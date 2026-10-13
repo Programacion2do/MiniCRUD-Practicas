@@ -1,3 +1,4 @@
+
 # Guías de Entrega — Programación Avanzada
  
 Guías interactivas paso a paso para estudiantes de **Programación Avanzada (Java Web)** — Bachillerato Tecnológico, UTU (DGETP).
@@ -7,7 +8,7 @@ Cada guía es un archivo HTML autocontenido que se abre directamente en el naveg
 ---
  
 ## Guías disponibles
-
+ 
 | Práctica | Tema | Guía |
 |---|---|---|
 | 1 | Mini CRUD básico | [Abrir guía 1](https://programacion2do.github.io/MiniCRUD-Practicas/guia-entrega-minicrud_1.html) |
@@ -28,7 +29,6 @@ Extiende el proyecto anterior incorporando las operaciones de editar y eliminar,
 - **Act. 01 — Básico:** agregar editar y eliminar al proyecto existente
 - **Act. 02 — Intermedio:** aplicar el patrón PRG (Post/Redirect/Get)
 - **Act. 03 — Avanzado:** replicar el CRUD con una entidad propia (Producto, Libro, Película, Videojuego, Estudiante u otra acordada con la docente)
-  
 ---
  
 ### [`guia-entrega-minicrud_3.html`](https://programacion2do.github.io/MiniCRUD-Practicas/guia-entrega-minicrud_3.html)
@@ -39,7 +39,25 @@ Incorpora una segunda tabla con clave foránea y herencia de clases Java (`Docen
 - **Act. 01 — Básico:** agregar la columna `fecha_nacimiento` a la tabla existente y actualizar el DAO
 - **Act. 02 — Intermedio:** implementar búsqueda por nombre con `LIKE` usando GET
 - **Act. 03 — Avanzado:** agregar la entidad `Docente` con herencia de `Persona` (tabla hija + FK)
-
+---
+ 
+## Material complementario
+ 
+### Guías de apoyo
+ 
+| Material | Descripción |
+|---|---|
+| [Cómo entregar la actividad MiniCRUD en GitHub](https://programacion2do.github.io/MiniCRUD-Practicas/Guia-entrega-GitHub.html) | Pasos para subir el proyecto a GitHub y realizar la entrega. |
+| [Guía MVC — Proyecto Mini-CRUD](https://programacion2do.github.io/MiniCRUD-Practicas/guia-mvc-crema-tinta.html) | Explicación de la arquitectura MVC aplicada al proyecto Mini-CRUD. |
+ 
+### Consignas en PDF
+ 
+| Práctica | Archivo |
+|---|---|
+| 1 | [practica-minicrud-1.pdf](https://programacion2do.github.io/MiniCRUD-Practicas/practica-minicrud-1.pdf) |
+| 2 | [practica-minicrud_2.pdf](https://programacion2do.github.io/MiniCRUD-Practicas/practica-minicrud_2.pdf) |
+| 3 | [practica-minicrud_3.pdf](https://programacion2do.github.io/MiniCRUD-Practicas/practica-minicrud_3.pdf) |
+ 
 ---
  
 ## Cómo usar las guías
@@ -64,18 +82,19 @@ La guía recuerda en qué paso quedó el estudiante mientras la pestaña del nav
 ---
  
 ## Estructura del repositorio
-
+ 
+```text
 MiniCRUD-Practicas/
 ├── guia-entrega-minicrud_1.html
 ├── guia-entrega-minicrud_2.html
 ├── guia-entrega-minicrud_3.html
 ├── Guia-entrega-GitHub.html
 ├── guia-mvc-crema-tinta.html
-├── practica-minicrud-1.pdf
+├── practica-minicrud_1.pdf
 ├── practica-minicrud_2.pdf
 ├── practica-minicrud_3.pdf
 └── README.md
-
+```
  
 ---
  
