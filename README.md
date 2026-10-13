@@ -8,13 +8,13 @@ Cada guía es un archivo HTML autocontenido que se abre directamente en el naveg
  
 ## Guías disponibles
  
-### `guia-entrega-minicrud.html`
+### `guia-entrega-minicrud_1.html`
 **PRACTICA 1 — Mini CRUD básico**  
 Introduce la estructura MVC con JSP y Servlets. El estudiante descarga el proyecto base, agrega los archivos indicados y despliega el CRUD de Personas con las operaciones de listar y agregar.
  
 ---
  
-### `guia-entrega-minicrud2.html`
+### `guia-entrega-minicrud_2.html`
 **PRACTICA 2 — Mini CRUD con edición y eliminación**  
 Extiende el proyecto anterior incorporando las operaciones de editar y eliminar, completando el ciclo CRUD completo. La actividad avanzada propone implementar el mismo CRUD sobre una entidad propia elegida por el estudiante.
  
