@@ -54,7 +54,7 @@ Incorpora una segunda tabla con clave foránea y herencia de clases Java (`Docen
  
 | Práctica | Archivo |
 |---|---|
-| 1 | [practica-minicrud-1.pdf](https://programacion2do.github.io/MiniCRUD-Practicas/practica-minicrud-1.pdf) |
+| 1 | [practica-minicrud_1.pdf](https://programacion2do.github.io/MiniCRUD-Practicas/practica-minicrud_1.pdf) |
 | 2 | [practica-minicrud_2.pdf](https://programacion2do.github.io/MiniCRUD-Practicas/practica-minicrud_2.pdf) |
 | 3 | [practica-minicrud_3.pdf](https://programacion2do.github.io/MiniCRUD-Practicas/practica-minicrud_3.pdf) |
  
