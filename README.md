@@ -63,7 +63,7 @@ La guía recuerda en qué paso quedó el estudiante mientras la pestaña del nav
 guias-entrega/
 ├── guia-entrega-minicrud.html
 ├── guia-entrega-minicrud2.html
-├── guia-entrega-BD-herencia.html
+├── guia-entrega-minicrud3.html
 └── README.md
 ```
  
