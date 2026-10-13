@@ -22,6 +22,7 @@ Extiende el proyecto anterior incorporando las operaciones de editar y eliminar,
 - **Act. 01 — Básico:** agregar editar y eliminar al proyecto existente
 - **Act. 02 — Intermedio:** aplicar el patrón PRG (Post/Redirect/Get)
 - **Act. 03 — Avanzado:** replicar el CRUD con una entidad propia (Producto, Libro, Película, Videojuego, Estudiante u otra acordada con la docente)
+  
 ---
  
 ### `guia-entrega-minicrud_3.html`
@@ -32,6 +33,7 @@ Incorpora una segunda tabla con clave foránea y herencia de clases Java (`Docen
 - **Act. 01 — Básico:** agregar la columna `fecha_nacimiento` a la tabla existente y actualizar el DAO
 - **Act. 02 — Intermedio:** implementar búsqueda por nombre con `LIKE` usando GET
 - **Act. 03 — Avanzado:** agregar la entidad `Docente` con herencia de `Persona` (tabla hija + FK)
+
 ---
  
 ## Cómo usar las guías
