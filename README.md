@@ -24,7 +24,7 @@ Extiende el proyecto anterior incorporando las operaciones de editar y eliminar,
 - **Act. 03 — Avanzado:** replicar el CRUD con una entidad propia (Producto, Libro, Película, Videojuego, Estudiante u otra acordada con la docente)
 ---
  
-### `guia-entrega-BD-herencia.html`
+### `guia-entrega-minicrud_3.html`
 **PRACTICO 3 — Base de Datos y Herencia**  
 Incorpora una segunda tabla con clave foránea y herencia de clases Java (`DocenteVO extends PersonaVO`). Cubre el manejo de `ALTER TABLE`, `CREATE TABLE` con `FOREIGN KEY … ON DELETE CASCADE` y la adaptación del DAO para múltiples tablas.
  
