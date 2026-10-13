@@ -7,15 +7,21 @@ Cada guía es un archivo HTML autocontenido que se abre directamente en el naveg
 ---
  
 ## Guías disponibles
+
+| Práctica | Tema | Guía |
+|---|---|---|
+| 1 | Mini CRUD básico | [Abrir guía 1](https://programacion2do.github.io/MiniCRUD-Practicas/guia-entrega-minicrud_1.html) |
+| 2 | Mini CRUD con edición y eliminación | [Abrir guía 2](https://programacion2do.github.io/MiniCRUD-Practicas/guia-entrega-minicrud_2.html) |
+| 3 | Base de Datos y Herencia | [Abrir guía 3](https://programacion2do.github.io/MiniCRUD-Practicas/guia-entrega-minicrud_3.html) |
  
-### `guia-entrega-minicrud_1.html`
-**PRACTICA 1 — Mini CRUD básico**  
+### [`guia-entrega-minicrud_1.html`](https://programacion2do.github.io/MiniCRUD-Practicas/guia-entrega-minicrud_1.html)
+**PRÁCTICA 1 — Mini CRUD básico**  
 Introduce la estructura MVC con JSP y Servlets. El estudiante descarga el proyecto base, agrega los archivos indicados y despliega el CRUD de Personas con las operaciones de listar y agregar.
  
 ---
  
-### `guia-entrega-minicrud_2.html`
-**PRACTICA 2 — Mini CRUD con edición y eliminación**  
+### [`guia-entrega-minicrud_2.html`](https://programacion2do.github.io/MiniCRUD-Practicas/guia-entrega-minicrud_2.html)
+**PRÁCTICA 2 — Mini CRUD con edición y eliminación**  
 Extiende el proyecto anterior incorporando las operaciones de editar y eliminar, completando el ciclo CRUD completo. La actividad avanzada propone implementar el mismo CRUD sobre una entidad propia elegida por el estudiante.
  
 **Actividades:**
@@ -25,8 +31,8 @@ Extiende el proyecto anterior incorporando las operaciones de editar y eliminar,
   
 ---
  
-### `guia-entrega-minicrud_3.html`
-**PRACTICO 3 — Base de Datos y Herencia**  
+### [`guia-entrega-minicrud_3.html`](https://programacion2do.github.io/MiniCRUD-Practicas/guia-entrega-minicrud_3.html)
+**PRÁCTICA 3 — Base de Datos y Herencia**  
 Incorpora una segunda tabla con clave foránea y herencia de clases Java (`DocenteVO extends PersonaVO`). Cubre el manejo de `ALTER TABLE`, `CREATE TABLE` con `FOREIGN KEY … ON DELETE CASCADE` y la adaptación del DAO para múltiples tablas.
  
 **Actividades:**
@@ -38,7 +44,7 @@ Incorpora una segunda tabla con clave foránea y herencia de clases Java (`Docen
  
 ## Cómo usar las guías
  
-Abrir el archivo `.html` en cualquier navegador moderno. No requiere servidor ni conexión a internet.
+Abrir el enlace de la guía en cualquier navegador moderno. También es posible descargar el archivo `.html` y abrirlo localmente: no requiere servidor ni conexión a internet.
  
 La guía recuerda en qué paso quedó el estudiante mientras la pestaña del navegador permanezca abierta. Al cerrarla, el avance se reinicia desde el paso 0.
  
@@ -58,14 +64,18 @@ La guía recuerda en qué paso quedó el estudiante mientras la pestaña del nav
 ---
  
 ## Estructura del repositorio
- 
-```
-guias-entrega/
-├── guia-entrega-minicrud.html
-├── guia-entrega-minicrud2.html
-├── guia-entrega-minicrud3.html
+
+MiniCRUD-Practicas/
+├── guia-entrega-minicrud_1.html
+├── guia-entrega-minicrud_2.html
+├── guia-entrega-minicrud_3.html
+├── Guia-entrega-GitHub.html
+├── guia-mvc-crema-tinta.html
+├── practica-minicrud-1.pdf
+├── practica-minicrud_2.pdf
+├── practica-minicrud_3.pdf
 └── README.md
-```
+
  
 ---
  
