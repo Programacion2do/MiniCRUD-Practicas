@@ -205,7 +205,7 @@ const CONFIGS = [
   /* ── ACTIVIDAD 02 — Intermedio ── */
   {
     actividad: 'Actividad 02 — Validar campos',
-    objetivo: 'Sobre el mismo proyecto de la Actividad 01, agregar validación del lado del servidor en el método <code>agregar()</code>: si los datos llegan vacíos, no guardar y volver al formulario con un mensaje de error conservando los datos ya escritos. Si son válidos, guardar y redirigir al listado (patrón PRG).',
+    objetivo: 'Sobre el proyecto base <code>mini-crud1</code> o sobre el proyecto de la Actividad 01 (cualquiera de los dos sirve), agregar validación del lado del servidor en el método <code>agregar()</code>: si el código o el nombre llegan vacíos, no guardar y volver al formulario con un mensaje de error conservando los datos ya escritos. Si son válidos, guardar y redirigir al listado (patrón PRG).',
     resumen: 'Sin cambios en PersonaVO — se modifica la <strong style="color:var(--amber)">lógica del Servlet</strong> y el <strong style="color:var(--amber)">formulario JSP</strong>',
     preguntasOrientadoras: [
       '¿Qué significa "validación del lado del servidor"? ¿Por qué no alcanza con usar el atributo <code>required</code> en el HTML del formulario?',
@@ -213,29 +213,29 @@ const CONFIGS = [
       '¿Qué es el patrón PRG (Post/Redirect/Get)? ¿Qué problema resuelve? ¿Qué pasa si se guarda un dato y luego el usuario presiona F5?',
       'Si el Servlet hace <code>forward</code> al formulario con un mensaje de error, ¿cómo llega ese mensaje hasta el JSP? ¿Qué métodos se usan en el Servlet para enviarlo y en el JSP para mostrarlo?',
       '¿Cómo se conservan los valores que el usuario ya escribió cuando el formulario vuelve a mostrarse con un error? ¿Qué hay que agregar en el JSP para lograrlo?',
-      'Describir el flujo completo cuando un usuario envía el formulario con el nombre vacío: qué recibe el Servlet, qué verifica, qué hace si hay error y qué hace si los datos son válidos.',
+      'Describir el flujo completo cuando un usuario envía el formulario con el código o el nombre vacíos: qué recibe el Servlet, qué verifica, qué hace si hay error y qué hace si ambos son válidos.',
     ],
     archivosDetalle: [
-      { nombre: 'PersonaControladorServlet.java', capa: 'Controlador', descripcion: 'En <code>agregar()</code>: validar que nombre no llegue vacío. Si hay error, setear atributo de error en el request y hacer <code>forward</code> al formulario. Si son válidos, guardar y hacer <code>sendRedirect</code> al listado.', tipo: 'modificar' },
+      { nombre: 'PersonaControladorServlet.java', capa: 'Controlador', descripcion: 'En <code>agregar()</code>: validar que el código y el nombre no lleguen vacíos (el código se valida antes de convertirlo con <code>Integer.parseInt()</code>). Si hay error, setear atributo de error en el request y hacer <code>forward</code> al formulario. Si son válidos, guardar y hacer <code>sendRedirect</code> al listado.', tipo: 'modificar' },
       { nombre: 'persona-form.jsp',              capa: 'Vista · Formulario', descripcion: 'Mostrar el mensaje de error cuando existe (usando EL o scriptlet). Conservar el valor que el usuario ya escribió en cada campo.', tipo: 'modificar' },
     ],
     nivelCss: 'intermedio',
     nivelLabel: 'Intermedio',
     tipo: 'act02',
     carpetaProyecto: 'mini-crud1-extendido',
-    urlBase:   'http://localhost:8080/mini-crud1-extendido',
-    urlPrueba: 'http://localhost:8080/mini-crud1-extendido',
+    urlBase:   'http://localhost:8080/mini-crud1<br>http://localhost:8080/mini-crud1-extendido',
+    urlPrueba: 'http://localhost:8080/mini-crud1<br>http://localhost:8080/mini-crud1-extendido',
     zipEjemplo: 'Prac2-web-Actividad2_GarciaMaria.zip',
     archivos: [
       { tipo: 'modificar', ruta: 'src/main/java/controlador/',     nombre: 'PersonaControladorServlet.java' },
       { tipo: 'modificar', ruta: 'src/main/webapp/WEB-INF/vista/', nombre: 'persona-form.jsp' },
     ],
     capturas: [
-      { icon: '🚫', texto: '<strong>Error de validación</strong> — el formulario mostrando el mensaje de error, con el campo nombre vacío y los demás campos conservando sus valores. La URL debe ser visible.' },
+      { icon: '🚫', texto: '<strong>Error de validación</strong> — el formulario mostrando el mensaje de error, con el campo código o nombre vacío y los demás campos conservando sus valores. La URL debe ser visible.' },
       { icon: '✅', texto: '<strong>Guardado exitoso</strong> — el listado de personas después de guardar datos válidos, con la nueva persona visible en la tabla. La URL debe ser visible.' },
     ],
     archivosEntrega: ['Prac2-web-Actividad2_ApellidoNombre.zip'],
-    verificacion: 'Probar enviando el formulario con nombre vacío: debe mostrar el error y conservar los demás valores. Luego probar con datos válidos: debe guardar y redirigir al listado.',
+    verificacion: 'Probar enviando el formulario con el código vacío y luego con el nombre vacío: en ambos casos debe mostrar el error y conservar los demás valores. Luego probar con datos válidos: debe guardar y redirigir al listado.',
     alertaDeploy: 'Si al enviar con error la página queda en blanco o redirige igual al listado, revisar que se usa <code>forward</code> (no <code>sendRedirect</code>) cuando hay error, y que hay un <code>return</code> después del forward para no continuar ejecutando el método.',
   },
 
@@ -427,10 +427,23 @@ function buildPasos(cfg) {
 
       ${esAct02 ? `
         <div class="tip">
-          <div class="tip-lbl">Continuar sobre la Actividad 01</div>
-          Abrir la carpeta <strong>mini-crud1-extendido</strong> en VS Code —
-          el proyecto que quedó de la Actividad 01 con los campos teléfono y dirección funcionando.
-          No descargar nada nuevo.
+          <div class="tip-lbl">Elegir el proyecto de partida</div>
+          Esta actividad no depende de la Actividad 01. Se puede trabajar sobre cualquiera de estos dos proyectos:
+          <br><br>
+          <strong>Opción A — Proyecto base:</strong> descargar el ZIP, descomprimir y abrir la carpeta
+          <code>mini-crud1</code> en VS Code. La URL será <code>http://localhost:8080/mini-crud1</code>.
+          <br>
+          <a href="https://github.com/eliizquierdo/material_programacion_avanzada2026/blob/main/proyectos-teoricos/mini-crud1/mini-crud1.zip"
+             target="_blank" rel="noopener"
+             style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:12px;word-break:break-all;">
+            mini-crud1.zip →
+          </a>
+          <br><br>
+          <strong>Opción B — Continuar la Actividad 01:</strong> abrir la carpeta <code>mini-crud1-extendido</code>
+          en VS Code, con los campos teléfono y dirección ya funcionando. La URL será
+          <code>http://localhost:8080/mini-crud1-extendido</code>.
+          <br><br>
+          En ambos casos se validan los mismos campos: <strong>código</strong> y <strong>nombre</strong>.
         </div>
       ` : ''}
 
@@ -501,7 +514,6 @@ function buildPasos(cfg) {
             <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:4px;">
               <li style="font-size:12px;color:var(--muted);">● <code>código</code> <span style="color:var(--blue);font-family:'JetBrains Mono',monospace;font-size:11px;">int</span></li>
               <li style="font-size:12px;color:var(--muted);">● <code>nombre</code> <span style="color:var(--blue);font-family:'JetBrains Mono',monospace;font-size:11px;">String</span></li>
-              <li style="font-size:12px;color:var(--muted);">● <code>apellido</code> <span style="color:var(--blue);font-family:'JetBrains Mono',monospace;font-size:11px;">String</span></li>
               <li style="font-size:12px;color:var(--muted);">● <code>grupo</code> <span style="color:var(--blue);font-family:'JetBrains Mono',monospace;font-size:11px;">String</span></li>
             </ul>
           </div>
