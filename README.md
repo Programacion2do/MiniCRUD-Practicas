@@ -27,7 +27,7 @@ Extiende el proyecto anterior incorporando las operaciones de editar y eliminar,
  
 **Actividades:**
 - **Act. 01 — Básico:** agregar editar y eliminar al proyecto existente
-- **Act. 02 — Intermedio:** aplicar el patrón PRG (Post/Redirect/Get)
+- **Act. 02 — Intermedio:** validar los datos del lado del servidor al agregar y al editar
 - **Act. 03 — Avanzado:** replicar el CRUD con una entidad propia (Producto, Libro, Película, Videojuego, Estudiante u otra acordada con la docente)
 ---
  
