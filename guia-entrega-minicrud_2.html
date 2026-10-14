@@ -16,14 +16,14 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column;}
-
+ 
 .header{padding:36px 40px 20px;max-width:720px;margin:0 auto;width:100%;}
 .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-bottom:12px;}
 .eyebrow::before{content:'● ';}
 h1{font-family:'JetBrains Mono',monospace;font-size:clamp(18px,3.5vw,26px);font-weight:800;line-height:1.2;margin-bottom:8px;}
 h1 span{color:var(--amber);}
 .subtitle{color:var(--muted);font-size:13.5px;max-width:540px;line-height:1.6;}
-
+ 
 /* ── Pestañas de actividad ── */
 .tabs-wrap{max-width:720px;margin:0 auto;padding:0 40px 24px;width:100%;}
 .tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
@@ -48,7 +48,7 @@ h1 span{color:var(--amber);}
 .tab-level.basico{background:var(--green-soft);color:var(--green);border:1px solid rgba(123,216,143,.3);}
 .tab-level.intermedio{background:var(--blue-soft);color:var(--blue);border:1px solid rgba(122,162,247,.3);}
 .tab-level.avanzado{background:var(--red-soft);color:var(--red);border:1px solid rgba(247,118,142,.3);}
-
+ 
 .progress-wrap{max-width:720px;margin:0 auto;padding:0 40px 20px;width:100%;}
 .progress-dots{display:flex;align-items:center;gap:6px;}
 .dot-step{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--muted);transition:all .25s;flex-shrink:0;}
@@ -58,27 +58,27 @@ h1 span{color:var(--amber);}
 .dot-sep.done{background:rgba(242,161,84,.4);}
 .progress-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:10px;}
 .progress-label span{color:var(--amber);}
-
+ 
 .step-area{max-width:720px;margin:0 auto;padding:0 40px;width:100%;flex:1;}
-
+ 
 .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:28px 28px 24px;}
 .card h2{font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:700;margin-bottom:14px;}
 .card p{font-size:13.5px;color:var(--muted);line-height:1.75;margin-bottom:10px;}
 .card p:last-child{margin-bottom:0;}
 .card p strong{color:var(--text);}
 code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--panel-2);padding:1px 5px;border-radius:4px;color:var(--amber);}
-
+ 
 .step-badge{display:inline-flex;align-items:center;gap:10px;margin-bottom:16px;}
 .step-badge-num{width:44px;height:44px;border-radius:50%;background:var(--amber-soft);border:1.5px solid rgba(242,161,84,.5);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--amber);}
 .step-badge-title{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:800;}
 .step-badge-title span{color:var(--amber);}
-
+ 
 .substeps{list-style:none;padding:0;margin:12px 0;}
 .substeps li{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-bottom:1px solid rgba(52,54,74,.4);font-size:13.5px;color:var(--muted);line-height:1.65;}
 .substeps li:last-child{border-bottom:none;}
 .substeps li strong{color:var(--text);}
 .substep-num{flex-shrink:0;width:24px;height:24px;border-radius:50%;background:var(--amber-soft);border:1px solid rgba(242,161,84,.3);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;color:var(--amber);margin-top:2px;}
-
+ 
 .file-list{margin:12px 0;display:flex;flex-direction:column;gap:6px;}
 .file-row{display:flex;align-items:baseline;gap:8px;padding:7px 12px;background:var(--panel-2);border-radius:6px;border:1px solid var(--border);}
 .file-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;text-transform:uppercase;padding:2px 7px;border-radius:4px;flex-shrink:0;}
@@ -87,7 +87,7 @@ code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--pane
 .file-badge.sin-cambios{background:var(--panel-2);color:var(--muted);border:1px solid var(--border);}
 .file-path{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted);}
 .file-path span{color:var(--text);font-weight:600;}
-
+ 
 .term{background:#14151d;border:1px solid var(--border);border-radius:8px;margin:12px 0;overflow:hidden;}
 .term-bar{background:var(--panel-2);border-bottom:1px solid var(--border);padding:7px 12px;display:flex;gap:6px;align-items:center;}
 .tdot{width:10px;height:10px;border-radius:50%;background:var(--border);}
@@ -96,31 +96,31 @@ code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--pane
 .term-body .c{color:var(--muted);}
 .term-body .a{color:var(--amber);}
 .term-body .b{color:var(--blue);}
-
+ 
 .tip{background:var(--green-soft);border:1px solid rgba(123,216,143,.3);border-radius:10px;padding:13px 17px;margin:12px 0;font-size:13px;color:var(--text);line-height:1.65;}
 .tip-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--green);letter-spacing:.06em;margin-bottom:5px;}
 .alerta{background:var(--amber-soft);border:1px solid rgba(242,161,84,.3);border-radius:10px;padding:13px 17px;margin:12px 0;font-size:13px;color:var(--text);line-height:1.65;}
 .alerta-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--amber);letter-spacing:.06em;margin-bottom:5px;}
 .aviso{background:var(--red-soft);border:1px solid rgba(247,118,142,.3);border-radius:10px;padding:13px 17px;margin:12px 0;font-size:13px;color:var(--text);line-height:1.65;}
 .aviso-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--red);letter-spacing:.06em;margin-bottom:5px;}
-
+ 
 .capture-list{display:flex;flex-direction:column;gap:8px;margin:12px 0;}
 .capture-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:var(--panel-2);border-radius:8px;border:1px solid var(--border);}
 .capture-icon{font-size:16px;flex-shrink:0;margin-top:2px;}
 .capture-text{font-size:13px;color:var(--muted);line-height:1.5;}
 .capture-text strong{color:var(--text);}
-
+ 
 .entrega-list{display:flex;flex-direction:column;gap:6px;margin:12px 0;}
 .entrega-item{display:flex;align-items:center;gap:10px;padding:8px 14px;background:var(--panel-2);border-radius:7px;border:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text);}
 .entrega-icon{color:var(--amber);flex-shrink:0;}
-
+ 
 .nav{display:flex;justify-content:space-between;align-items:center;padding:24px 40px 40px;max-width:720px;margin:0 auto;width:100%;}
 .nav-btn{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;padding:10px 22px;border-radius:8px;cursor:pointer;border:1.5px solid var(--border);background:var(--panel-2);color:var(--text);transition:all .2s;}
 .nav-btn:hover:not(:disabled){border-color:var(--amber);color:var(--amber);}
 .nav-btn:disabled{opacity:.3;cursor:default;}
 .nav-btn.primary{background:var(--amber);color:#191a23;border-color:var(--amber);}
 .nav-btn.primary:hover:not(:disabled){background:#e8924a;}
-
+ 
 @media(max-width:520px){
   .header,.tabs-wrap,.progress-wrap,.step-area,.nav{padding-left:20px;padding-right:20px;}
   .tabs{flex-direction:column;}
@@ -129,34 +129,34 @@ code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--pane
 </style>
 </head>
 <body>
-
+ 
 <div class="header">
   <div class="eyebrow">Programación Avanzada · UTU</div>
   <h1>Guía de entrega — <span>MiniCRUD con edición y eliminación</span></h1>
   <p class="subtitle">Tres actividades para implementar y extender un CRUD completo con JSP, Servlet y el patrón MVC.</p>
 </div>
-
+ 
 <div class="tabs-wrap">
   <div class="tabs" id="tabs"></div>
 </div>
-
+ 
 <div class="progress-wrap">
   <div class="progress-dots" id="dots"></div>
   <div class="progress-label" id="progress-label"></div>
 </div>
-
+ 
 <div class="step-area">
   <div class="card" id="card"></div>
 </div>
-
+ 
 <div class="nav">
   <button class="nav-btn" id="btn-prev" onclick="cambiarPaso(-1)">← Anterior</button>
   <button class="nav-btn primary" id="btn-next" onclick="cambiarPaso(1)">Siguiente →</button>
 </div>
-
+ 
 <script>
 const TAREA_CREA = 'PRACTICA 2-MiniCrud con edición y eliminación';
-
+ 
 const CONFIGS = [
   /* ── ACTIVIDAD 01 — Básico ── */
   {
@@ -201,23 +201,24 @@ const CONFIGS = [
     verificacion: 'El campo nuevo debe aparecer en el formulario de alta, en la tabla del listado y precargado en el formulario de edición. Si falta en alguno, revisar el archivo correspondiente.',
     alertaDeploy: 'Los errores más comunes: falta un getter en PersonaVO, el atributo <code>name</code> del input en el JSP no coincide con el parámetro que lee el Servlet, o el constructor de PersonaVO no fue actualizado con los campos nuevos.',
   },
-
+ 
   /* ── ACTIVIDAD 02 — Intermedio ── */
   {
-    actividad: 'Actividad 02 — Validar campos',
-    objetivo: 'Sobre el proyecto base <code>mini-crud1</code> o sobre el proyecto de la Actividad 01 (cualquiera de los dos sirve), agregar validación del lado del servidor en el método <code>agregar()</code>: si el código o el nombre llegan vacíos, no guardar y volver al formulario con un mensaje de error conservando los datos ya escritos. Si son válidos, guardar y redirigir al listado (patrón PRG).',
-    resumen: 'Sin cambios en PersonaVO — se modifica la <strong style="color:var(--amber)">lógica del Servlet</strong> y el <strong style="color:var(--amber)">formulario JSP</strong>',
+    actividad: 'Actividad 02 — Validar al agregar y al editar',
+    objetivo: 'Sobre el proyecto base <code>mini-crud1</code> o sobre el proyecto de la Actividad 01 (cualquiera de los dos sirve), agregar validación del lado del servidor en dos operaciones. <strong>Al agregar:</strong> incorporar la validación de <code>agregar()</code> explicada en la wiki (<a href="https://github.com/eliizquierdo/material_programacion_avanzada2026/wiki/Validaci%C3%B3n-de-campos-obligatorios" target="_blank" rel="noopener" style="color:var(--amber);">Validación de campos obligatorios</a>). <strong>Al editar:</strong> aplicar el mismo criterio en <code>editar()</code>, que no está resuelto en la wiki: si el nombre llega vacío, o si el código llega vacío, no es un número o no corresponde a una persona existente, no guardar y volver al formulario de edición con un mensaje de error, conservando los datos ya escritos. Si los datos son válidos, actualizar y redirigir al listado (patrón PRG).',
+    resumen: 'Sin cambios en PersonaVO — se modifica la <strong style="color:var(--amber)">lógica del Servlet</strong> y los <strong style="color:var(--amber)">dos formularios JSP</strong>',
     preguntasOrientadoras: [
       '¿Qué significa "validación del lado del servidor"? ¿Por qué no alcanza con usar el atributo <code>required</code> en el HTML del formulario?',
-      '¿Cuál es la diferencia entre <code>forward</code> y <code>sendRedirect</code>? ¿Cuándo conviene usar cada uno en este caso?',
-      '¿Qué es el patrón PRG (Post/Redirect/Get)? ¿Qué problema resuelve? ¿Qué pasa si se guarda un dato y luego el usuario presiona F5?',
-      'Si el Servlet hace <code>forward</code> al formulario con un mensaje de error, ¿cómo llega ese mensaje hasta el JSP? ¿Qué métodos se usan en el Servlet para enviarlo y en el JSP para mostrarlo?',
-      '¿Cómo se conservan los valores que el usuario ya escribió cuando el formulario vuelve a mostrarse con un error? ¿Qué hay que agregar en el JSP para lograrlo?',
-      'Describir el flujo completo cuando un usuario envía el formulario con el código o el nombre vacíos: qué recibe el Servlet, qué verifica, qué hace si hay error y qué hace si ambos son válidos.',
+      'En <code>agregar()</code> el código <strong>no</strong> debe existir en el DAO; en <code>editar()</code> el código <strong>sí</strong> debe existir. ¿Por qué cambia la condición? ¿Qué método del DAO sirve para comprobarlo en los dos casos?',
+      'En <code>persona-editar.jsp</code> el campo código es <code>readonly</code>. ¿Alcanza con eso para no validarlo en el Servlet? ¿De qué otra forma podría llegar un código modificado o vacío?',
+      'Si el Servlet hace <code>forward</code> a <code>persona-editar.jsp</code> con un mensaje de error, ¿cómo llega ese mensaje hasta el JSP? ¿Qué se usa en el Servlet para enviarlo y en el JSP para mostrarlo?',
+      '<code>persona-editar.jsp</code> precarga los campos con los datos de la persona que envía <code>cargarEditar()</code>. Cuando vuelve con un error, ¿de dónde tiene que leer los valores para mostrar lo que el usuario acababa de escribir?',
+      'Describir el flujo completo cuando un usuario edita una persona y deja el nombre vacío: qué recibe el Servlet, qué verifica, qué hace si hay error y qué hace si los datos son válidos.',
     ],
     archivosDetalle: [
-      { nombre: 'PersonaControladorServlet.java', capa: 'Controlador', descripcion: 'En <code>agregar()</code>: validar que el código y el nombre no lleguen vacíos (el código se valida antes de convertirlo con <code>Integer.parseInt()</code>). Si hay error, setear atributo de error en el request y hacer <code>forward</code> al formulario. Si son válidos, guardar y hacer <code>sendRedirect</code> al listado.', tipo: 'modificar' },
-      { nombre: 'persona-form.jsp',              capa: 'Vista · Formulario', descripcion: 'Mostrar el mensaje de error cuando existe (usando EL o scriptlet). Conservar el valor que el usuario ya escribió en cada campo.', tipo: 'modificar' },
+      { nombre: 'PersonaControladorServlet.java', capa: 'Controlador', descripcion: 'En <code>agregar()</code>: incorporar la validación de la wiki. En <code>editar()</code>: validar que el nombre no llegue vacío y que el código no llegue vacío, sea un número y corresponda a una persona existente. Si hay error, setear el atributo de error en el request y hacer <code>forward</code> al formulario que corresponda. Si los datos son válidos, guardar o actualizar y hacer <code>sendRedirect</code> al listado.', tipo: 'modificar' },
+      { nombre: 'persona-form.jsp',              capa: 'Vista · Formulario de alta', descripcion: 'Mostrar el mensaje de error cuando existe y conservar el valor que el usuario ya escribió en cada campo.', tipo: 'modificar' },
+      { nombre: 'persona-editar.jsp',            capa: 'Vista · Formulario de edición', descripcion: 'Mostrar el mensaje de error cuando existe y conservar lo que el usuario escribió al volver con un error.', tipo: 'modificar' },
     ],
     nivelCss: 'intermedio',
     nivelLabel: 'Intermedio',
@@ -229,16 +230,22 @@ const CONFIGS = [
     archivos: [
       { tipo: 'modificar', ruta: 'src/main/java/controlador/',     nombre: 'PersonaControladorServlet.java' },
       { tipo: 'modificar', ruta: 'src/main/webapp/WEB-INF/vista/', nombre: 'persona-form.jsp' },
+      { tipo: 'modificar', ruta: 'src/main/webapp/WEB-INF/vista/', nombre: 'persona-editar.jsp' },
     ],
     capturas: [
-      { icon: '🚫', texto: '<strong>Error de validación</strong> — el formulario mostrando el mensaje de error, con el campo código o nombre vacío y los demás campos conservando sus valores. La URL debe ser visible.' },
-      { icon: '✅', texto: '<strong>Guardado exitoso</strong> — el listado de personas después de guardar datos válidos, con la nueva persona visible en la tabla. La URL debe ser visible.' },
+      { icon: '🚫', texto: '<strong>Error al agregar</strong> — el formulario de alta mostrando el mensaje de error, con el campo código o nombre vacío y los demás campos conservando sus valores. La URL debe ser visible.' },
+      { icon: '🚫', texto: '<strong>Error al editar</strong> — el formulario de edición mostrando el mensaje de error después de dejar el nombre vacío, con el código conservado. La URL debe ser visible.' },
+      { icon: '✅', texto: '<strong>Edición guardada</strong> — el listado de personas después de editar con datos válidos, con el nombre actualizado en la tabla. La URL debe ser visible.' },
     ],
     archivosEntrega: ['Prac2-web-Actividad2_ApellidoNombre.zip'],
-    verificacion: 'Probar enviando el formulario con el código vacío y luego con el nombre vacío: en ambos casos debe mostrar el error y conservar los demás valores. Luego probar con datos válidos: debe guardar y redirigir al listado.',
-    alertaDeploy: 'Si al enviar con error la página queda en blanco o redirige igual al listado, revisar que se usa <code>forward</code> (no <code>sendRedirect</code>) cuando hay error, y que hay un <code>return</code> después del forward para no continuar ejecutando el método.',
+    verificacion: '<strong>Al agregar:</strong> probar con el código vacío y luego con el nombre vacío; en ambos casos debe mostrar el error y conservar los demás valores. <strong>Al editar:</strong> abrir una persona con el botón Editar, borrar el nombre y guardar; debe volver al formulario de edición con el error y el código conservado. Luego editar con datos válidos: debe actualizar y redirigir al listado. Para probar el formulario sin la validación del navegador, agregar <code>novalidate</code> al <code>&lt;form&gt;</code>.',
+    alertaDeploy: 'Si al enviar con error la página queda en blanco o redirige igual al listado, revisar que se usa <code>forward</code> (no <code>sendRedirect</code>) cuando hay error, y que hay un <code>return</code> después del forward para no continuar ejecutando el método. Si el formulario de edición vuelve vacío, revisar de dónde lee los valores el JSP cuando llega desde el error.',
+    paraInvestigar: [
+      'Mostrar <strong>todos los errores juntos</strong> en lugar de cortar en el primero: por ejemplo, si el código y el nombre están vacíos a la vez, que aparezcan los dos mensajes. Investigar cómo guardar varios mensajes en una lista en el Servlet y recorrerla en el JSP.',
+      'Validar el <strong>formato del nombre</strong>: que tenga al menos 3 caracteres y solo letras y espacios. Investigar qué métodos de <code>String</code> y de <code>Character</code> permiten comprobarlo.',
+    ],
   },
-
+ 
   /* ── ACTIVIDAD 03 — Avanzado ── */
   {
     actividad: 'Actividad 03 — Nuevo CRUD',
@@ -286,10 +293,10 @@ const CONFIGS = [
     alertaDeploy: 'Si el navegador muestra 404, verificar que el mapeo <code>@WebServlet</code> coincide exactamente con la URL que se intenta acceder. Si hay error 500, revisar la consola de Tomcat para ver el mensaje de excepción.',
   },
 ];
-
+ 
 let actIdx = 0;
 let pasoIdx = 0;
-
+ 
 function buildTabs() {
   const wrap = document.getElementById('tabs');
   wrap.innerHTML = CONFIGS.map((cfg, i) => `
@@ -302,7 +309,7 @@ function buildTabs() {
     </button>
   `).join('');
 }
-
+ 
 function buildDots(pasos) {
   const wrap = document.getElementById('dots');
   wrap.innerHTML = pasos.map((p, i) => {
@@ -312,11 +319,11 @@ function buildDots(pasos) {
       : '';
     return `<div class="dot-step ${cls}">${i+1}</div>${sep}`;
   }).join('');
-
+ 
   document.getElementById('progress-label').innerHTML =
     `Paso <span>${pasoIdx + 1} de ${pasos.length}</span> — ${pasos[pasoIdx].titulo}`;
 }
-
+ 
 function buildFilas(archivos) {
   return archivos.map(f => `
     <div class="file-row">
@@ -325,7 +332,7 @@ function buildFilas(archivos) {
     </div>
   `).join('');
 }
-
+ 
 function buildCapturas(capturas) {
   return capturas.map(c => `
     <div class="capture-item">
@@ -334,7 +341,7 @@ function buildCapturas(capturas) {
     </div>
   `).join('');
 }
-
+ 
 function buildArchivosDetalle(arr) {
   return `
     <table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:12px;">
@@ -363,7 +370,7 @@ function buildArchivosDetalle(arr) {
     </table>
   `;
 }
-
+ 
 function buildEntrega(archivos) {
   return archivos.map(a => `
     <div class="entrega-item">
@@ -371,12 +378,12 @@ function buildEntrega(archivos) {
     </div>
   `).join('');
 }
-
+ 
 function buildPasos(cfg) {
   const esAct01 = cfg.tipo === 'act01';
   const esAct02 = cfg.tipo === 'act02';
   const esAct03 = cfg.tipo === 'act03';
-
+ 
   const paso0 = {
     titulo: 'Leer la consigna',
     html: `
@@ -384,16 +391,16 @@ function buildPasos(cfg) {
         <div class="step-badge-num" style="font-size:18px;">📖</div>
         <div class="step-badge-title">Leer la <span>consigna</span></div>
       </div>
-
+ 
       <div class="tip">
         <div class="tip-lbl">Objetivo</div>
         <p style="margin-bottom:10px;">${cfg.objetivo}</p>
         <p style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text);background:var(--panel-2);padding:7px 12px;border-radius:6px;display:inline-block;margin:0;">${cfg.resumen}</p>
       </div>
-
+ 
       <p style="margin-top:16px;margin-bottom:4px;font-size:13px;">Archivos involucrados:</p>
       ${buildArchivosDetalle(cfg.archivosDetalle)}
-
+ 
       <div class="alerta" style="margin-top:16px;">
         <div class="alerta-lbl">Preguntas orientadoras — responder antes de tocar el código</div>
         <ol style="padding-left:20px;margin-top:8px;display:flex;flex-direction:column;gap:8px;">
@@ -402,7 +409,7 @@ function buildPasos(cfg) {
       </div>
     `
   };
-
+ 
   const paso1 = {
     titulo: 'Configurar el proyecto',
     html: `
@@ -410,7 +417,7 @@ function buildPasos(cfg) {
         <div class="step-badge-num">1</div>
         <div class="step-badge-title">Configurar el <span>proyecto</span></div>
       </div>
-
+ 
       ${esAct01 ? `
         <div class="alerta">
           <div class="alerta-lbl">Proyecto base — descargar mini-crud1</div>
@@ -424,7 +431,7 @@ function buildPasos(cfg) {
           </a>
         </div>
       ` : ''}
-
+ 
       ${esAct02 ? `
         <div class="tip">
           <div class="tip-lbl">Elegir el proyecto de partida</div>
@@ -446,7 +453,7 @@ function buildPasos(cfg) {
           En ambos casos se validan los mismos campos: <strong>código</strong> y <strong>nombre</strong>.
         </div>
       ` : ''}
-
+ 
       ${esAct03 ? `
         <div class="alerta">
           <div class="alerta-lbl">Proyecto de referencia — descargar mini-crud2</div>
@@ -468,7 +475,7 @@ function buildPasos(cfg) {
         </div>
         <p style="margin-top:14px;font-size:13.5px;color:var(--text);font-weight:600;">Elegir la Clase a implementar:</p>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px;">
-
+ 
           <div style="background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
             <div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--green);margin-bottom:8px;">Producto</div>
             <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:4px;">
@@ -478,7 +485,7 @@ function buildPasos(cfg) {
               <li style="font-size:12px;color:var(--muted);">● <code>descripción</code> <span style="color:var(--blue);font-family:'JetBrains Mono',monospace;font-size:11px;">String</span></li>
             </ul>
           </div>
-
+ 
           <div style="background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
             <div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--green);margin-bottom:8px;">Libro</div>
             <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:4px;">
@@ -488,7 +495,7 @@ function buildPasos(cfg) {
               <li style="font-size:12px;color:var(--muted);">● <code>año</code> <span style="color:var(--blue);font-family:'JetBrains Mono',monospace;font-size:11px;">int</span></li>
             </ul>
           </div>
-
+ 
           <div style="background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
             <div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--green);margin-bottom:8px;">Película</div>
             <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:4px;">
@@ -498,7 +505,7 @@ function buildPasos(cfg) {
               <li style="font-size:12px;color:var(--muted);">● <code>año</code> <span style="color:var(--blue);font-family:'JetBrains Mono',monospace;font-size:11px;">int</span></li>
             </ul>
           </div>
-
+ 
           <div style="background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
             <div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--green);margin-bottom:8px;">Videojuego</div>
             <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:4px;">
@@ -508,7 +515,7 @@ function buildPasos(cfg) {
               <li style="font-size:12px;color:var(--muted);">● <code>plataforma</code> <span style="color:var(--blue);font-family:'JetBrains Mono',monospace;font-size:11px;">String</span></li>
             </ul>
           </div>
-
+ 
           <div style="background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
             <div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--green);margin-bottom:8px;">Estudiante</div>
             <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:4px;">
@@ -517,7 +524,7 @@ function buildPasos(cfg) {
               <li style="font-size:12px;color:var(--muted);">● <code>grupo</code> <span style="color:var(--blue);font-family:'JetBrains Mono',monospace;font-size:11px;">String</span></li>
             </ul>
           </div>
-
+ 
           <div style="background:var(--panel-2);border:1.5px dashed rgba(52,54,74,.8);border-radius:10px;padding:14px 16px;">
             <div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px;">Otra entidad</div>
             <p style="font-size:11.5px;color:var(--muted);margin-bottom:8px;line-height:1.5;">(proponer al docente)</p>
@@ -527,16 +534,16 @@ function buildPasos(cfg) {
               <li style="font-size:12px;color:var(--border);border-bottom:1px dashed var(--border);padding-bottom:4px;">_________________________</li>
             </ul>
           </div>
-
+ 
         </div>
       ` : ''}
-
+ 
       <div class="tip">
         <div class="tip-lbl">Revisar versión de Tomcat en el pom.xml</div>
         Abrir el archivo <code>pom.xml</code> y verificar que la versión de Tomcat
         sea <strong>10.1.57</strong>. Si aparece otra versión, corregirla antes de continuar.
       </div>
-
+ 
       ${!esAct03 ? `
         <p style="margin-top:4px;">Desplegar el proyecto <strong>sin modificar nada</strong> para comprobar que funciona de base:</p>
         <div class="term">
@@ -566,7 +573,7 @@ function buildPasos(cfg) {
       `}
     `
   };
-
+ 
   const paso2 = {
     titulo: 'Modificar el código',
     html: `
@@ -574,7 +581,7 @@ function buildPasos(cfg) {
         <div class="step-badge-num">2</div>
         <div class="step-badge-title">${esAct03 ? 'Crear el' : 'Modificar el'} <span>código</span></div>
       </div>
-
+ 
       ${!esAct02 && !esAct03 ? `
         <div class="alerta">
           <div class="alerta-lbl">Antes de modificar — renombrar el proyecto en el pom.xml</div>
@@ -584,7 +591,7 @@ function buildPasos(cfg) {
           <code>${cfg.urlPrueba}</code>.
         </div>
       ` : ''}
-
+ 
       ${esAct03 ? `
         <div class="alerta">
           <div class="alerta-lbl">Verificar el artifactId en el pom.xml</div>
@@ -592,10 +599,10 @@ function buildPasos(cfg) {
           con el nombre del proyecto elegido. Eso determina la URL de acceso.
         </div>
       ` : ''}
-
+ 
       <p style="margin-top:4px;">${esAct03 ? 'Crear los siguientes archivos nuevos:' : 'Realizar los cambios en los siguientes archivos:'}</p>
       <div class="file-list">${buildFilas(cfg.archivos)}</div>
-
+ 
       <p style="margin-top:16px;">Una vez guardados los cambios, desplegar y verificar:</p>
       <div class="term">
         <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div>
@@ -608,19 +615,29 @@ function buildPasos(cfg) {
           <span class="term-lbl">Navegador</span></div>
         <div class="term-body"><span class="b">${cfg.urlPrueba}</span></div>
       </div>
-
+ 
       <div class="alerta">
         <div class="alerta-lbl">Qué verificar</div>
         ${cfg.verificacion}
       </div>
-
+ 
       <div class="tip">
         <div class="tip-lbl">Si el deploy falla</div>
         ${cfg.alertaDeploy}
       </div>
+ 
+      ${cfg.paraInvestigar ? `
+        <div class="tip">
+          <div class="tip-lbl">Para investigar (opcional)</div>
+          Una vez que todo funcione, se puede ir un paso más allá:
+          <ul style="padding-left:20px;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+            ${cfg.paraInvestigar.map(t => `<li style="font-size:13px;line-height:1.6;">${t}</li>`).join('')}
+          </ul>
+        </div>
+      ` : ''}
     `
   };
-
+ 
   const paso3 = {
     titulo: 'Tomar capturas de pantalla',
     html: `
@@ -637,7 +654,7 @@ function buildPasos(cfg) {
       </div>
     `
   };
-
+ 
   const paso4 = {
     titulo: 'Comprimir en ZIP',
     html: `
@@ -657,7 +674,7 @@ function buildPasos(cfg) {
       </div>
     `
   };
-
+ 
   const paso5 = {
     titulo: 'Subir en CREA',
     html: `
@@ -700,24 +717,24 @@ function buildPasos(cfg) {
       </div>
     `
   };
-
+ 
   return [paso0, paso1, paso2, paso3, paso4, paso5];
 }
-
+ 
 function render() {
   buildTabs();
   const cfg = CONFIGS[actIdx];
   const pasos = buildPasos(cfg);
   buildDots(pasos);
-
+ 
   document.getElementById('card').innerHTML = pasos[pasoIdx].html;
-
+ 
   // Sincronizar el número en el badge del card con la posición real en los puntos de progreso
   const badgeNum = document.querySelector('.step-badge-num');
   if (badgeNum && /^\d+$/.test(badgeNum.textContent.trim())) {
     badgeNum.textContent = pasoIdx + 1;
   }
-
+ 
   const btnPrev = document.getElementById('btn-prev');
   const btnNext = document.getElementById('btn-next');
   btnPrev.disabled = pasoIdx === 0;
@@ -734,13 +751,13 @@ function render() {
     btnNext.disabled = false;
   }
 }
-
+ 
 function cambiarActividad(idx) {
   actIdx = idx;
   pasoIdx = 0;
   render();
 }
-
+ 
 function cambiarPaso(dir) {
   const pasos = buildPasos(CONFIGS[actIdx]);
   const nuevoIdx = pasoIdx + dir;
@@ -752,8 +769,9 @@ function cambiarPaso(dir) {
   }
   render();
 }
-
+ 
 render();
 </script>
 </body>
 </html>
+ 
