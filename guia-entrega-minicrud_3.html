@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Guía de entrega — BD y Herencia</title>
+<title>Guía de entrega — Base de Datos</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600;700&display=swap');
 :root{
@@ -158,7 +158,7 @@ code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--pane
 
 <div class="header">
   <div class="eyebrow">Programación Avanzada · UTU · Bachillerato Tecnológico</div>
-  <h1>Guía de entrega — <span>BD y Herencia</span></h1>
+  <h1>Guía de entrega — <span>Base de Datos</span></h1>
   <p class="subtitle">Seleccionar la actividad a entregar, luego seguir los pasos.</p>
 </div>
 
@@ -167,7 +167,7 @@ code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--pane
     <button class="tab-btn active" onclick="cambiarActividad(0)">
       <div class="tab-num">01</div>
       <div class="tab-info">
-        <span class="tab-title">Fecha de nacimiento</span>
+        <span class="tab-title">Mostrar fecha de nacimiento</span>
         <span class="tab-level basico">Básico</span>
       </div>
     </button>
@@ -181,7 +181,7 @@ code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--pane
     <button class="tab-btn" onclick="cambiarActividad(2)">
       <div class="tab-num">03</div>
       <div class="tab-info">
-        <span class="tab-title">DocenteVO CRUD</span>
+        <span class="tab-title">Tu entidad en MySQL</span>
         <span class="tab-level avanzado">Avanzado</span>
       </div>
     </button>
@@ -212,39 +212,35 @@ const CONFIGS = [
 
   /* ── ACTIVIDAD 01 — Básico ── */
   {
-    actividad: 'Actividad 01 — Fecha de nacimiento',
+    actividad: 'Actividad 01 — Mostrar la fecha de nacimiento',
     nivel: 'basico',
-    descripcion: 'Ampliar la entidad Persona para incluir el campo <code>fecha_nacimiento</code> (tipo DATE en MySQL). El cambio se propaga por todas las capas: la tabla en MySQL, el VO, cuatro métodos del DAO, el Servlet y los tres JSP.',
+    descripcion: 'Agregar a la tabla <code>personas</code> la columna <code>fecha_nacimiento</code> (tipo DATE), cargar fechas <strong>directamente en MySQL</strong> y mostrarlas en el listado de la aplicación. El cambio recorre las capas que intervienen en una consulta: la tabla, el VO, el método <code>listarPersonas()</code> del DAO y la vista <code>persona-lista.jsp</code>. En esta práctica el DAO solo se usa para traer datos; agregar, actualizar y eliminar desde la aplicación se trabajará en las próximas clases.',
     carpetaProyecto: 'mini-crud-sql',
-    urlBase: 'http://localhost:8080/mini-crud-sql/persona?accion=listar',
+    urlBase: 'http://localhost:8080/mini-crud/persona',
     zipPrefijo: 'Actividad1',
     zipEjemplo: 'Actividad1_GarciaMaria.zip',
     archivos: [
       { tipo: 'modificar', ruta: 'src/main/java/modelo/vo/',       nombre: 'PersonaVO.java' },
       { tipo: 'modificar', ruta: 'src/main/java/modelo/dao/',      nombre: 'PersonaDAO.java' },
-      { tipo: 'modificar', ruta: 'src/main/java/controlador/',     nombre: 'PersonaControladorServlet.java' },
-      { tipo: 'modificar', ruta: 'src/main/webapp/WEB-INF/vista/', nombre: 'persona-form.jsp' },
       { tipo: 'modificar', ruta: 'src/main/webapp/WEB-INF/vista/', nombre: 'persona-lista.jsp' },
-      { tipo: 'modificar', ruta: 'src/main/webapp/WEB-INF/vista/', nombre: 'persona-editar.jsp' },
     ],
-    verificacion: 'Agregar una persona con fecha de nacimiento: el dato debe guardarse y aparecer en la lista. Al editar esa persona, el campo fecha de nacimiento debe aparecer precargado con el valor guardado en la BD.',
-    alertaDeploy: 'Los errores más comunes son: orden incorrecto de los parámetros en <code>PreparedStatement</code> (el <code>?</code> se numera de izquierda a derecha en el SQL empezando en 1), falta el getter <code>getFechaNacimiento()</code> en PersonaVO, o el atributo <code>name="fechaNacimiento"</code> del input en el JSP no coincide con el que lee el Servlet.',
+    verificacion: 'El listado debe mostrar la columna <strong>Fecha de nacimiento</strong> con los mismos valores que devuelve <code>SELECT * FROM personas</code> en MySQL Workbench. La persona que no tiene fecha cargada debe aparecer con la celda vacía, sin errores.',
+    alertaDeploy: 'Los errores más comunes son: el nombre de la columna en <code>rs.getDate("fecha_nacimiento")</code> no coincide exactamente con el de la tabla (o no se ejecutó el <code>ALTER TABLE</code>), falta el getter <code>getFechaNacimiento()</code> en PersonaVO, o en el JSP se escribió <code>${p.fecha_nacimiento}</code> en lugar de <code>${p.fechaNacimiento}</code> (EL usa el nombre del getter, no el de la columna).',
     capturas: [
-      { icono: '📋', titulo: 'Lista de personas',     desc: 'La tabla con al menos una persona cargada, mostrando la columna Fecha de nacimiento con un valor real. La URL debe ser visible.' },
-      { icono: '📝', titulo: 'Formulario de alta',    desc: 'El formulario con el campo de fecha visible y con una fecha seleccionada (antes de guardar). La URL debe ser visible.' },
-      { icono: '✏️', titulo: 'Formulario de edición', desc: 'El formulario de edición con la fecha de nacimiento precargada usando EL. La URL debe ser visible.' },
+      { icono: '🗄️', titulo: 'Datos en MySQL',     desc: 'MySQL Workbench mostrando el resultado de <code>SELECT * FROM personas</code>, con la columna <code>fecha_nacimiento</code> y las fechas cargadas.' },
+      { icono: '📋', titulo: 'Lista de personas', desc: 'El listado de la aplicación con la columna Fecha de nacimiento visible, incluida la persona sin fecha. La URL debe ser visible.' },
     ],
     archivosEntrega: [
       { nombre: 'Actividad1_ApellidoNombre.zip', desc: 'El proyecto completo comprimido' },
-      { nombre: 'captura-lista.png',             desc: 'Lista con columna Fecha de nacimiento visible' },
-      { nombre: 'captura-form.png',              desc: 'Formulario de alta con campo de fecha' },
-      { nombre: 'captura-editar.png',            desc: 'Formulario de edición con fecha precargada' },
+      { nombre: 'captura-mysql.png',             desc: 'Resultado del SELECT en MySQL Workbench' },
+      { nombre: 'captura-lista.png',             desc: 'Lista con la columna Fecha de nacimiento' },
     ],
-    notaEntrega: 'Verificar que la columna <code>fecha_nacimiento</code> existe en la tabla <code>personas</code> antes de comprimir el proyecto. Si no se ejecutó el ALTER TABLE todavía, hacerlo primero desde MySQL Workbench.',
+    notaEntrega: 'Verificar que la columna <code>fecha_nacimiento</code> existe en la tabla <code>personas</code> y tiene fechas cargadas antes de tomar las capturas.',
     preguntasOrientadoras: [
       '¿En qué tipo de dato de MySQL se puede guardar una fecha? ¿Y en Java, qué objeto se usa para representarla en el VO?',
       'Si la tabla <code>personas</code> ya existe con datos, ¿se puede agregar una columna sin perder esos registros? ¿Qué comando SQL lo hace?',
-      '¿Cuántos métodos del DAO necesitan actualizarse para incluir <code>fecha_nacimiento</code>? ¿Cuáles son y qué cambia en cada uno?',
+      'La consulta <code>SELECT * FROM personas</code> ya trae la columna nueva. ¿Por qué igual no aparece en la página hasta modificar el DAO? ¿En qué fase se lee?',
+      '¿Por qué conviene <strong>agregar</strong> un constructor de 3 parámetros en <code>PersonaVO</code> en lugar de modificar el de 2? ¿Qué otras partes del proyecto usan el constructor actual?',
     ],
     tipo: 'act01',
   },
@@ -253,9 +249,9 @@ const CONFIGS = [
   {
     actividad: 'Actividad 02 — Búsqueda por nombre',
     nivel: 'intermedio',
-    descripcion: 'Agregar un método <code>buscarPorNombre</code> al DAO que filtre personas usando SQL <code>LIKE</code>, e integrarlo con una acción nueva en el Servlet y un formulario de búsqueda en <code>persona-lista.jsp</code>.',
+    descripcion: 'Agregar un método <code>buscarPorNombre</code> al DAO que traiga de la base solo las personas cuyo nombre contiene un texto, usando SQL <code>LIKE</code>, e integrarlo con una acción nueva en el Servlet y un formulario de búsqueda en <code>persona-lista.jsp</code>. Los datos de prueba se cargan directamente en MySQL.',
     carpetaProyecto: 'mini-crud-sql',
-    urlBase: 'http://localhost:8080/mini-crud-sql/persona?accion=listar',
+    urlBase: 'http://localhost:8080/mini-crud/persona',
     zipPrefijo: 'Actividad2',
     zipEjemplo: 'Actividad2_GarciaMaria.zip',
     archivos: [
@@ -263,20 +259,21 @@ const CONFIGS = [
       { tipo: 'modificar', ruta: 'src/main/java/controlador/',     nombre: 'PersonaControladorServlet.java' },
       { tipo: 'modificar', ruta: 'src/main/webapp/WEB-INF/vista/', nombre: 'persona-lista.jsp' },
     ],
-    verificacion: 'Buscar "an" debe mostrar solo las personas cuyo nombre contiene esas letras. Si no hay coincidencias, debe aparecer el mensaje "No se encontraron personas". El enlace "Ver todos" debe volver al listado completo sin filtro.',
-    alertaDeploy: 'Si la búsqueda no filtra y siempre muestra todos los resultados, verificar que el <code>case "buscar"</code> está en el <code>doGet</code> (no en el <code>doPost</code>) y que el formulario tiene <code>method="get"</code>. Si hay error 500, revisar que el método <code>buscarPorNombre</code> está declarado en PersonaDAO.',
+    verificacion: 'Buscar "an" debe mostrar solo Ana, Mariana y Fabiana. Si no hay coincidencias, debe aparecer el mensaje "No se encontraron personas con ese nombre." El enlace "Ver todos" debe volver al listado completo sin filtro.',
+    alertaDeploy: 'Si la búsqueda no filtra y siempre muestra todos los resultados, verificar que el <code>case "buscar"</code> está en el <code>doGet</code> (no en el <code>doPost</code>), que el formulario tiene <code>method="get"</code> y que envía <code>action=buscar</code> en un campo oculto. Si hay error 500, revisar que el método <code>buscarPorNombre</code> está declarado en PersonaDAO y que el <code>%</code> se agrega en el valor del parámetro, no en el SQL.',
     capturas: [
       { icono: '🔍', titulo: 'Búsqueda con resultados', desc: 'La tabla mostrando solo las personas que coinciden con el término buscado. El campo de búsqueda debe tener texto escrito y la URL debe ser visible.' },
-      { icono: '🚫', titulo: 'Sin resultados',           desc: 'La página mostrando el mensaje "No se encontraron personas" al buscar algo que no existe en la BD. La URL debe ser visible.' },
+      { icono: '🚫', titulo: 'Sin resultados',           desc: 'La página mostrando el mensaje "No se encontraron personas con ese nombre." al buscar algo que no existe en la BD. La URL debe ser visible.' },
     ],
     archivosEntrega: [
       { nombre: 'Actividad2_ApellidoNombre.zip',  desc: 'El proyecto completo comprimido' },
       { nombre: 'captura-busqueda.png',            desc: 'Búsqueda con resultados filtrados visibles' },
-      { nombre: 'captura-sin-resultados.png',      desc: 'Mensaje "No se encontraron personas"' },
+      { nombre: 'captura-sin-resultados.png',      desc: 'Mensaje "No se encontraron personas con ese nombre."' },
     ],
     notaEntrega: 'Esta actividad se entrega sobre el mismo proyecto que la Actividad 01. El ZIP debe incluir todos los cambios acumulados (fecha_nacimiento + búsqueda por nombre).',
     preguntasOrientadoras: [
       '¿En qué capa de la arquitectura MVC (VO, DAO, Servlet o JSP) se escribe la consulta SQL con <code>LIKE</code>?',
+      '¿Por qué el <code>%</code> se agrega en el valor que se pasa con <code>ps.setString()</code> y no directamente en el texto del SQL?',
       '¿Por qué el formulario de búsqueda debe usar <code>method="get"</code> en vez de <code>method="post"</code>?',
       '¿Qué debe mostrarse en la lista si ninguna persona coincide con el término buscado?',
     ],
@@ -285,39 +282,40 @@ const CONFIGS = [
 
   /* ── ACTIVIDAD 03 — Avanzado ── */
   {
-    actividad: 'Actividad 03 — DocenteVO CRUD',
+    actividad: 'Actividad 03 — Llevar tu entidad a MySQL',
     nivel: 'avanzado',
-    descripcion: 'Aplicar el patrón de herencia del Tema 4 para construir un CRUD completo de Docente. <code>DocenteVO</code> extiende <code>PersonaVO</code> y agrega <code>especialidad</code> y <code>cargo</code>. Los datos se distribuyen en dos tablas (<code>personas</code> + <code>docentes</code>) vinculadas por FK con <code>ON DELETE CASCADE</code>.',
-    carpetaProyecto: 'mini-crud-alumno-sql',
-    urlBase: 'http://localhost:8080/mini-crud-alumno-sql/docente?accion=listar',
+    descripcion: 'Retomar el proyecto de la <strong>Actividad 03 de la Práctica 2</strong> (el CRUD de la entidad elegida: Producto, Libro, Película, Videojuego, Estudiante u otra) y hacer que su <strong>listado salga de MySQL</strong> en lugar del <code>ArrayList</code> en memoria. Hay que crear la tabla, cargar los datos directamente en MySQL Workbench, conectar el proyecto a la base y escribir el método de listado con las 5 fases. Como por ahora el DAO solo trae datos, los botones Agregar, Editar y Eliminar quedan deshabilitados hasta las próximas clases. En esta guía se usa <strong>Producto</strong> como ejemplo: reemplazar por la entidad propia.',
+    carpetaProyecto: 'el proyecto de la Actividad 03 de la Práctica 2',
+    urlBase: 'http://localhost:8080/&lt;nombre-del-proyecto&gt;/producto',
     zipPrefijo: 'Actividad3',
     zipEjemplo: 'Actividad3_GarciaMaria.zip',
     archivos: [
-      { tipo: 'crear', ruta: 'src/main/java/modelo/vo/',       nombre: 'DocenteVO.java' },
-      { tipo: 'crear', ruta: 'src/main/java/modelo/dao/',      nombre: 'DocenteDAO.java' },
-      { tipo: 'crear', ruta: 'src/main/java/controlador/',     nombre: 'DocenteControladorServlet.java' },
-      { tipo: 'crear', ruta: 'src/main/webapp/WEB-INF/vista/', nombre: 'docente-form.jsp' },
-      { tipo: 'crear', ruta: 'src/main/webapp/WEB-INF/vista/', nombre: 'docente-lista.jsp' },
-      { tipo: 'crear', ruta: 'src/main/webapp/WEB-INF/vista/', nombre: 'docente-editar.jsp' },
+      { tipo: 'modificar', ruta: '',                                nombre: 'pom.xml' },
+      { tipo: 'crear',     ruta: 'src/main/resources/',             nombre: 'db.properties' },
+      { tipo: 'crear',     ruta: 'src/main/java/modelo/conexion/',  nombre: 'Conexion.java' },
+      { tipo: 'modificar', ruta: 'src/main/java/modelo/dao/',       nombre: 'ProductoDAO.java' },
+      { tipo: 'modificar', ruta: 'src/main/java/controlador/',      nombre: 'ProductoControladorServlet.java' },
+      { tipo: 'modificar', ruta: 'src/main/webapp/WEB-INF/vista/',  nombre: 'producto-lista.jsp' },
+      { tipo: 'modificar', ruta: 'src/main/webapp/css/',            nombre: 'styles.css' },
     ],
-    verificacion: 'Al agregar un docente, verificar con <code>SELECT * FROM docentes</code> y <code>SELECT * FROM personas</code> en MySQL Workbench que se insertaron filas en ambas tablas. Al eliminar, la fila debe desaparecer de las dos tablas (efecto del CASCADE).',
-    alertaDeploy: 'Si hay error 500 al agregar, verificar que la tabla <code>docentes</code> fue creada en MySQL y que el <code>super(codigo, nombre)</code> está en el constructor de DocenteVO. Si hay error 404, verificar que <code>@WebServlet("/docente")</code> coincide exactamente con la URL que se intenta acceder.',
+    verificacion: 'El listado debe mostrar exactamente los registros que devuelve <code>SELECT * FROM productos</code> en MySQL Workbench. Para comprobar que los datos vienen de la base: agregar una fila nueva con un <code>INSERT</code> en Workbench y recargar la página; la fila nueva debe aparecer sin volver a compilar. Los botones Agregar, Editar y Eliminar deben verse en gris y no hacer nada.',
+    alertaDeploy: 'Si aparece <code>Communications link failure</code> o <code>Access denied</code>, revisar la URL, el usuario y la contraseña de <code>db.properties</code> y que el servicio de MySQL esté iniciado. Si aparece <code>Table ... doesn\'t exist</code>, revisar que la tabla esté creada en la base indicada en <code>db.properties</code>. Si el listado sale vacío, revisar que el Servlet llama al método nuevo y no a <code>getLista()</code>, y que los nombres de columna en <code>rs.getXxx("...")</code> coinciden con los de la tabla.',
     capturas: [
-      { icono: '📋', titulo: 'Lista de docentes',     desc: 'La tabla con al menos un docente cargado, mostrando código, nombre, especialidad y cargo. La URL debe ser visible.' },
-      { icono: '📝', titulo: 'Formulario de alta',    desc: 'El formulario con los cuatro campos visibles y con datos escritos (antes de guardar). La URL debe ser visible.' },
-      { icono: '✏️', titulo: 'Formulario de edición', desc: 'El formulario de edición con todos los campos del docente precargados. El campo código debe ser readonly. La URL debe ser visible.' },
+      { icono: '🗄️', titulo: 'Datos en MySQL',      desc: 'MySQL Workbench mostrando el resultado de <code>SELECT * FROM</code> la tabla de la entidad, con al menos 4 registros.' },
+      { icono: '📋', titulo: 'Listado desde la BD', desc: 'El listado de la aplicación con los mismos registros que en MySQL y los botones deshabilitados. La URL debe ser visible.' },
     ],
     archivosEntrega: [
       { nombre: 'Actividad3_ApellidoNombre.zip', desc: 'El proyecto completo comprimido' },
-      { nombre: 'captura-lista.png',             desc: 'Lista de docentes con todos los campos' },
-      { nombre: 'captura-form.png',              desc: 'Formulario de alta con datos escritos' },
-      { nombre: 'captura-editar.png',            desc: 'Formulario de edición con valores precargados' },
+      { nombre: 'entidad.sql',                   desc: 'Script con el CREATE TABLE y los INSERT usados' },
+      { nombre: 'captura-mysql.png',             desc: 'Resultado del SELECT en MySQL Workbench' },
+      { nombre: 'captura-lista.png',             desc: 'Listado de la aplicación con los datos de la BD' },
     ],
-    notaEntrega: 'La tabla <code>docentes</code> debe haberse creado en MySQL antes de desplegar. El campo código en el formulario de edición debe ser <code>readonly</code>. Verificar que al eliminar un docente la fila desaparece de ambas tablas.',
+    notaEntrega: 'Guardar en un archivo <code>entidad.sql</code> el <code>CREATE TABLE</code> y los <code>INSERT</code> ejecutados en Workbench, para poder recrear la tabla al corregir.',
     preguntasOrientadoras: [
-      '¿Qué significa en Java que <code>DocenteVO extends PersonaVO</code>? ¿Qué atributos hereda automáticamente sin redeclararlos?',
-      '¿Por qué se necesitan dos tablas en MySQL para guardar un Docente? ¿En cuál de las dos se hace el INSERT primero y por qué?',
-      '¿Qué efecto tiene <code>ON DELETE CASCADE</code> cuando se elimina una fila de la tabla <code>personas</code>?',
+      '¿Qué tipo de dato de MySQL corresponde a cada atributo del VO (<code>int</code>, <code>String</code>, <code>double</code>)? ¿Y qué método del <code>ResultSet</code> se usa para leer cada uno?',
+      'Al pasar de un <code>ArrayList</code> a MySQL, ¿qué archivos cambian y cuáles quedan igual? ¿Por qué el VO y el JSP casi no se tocan?',
+      'Si se agrega una fila desde MySQL Workbench, ¿por qué aparece en la página al recargar sin volver a compilar? ¿Pasaba lo mismo con el <code>ArrayList</code>?',
+      '¿Por qué conviene deshabilitar por ahora los botones Agregar, Editar y Eliminar en lugar de dejarlos funcionando sobre el <code>ArrayList</code>?',
     ],
     tipo: 'act03',
   },
@@ -372,7 +370,7 @@ function buildPasos(cfg) {
       <p>${cfg.descripcion}</p>
       <p style="margin-top:12px;font-size:13.5px;color:var(--text);font-weight:600;">Antes de empezar, reflexionar sobre estas preguntas orientadoras:</p>
       <ul class="preguntas">
-        ${cfg.preguntasOrientadoras.map(q => `<li>${q}</li>`).join('')}
+        ${cfg.preguntasOrientadoras.map(q => `<li><span>${q}</span></li>`).join('')}
       </ul>
       <div class="tip"><div class="tip-lbl">No es necesario responderlas en voz alta</div>Son para activar lo que ya se sabe y detectar qué conviene repasar antes de escribir el código.</div>
     `
@@ -380,54 +378,103 @@ function buildPasos(cfg) {
 
   /* ── paso1: Preparar ── */
   const paso1 = {
-    titulo: esAct03 ? 'Preparar el proyecto base' : 'Preparar los archivos del proyecto',
+    titulo: esAct03 ? 'Preparar la base y el proyecto' : 'Preparar los archivos del proyecto',
     html: `
       ${esAct01 ? `
+        <div class="tip"><div class="tip-lbl">Alcance de esta práctica</div>En esta práctica el DAO se usa solo para <strong>traer datos</strong> (consultas <code>SELECT</code>). Los datos se cargan directamente en MySQL Workbench con <code>INSERT</code> y <code>UPDATE</code>. Agregar, actualizar y eliminar desde la aplicación se trabajará en las próximas clases.</div>
         <div class="tip"><div class="tip-lbl">Paso 1 — Descargar el proyecto</div>Descargar el proyecto <strong>mini-crud-sql</strong> y abrirlo en VS Code: <a href="https://github.com/eliizquierdo/material_programacion_avanzada2026/blob/main/proyectos-teoricos/mini-crud-sql/mini-crud-sql.zip" target="_blank" rel="noopener" style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:12px;word-break:break-all;">mini-crud-sql.zip →</a></div>
         <div class="alerta"><div class="alerta-lbl">Paso 2 — Configurar la base de datos en MySQL Workbench</div>
-          Si la base de datos <strong>no existe todavía</strong>, ejecutar este script completo para crearla:
+          Si la base de datos <strong>no existe todavía</strong>, ejecutar este script para crearla:
           <div class="term" style="margin-top:10px;">
             <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="term-lbl">MySQL Workbench — crear BD y tabla</span></div>
-            <div class="term-body"><span class="a">CREATE DATABASE IF NOT EXISTS</span> mini_crud_db;
-<span class="a">USE</span> mini_crud_db;
+            <div class="term-body"><span class="a">CREATE DATABASE</span> institutoWeb;
+<span class="a">USE</span> institutoWeb;
 
-<span class="a">CREATE TABLE IF NOT EXISTS</span> personas (
-  codigo  <span class="b">INT AUTO_INCREMENT PRIMARY KEY</span>,
-  nombre  <span class="b">VARCHAR</span>(100) <span class="b">NOT NULL</span>,
-  apellido <span class="b">VARCHAR</span>(100) <span class="b">NOT NULL</span>,
-  email   <span class="b">VARCHAR</span>(150)
-);</div>
+<span class="a">CREATE TABLE</span> personas (
+  codigo <span class="b">INT</span>(8),
+  nombre <span class="b">VARCHAR</span>(10) <span class="b">NOT NULL</span>,
+  <span class="b">PRIMARY KEY</span> (codigo)
+);
+
+<span class="a">INSERT INTO</span> personas (codigo, nombre)
+<span class="a">VALUES</span> (1, 'Juan'), (2, 'María'), (3, 'Carlos');</div>
           </div>
           Si la base de datos <strong>ya existe</strong> de una clase anterior, saltar al paso 3.
         </div>
-        <div class="alerta"><div class="alerta-lbl">Paso 3 — Agregar la columna fecha_nacimiento</div>Con la tabla ya existente, ejecutar el siguiente comando para agregar la columna sin perder los datos que ya están guardados:
+        <div class="alerta"><div class="alerta-lbl">Paso 3 — Agregar la columna y cargar fechas</div>Ejecutar el siguiente script para agregar la columna sin perder los datos y cargar algunas fechas. La persona con código 3 queda a propósito sin fecha:
           <div class="term" style="margin-top:10px;">
-            <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="term-lbl">MySQL Workbench — agregar columna</span></div>
-            <div class="term-body"><span class="a">USE</span> mini_crud_db;
+            <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="term-lbl">MySQL Workbench — columna nueva y datos</span></div>
+            <div class="term-body"><span class="a">USE</span> institutoWeb;
 
-<span class="c">-- Agregar columna fecha_nacimiento a la tabla existente</span>
-<span class="a">ALTER TABLE</span> personas <span class="a">ADD COLUMN</span> fecha_nacimiento <span class="b">DATE</span>;</div>
+<span class="c">-- 1. Agregar la columna sin perder los datos que ya existen</span>
+<span class="a">ALTER TABLE</span> personas <span class="a">ADD COLUMN</span> fecha_nacimiento <span class="b">DATE</span>;
+
+<span class="c">-- 2. Cargar fechas a personas que ya están en la tabla</span>
+<span class="a">UPDATE</span> personas <span class="a">SET</span> fecha_nacimiento = '2008-03-15' <span class="a">WHERE</span> codigo = 1;
+<span class="a">UPDATE</span> personas <span class="a">SET</span> fecha_nacimiento = '2007-11-02' <span class="a">WHERE</span> codigo = 2;
+
+<span class="c">-- 3. Agregar una persona nueva, ya con su fecha</span>
+<span class="a">INSERT INTO</span> personas (codigo, nombre, fecha_nacimiento)
+<span class="a">VALUES</span> (4, 'Lucía', '2008-07-21');
+
+<span class="c">-- 4. Comprobar el resultado</span>
+<span class="a">SELECT</span> * <span class="a">FROM</span> personas;</div>
           </div>
         </div>
-        <div class="tip"><div class="tip-lbl">Referencia de métodos del DAO</div>El método <strong>eliminarPersona()</strong> no necesita cambios. Los otros cuatro métodos (listar, agregar, actualizar, obtenerPorCodigo) deben actualizarse para incluir <code>fecha_nacimiento</code> en el SQL y usar <code>rs.getDate()</code> / <code>ps.setDate()</code>.</div>
+        <div class="tip"><div class="tip-lbl">Qué cambia en el código</div><strong>PersonaVO:</strong> atributo <code>java.sql.Date fechaNacimiento</code>, un constructor <strong>nuevo</strong> de 3 parámetros (sin borrar el de 2, que el Servlet y otros métodos del DAO siguen usando), getter y setter. <strong>PersonaDAO:</strong> solo <code>listarPersonas()</code>; en la fase 5 leer <code>rs.getDate("fecha_nacimiento")</code>. <strong>persona-lista.jsp:</strong> columna nueva con <code>\${p.fechaNacimiento}</code> y el <code>colspan</code> de la fila vacía de 3 a 4.</div>
       ` : ''}
       ${esAct02 ? `
         <div class="tip"><div class="tip-lbl">Mismo proyecto que Actividad 01</div>Continuar trabajando sobre el mismo proyecto <strong>mini-crud-sql</strong> modificado en la Actividad 01. No es necesario descargar nada nuevo.</div>
+        <div class="alerta"><div class="alerta-lbl">Cargar datos de prueba en MySQL</div>Para que la búsqueda tenga resultados interesantes, agregar algunas personas desde MySQL Workbench (el nombre admite hasta 10 caracteres):
+          <div class="term" style="margin-top:10px;">
+            <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="term-lbl">MySQL Workbench — datos de prueba</span></div>
+            <div class="term-body"><span class="a">USE</span> institutoWeb;
+<span class="a">INSERT INTO</span> personas (codigo, nombre)
+<span class="a">VALUES</span> (5, 'Ana'), (6, 'Mariana'), (7, 'Fabiana'), (8, 'Diego');</div>
+          </div>
+        </div>
+        <div class="tip"><div class="tip-lbl">El % va en el parámetro</div>El SQL es <code>SELECT * FROM personas WHERE nombre LIKE ?</code> y el valor se asigna con <code>ps.setString(1, "%" + termino + "%")</code>. Para las fases 4 y 5, tomar como modelo <code>obtenerPersonaPorCodigo()</code> (ResultSet en un try anidado) y <code>listarPersonas()</code> (recorrer con <code>while</code>).</div>
         <div class="tip"><div class="tip-lbl">Búsquedas con GET, no con POST</div>El formulario de búsqueda usa <code>method="get"</code> porque no modifica datos. El término buscado queda en la URL, lo que permite compartir o guardar el link de los resultados. El patrón PRG solo aplica a operaciones que escriben en la BD.</div>
       ` : ''}
       ${esAct03 ? `
-        <div class="alerta"><div class="alerta-lbl">Proyecto base — descargar mini-crud-alumno-sql</div>No crear el proyecto desde cero. Descargar <strong>mini-crud-alumno-sql</strong> y usarlo como punto de partida para agregar la entidad Docente: <a href="https://github.com/eliizquierdo/material_programacion_avanzada2026/blob/main/proyectos-teoricos/mini-crud-alumno-sql/mini-crud-alumno-sql.zip" target="_blank" rel="noopener" style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:12px;word-break:break-all;">mini-crud-alumno-sql.zip →</a> El <code>pom.xml</code>, la clase <code>Conexion.java</code> y el <code>db.properties</code> se mantienen igual.</div>
-        <div class="alerta"><div class="alerta-lbl">Crear tabla en MySQL primero</div>Antes de desplegar, ejecutar el siguiente script en MySQL Workbench para crear la tabla hija:
+        <div class="tip"><div class="tip-lbl">Proyecto de partida</div>Trabajar sobre el proyecto de la <strong>Actividad 03 de la Práctica 2</strong>, el CRUD de la entidad elegida. Los ejemplos usan <strong>Producto</strong> (código, nombre, precio, descripción): reemplazar el nombre de la tabla, de las clases y de los atributos por los de la entidad propia.</div>
+        <div class="alerta"><div class="alerta-lbl">Paso 1 — Crear la tabla y cargar datos en MySQL</div>Ejecutar en MySQL Workbench un script como este, adaptado a la entidad. Guardarlo también como <code>entidad.sql</code> para la entrega:
           <div class="term" style="margin-top:10px;">
-            <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="term-lbl">MySQL Workbench — crear tabla docentes</span></div>
-            <div class="term-body"><span class="c">-- La tabla personas ya existe; solo crear la tabla hija:</span>
-<span class="a">CREATE TABLE</span> docentes (
-  codigo        <span class="b">INT PRIMARY KEY</span>,
-  especialidad  <span class="b">VARCHAR</span>(100) <span class="b">NOT NULL</span>,
-  cargo         <span class="b">VARCHAR</span>(80)  <span class="b">NOT NULL</span>,
-  <span class="b">FOREIGN KEY</span> (codigo) <span class="b">REFERENCES</span> personas(codigo)
-    <span class="b">ON DELETE CASCADE</span>
-);</div>
+            <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="term-lbl">MySQL Workbench — tabla y datos (ejemplo con Producto)</span></div>
+            <div class="term-body"><span class="a">USE</span> institutoWeb;
+
+<span class="a">CREATE TABLE</span> productos (
+  codigo       <span class="b">INT PRIMARY KEY</span>,
+  nombre       <span class="b">VARCHAR</span>(30) <span class="b">NOT NULL</span>,
+  precio       <span class="b">DECIMAL</span>(8,2) <span class="b">NOT NULL</span>,
+  descripcion  <span class="b">VARCHAR</span>(100)
+);
+
+<span class="a">INSERT INTO</span> productos (codigo, nombre, precio, descripcion)
+<span class="a">VALUES</span> (1, 'Teclado', 850.00, 'Teclado USB'),
+       (2, 'Mouse', 420.50, 'Mouse óptico'),
+       (3, 'Monitor', 6900.00, 'Monitor de 22 pulgadas'),
+       (4, 'Auriculares', 1290.00, 'Con micrófono');
+
+<span class="a">SELECT</span> * <span class="a">FROM</span> productos;</div>
+          </div>
+        </div>
+        <div class="tip"><div class="tip-lbl">Tipos de Java a MySQL</div><code>int</code> → <code>INT</code> y se lee con <code>rs.getInt()</code> · <code>String</code> → <code>VARCHAR(n)</code> y se lee con <code>rs.getString()</code> · <code>double</code> → <code>DECIMAL(8,2)</code> o <code>DOUBLE</code> y se lee con <code>rs.getDouble()</code>.</div>
+        <div class="alerta"><div class="alerta-lbl">Paso 2 — Conectar el proyecto a la base</div>Copiar desde <a href="https://github.com/eliizquierdo/material_programacion_avanzada2026/blob/main/proyectos-teoricos/mini-crud-sql/mini-crud-sql.zip" target="_blank" rel="noopener" style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:12px;">mini-crud-sql.zip →</a> la clase <code>modelo/conexion/Conexion.java</code> y el archivo <code>src/main/resources/db.properties</code> (crear la carpeta <code>resources</code> si no existe). Revisar que el usuario y la contraseña de <code>db.properties</code> sean los de la propia máquina. Agregar al <code>pom.xml</code> la dependencia del conector (ver el recuadro siguiente).</div>
+        <div class="tip"><div class="tip-lbl">Paso 3 — El método de listado en el DAO</div>En <code>ProductoDAO</code>, agregar <code>listarProductos()</code>, que devuelve <code>List&lt;ProductoVO&gt;</code> y aplica las 5 fases con <code>SELECT * FROM productos</code>, tomando como modelo <code>listarPersonas()</code> de <code>mini-crud-sql</code>. Por ahora no borrar los métodos que trabajan con el <code>ArrayList</code>. En el Servlet, el listado pasa a usar <code>dao.listarProductos()</code> en lugar de <code>dao.getLista()</code>.</div>
+        <div class="tip"><div class="tip-lbl">Paso 4 — Deshabilitar los botones</div>En <code>producto-lista.jsp</code>, reemplazar los botones Editar y Eliminar de cada fila, y el botón Agregar, por botones deshabilitados:
+          <div class="term" style="margin-top:10px;">
+            <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="term-lbl">producto-lista.jsp — botón deshabilitado</span></div>
+            <div class="term-body">&lt;<span class="a">button</span> disabled class="btn-disabled" title="Funcionalidad no disponible"&gt;Editar&lt;/<span class="a">button</span>&gt;</div>
+          </div>
+          Si el <code>styles.css</code> del proyecto no tiene la clase <code>.btn-disabled</code>, agregarla:
+          <div class="term" style="margin-top:10px;">
+            <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="term-lbl">styles.css — clase para botones deshabilitados</span></div>
+            <div class="term-body">.btn-disabled {
+  background-color: #cccccc;  color: #666666;
+  border: 1px solid #999999;  border-radius: 3px;
+  padding: 5px 10px;  opacity: 0.6;  cursor: not-allowed;
+}</div>
           </div>
         </div>
       ` : ''}
@@ -443,7 +490,7 @@ function buildPasos(cfg) {
         </div>
         Si el <code>pom.xml</code> ya tiene esta dependencia (puede ser en versión diferente), no hace falta cambiarla.
       </div>` : ''}
-      <p>${esAct03 ? 'Crear los siguientes archivos nuevos dentro del proyecto:' : esAct02 ? 'Modificar los siguientes archivos (solo 3 archivos):' : 'Modificar los siguientes archivos del proyecto <strong>mini-crud-sql</strong>:'}</p>
+      <p>${esAct03 ? 'Crear o modificar los siguientes archivos del proyecto (con los nombres de la entidad propia):' : esAct02 ? 'Modificar los siguientes archivos (solo 3 archivos):' : 'Modificar los siguientes archivos del proyecto <strong>mini-crud-sql</strong>:'}</p>
       <div class="file-list">${renderArchivos(cfg)}</div>
     `
   };
