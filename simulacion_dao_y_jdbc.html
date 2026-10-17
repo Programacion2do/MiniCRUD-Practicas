@@ -136,7 +136,7 @@
 
         <div class="flex items-center gap-1.5 shrink-0">
             <select id="operationSelect" onchange="changeScenario(this.value)" class="bg-slate-950 border border-slate-700 text-[11px] text-sky-300 font-mono rounded-lg px-2 py-1 focus:outline-none focus:border-sky-500 cursor-pointer max-w-[170px] sm:max-w-[210px] truncate">
-                <option value="normal">Consulta: listarPersonas() [Éxito]</option>
+                <option value="normal">Consulta: getLista() [Éxito]</option>
                 <option value="empty">¿Qué pasaría si... Tabla Vacía?</option>
                 <option value="bad_pass">¿Qué pasaría si... Password Errónea?</option>
                 <option value="bad_table">¿Qué pasaría si... Tabla Inexistente?</option>
@@ -315,7 +315,7 @@
                 <i class="fa-solid fa-graduation-cap"></i> Explicación Didáctica
             </div>
             <div id="explanationText" class="text-xs text-slate-200 leading-snug my-auto">
-                Haz clic en <strong>"Paso Siguiente"</strong> o presiona la <strong>Flecha Derecha (&rarr;)</strong> para iniciar el recorrido de ejecución de <code class="text-sky-300">listarPersonas()</code>.
+                Haz clic en <strong>"Paso Siguiente"</strong> o presiona la <strong>Flecha Derecha (&rarr;)</strong> para iniciar el recorrido de ejecución de <code class="text-sky-300">getLista()</code>.
             </div>
             <div class="text-[10px] text-slate-500 font-mono text-right">
                 Atajos: <kbd class="bg-slate-800 px-1 rounded text-slate-300">&rarr;</kbd> Sig | <kbd class="bg-slate-800 px-1 rounded text-slate-300">&leftarrow;</kbd> Ant | <kbd class="bg-slate-800 px-1 rounded text-slate-300">Espacio</kbd> Play | <kbd class="bg-slate-800 px-1 rounded text-slate-300">R</kbd> Reiniciar
@@ -449,7 +449,7 @@
     <script>
         /* CODIGO JAVA DEL DAO A MOSTRAR */
         const RAW_DAO_CODE = [
-            `public List<PersonaVO> listarPersonas() {`,
+            `public List<PersonaVO> getLista() {`,
             `    List<PersonaVO> lista = new ArrayList<>();`,
             ``,
             `    // FASE 1: Definir la sentencia SQL`,
@@ -518,7 +518,7 @@
                     html += `<span class="token-keyword">${escaped}</span>`;
                 } else if (/^(List|PersonaVO|ArrayList|String|Connection|Conexion|PreparedStatement|ResultSet|SQLException|System)$/.test(token)) {
                     html += `<span class="token-class">${escaped}</span>`;
-                } else if (/^(listarPersonas|getConexion|prepareStatement|executeQuery|next|getInt|getString|add|setCodigo|setNombre|println)$/.test(token)) {
+                } else if (/^(getLista|getConexion|prepareStatement|executeQuery|next|getInt|getString|add|setCodigo|setNombre|println)$/.test(token)) {
                     html += `<span class="token-method">${escaped}</span>`;
                 } else {
                     html += escaped;
@@ -562,7 +562,7 @@
                 steps.push({
                     lineIndex: 0, fase: null,
                     sql: 'null', con: 'null', ps: 'null', rs: 'null', lista: '[]',
-                    desc: 'Inicio del método <code class="text-sky-300">listarPersonas()</code>. Se invoca desde el Servlet.',
+                    desc: 'Inicio del método <code class="text-sky-300">getLista()</code>. Se invoca desde el Servlet.',
                     status: 'Método iniciado', pipeActive: false, psActive: false, showBrowser: false
                 });
                 steps.push({
@@ -698,7 +698,7 @@
                 steps.push({
                     lineIndex: 0, fase: null,
                     sql: 'null', con: 'null', ps: 'null', rs: 'null', lista: '[]',
-                    desc: 'Inicio del método <code class="text-sky-300">listarPersonas()</code> con consulta a tabla inexistente.', status: 'Método iniciado', pipeActive: false, psActive: false
+                    desc: 'Inicio del método <code class="text-sky-300">getLista()</code> con consulta a tabla inexistente.', status: 'Método iniciado', pipeActive: false, psActive: false
                 });
                 steps.push({
                     lineIndex: 1, fase: null,
