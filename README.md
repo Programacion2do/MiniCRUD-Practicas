@@ -12,7 +12,7 @@ Cada guía es un archivo HTML autocontenido que se abre directamente en el naveg
 |---|---|---|
 | 1 | Mini CRUD básico | [Abrir guía 1](https://programacion2do.github.io/MiniCRUD-Practicas/guia-entrega-minicrud_1.html) |
 | 2 | Mini CRUD con edición y eliminación | [Abrir guía 2](https://programacion2do.github.io/MiniCRUD-Practicas/guia-entrega-minicrud_2.html) |
-| 3 | Base de Datos y Herencia | [Abrir guía 3](https://programacion2do.github.io/MiniCRUD-Practicas/guia-entrega-minicrud_3.html) |
+| 3 | Mini CRUD con Base de Datos | [Abrir guía 3](https://programacion2do.github.io/MiniCRUD-Practicas/guia-entrega-minicrud_3.html) |
  
 ### [`guia-entrega-minicrud_1.html`](https://programacion2do.github.io/MiniCRUD-Practicas/guia-entrega-minicrud_1.html)
 **PRÁCTICA 1 — Mini CRUD básico**  
@@ -25,7 +25,7 @@ Introduce la estructura MVC con JSP y Servlets. El estudiante descarga el proyec
 Extiende el proyecto anterior incorporando las operaciones de editar y eliminar, completando el ciclo CRUD completo. La actividad avanzada propone implementar el mismo CRUD sobre una entidad propia elegida por el estudiante.
  
 **Actividades:**
-- **Act. 01 — Básico:** agregar editar y eliminar al proyecto existente
+- **Act. 01 — Básico:** ampliar la entidad Persona con teléfono y dirección en el alta, el listado y la edición
 - **Act. 02 — Intermedio:** validar los datos del lado del servidor al agregar y al editar
 - **Act. 03 — Avanzado:** replicar el CRUD con una entidad propia (Producto, Libro, Película, Videojuego, Estudiante u otra acordada con la docente)
 ---

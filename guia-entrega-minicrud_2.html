@@ -173,7 +173,7 @@ const CONFIGS = [
     ],
     archivosDetalle: [
       { nombre: 'PersonaVO.java',                capa: 'Modelo · VO',          descripcion: 'Agregar <code>private String telefono</code> y <code>private String direccion</code>. Actualizar constructor, getters/setters y toString().', tipo: 'modificar' },
-      { nombre: 'PersonaControladorServlet.java', capa: 'Controlador',          descripcion: 'En <code>agregar()</code> y en <code>actualizar()</code>: leer <code>getParameter("telefono")</code> y <code>getParameter("direccion")</code> y pasarlos al constructor/setter.', tipo: 'modificar' },
+      { nombre: 'PersonaControladorServlet.java', capa: 'Controlador',          descripcion: 'En <code>agregar()</code> y en <code>editar()</code>: leer <code>getParameter("telefono")</code> y <code>getParameter("direccion")</code> y pasarlos al constructor de <code>PersonaVO</code>.', tipo: 'modificar' },
       { nombre: 'persona-form.jsp',              capa: 'Vista · Formulario alta', descripcion: 'Agregar <code>&lt;label&gt;</code> e <code>&lt;input&gt;</code> para teléfono y dirección.', tipo: 'modificar' },
       { nombre: 'persona-lista.jsp',             capa: 'Vista · Listado',      descripcion: 'Agregar columnas Teléfono y Dirección en el <code>&lt;thead&gt;</code> y en cada fila de la tabla.', tipo: 'modificar' },
       { nombre: 'persona-editar.jsp',            capa: 'Vista · Formulario edición', descripcion: 'Agregar los campos con los valores precargados usando EL (<code>value="${persona.telefono}"</code>, etc.).', tipo: 'modificar' },
@@ -261,8 +261,8 @@ const CONFIGS = [
     ],
     archivosDetalle: [
       { nombre: 'XxxVO.java',                capa: 'Modelo · VO',      descripcion: 'Definir la entidad elegida: atributos privados, constructor completo, getters/setters y toString().', tipo: 'crear' },
-      { nombre: 'XxxDAO.java',               capa: 'Modelo · DAO',     descripcion: 'ArrayList estático, y los métodos: <code>listar()</code>, <code>agregar()</code>, <code>buscar()</code>, <code>actualizar()</code>, <code>eliminar()</code>.', tipo: 'crear' },
-      { nombre: 'XxxControladorServlet.java', capa: 'Controlador',      descripcion: 'Anotación <code>@WebServlet</code>, leer parámetro <code>accion</code> y delegar en el DAO. Redirigir o hacer forward según el resultado.', tipo: 'crear' },
+      { nombre: 'XxxDAO.java',               capa: 'Modelo · DAO',     descripcion: 'Un <code>ArrayList</code> en memoria y los mismos métodos que <code>PersonaDAO</code> de <code>mini-crud2</code>: <code>getLista()</code>, <code>agregar()</code>, <code>obtenerXCodigo()</code>, <code>actualizar()</code> y <code>eliminar()</code>.', tipo: 'crear' },
+      { nombre: 'XxxControladorServlet.java', capa: 'Controlador',      descripcion: 'Anotación <code>@WebServlet</code>, leer el parámetro <code>action</code> y delegar en el DAO. Redirigir o hacer forward según el resultado.', tipo: 'crear' },
       { nombre: 'xxx-form.jsp',              capa: 'Vista · Formulario alta', descripcion: 'Formulario con un campo por atributo, acción POST al Servlet. Mostrar mensaje de error si el código ya existe.', tipo: 'crear' },
       { nombre: 'xxx-lista.jsp',             capa: 'Vista · Listado',  descripcion: 'Tabla con todos los atributos. Botones Editar y Eliminar en cada fila con los parámetros necesarios.', tipo: 'crear' },
       { nombre: 'xxx-editar.jsp',            capa: 'Vista · Formulario edición', descripcion: 'Formulario con valores precargados usando EL. El campo código debe ser <code>readonly</code>.', tipo: 'crear' },
@@ -270,9 +270,9 @@ const CONFIGS = [
     nivelCss: 'avanzado',
     nivelLabel: 'Avanzado',
     tipo: 'act03',
-    carpetaProyecto: '[nombre-de-tu-proyecto]',
+    carpetaProyecto: '[nombre-del-proyecto]',
     urlBase:   '',
-    urlPrueba: 'http://localhost:8080/[nombre-de-tu-proyecto]',
+    urlPrueba: 'http://localhost:8080/[nombre-del-proyecto]',
     zipEjemplo: 'Prac2-web-Actividad3_GarciaMaria.zip',
     archivos: [
       { tipo: 'crear', ruta: 'src/main/java/modelo/vo/',       nombre: 'XxxVO.java' },
@@ -665,7 +665,7 @@ function buildPasos(cfg) {
       <p>Comprimir <strong>solo la carpeta del proyecto</strong>, sin incluir la subcarpeta <code>target/</code> ni las capturas — esas van sueltas aparte.</p>
       <div class="alerta">
         <div class="alerta-lbl">Nombre del archivo ZIP</div>
-        El archivo debe llamarse exactamente <code>${cfg.zipEjemplo}</code> — con tu apellido y nombre, sin espacios ni acentos.
+        El archivo debe llamarse exactamente <code>${cfg.zipEjemplo}</code> — con el apellido y nombre propios, sin espacios ni acentos.
       </div>
       <div class="tip">
         <div class="tip-lbl">Cómo excluir la carpeta target</div>
