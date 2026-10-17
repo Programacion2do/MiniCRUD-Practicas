@@ -35,7 +35,7 @@ Extiende el proyecto anterior incorporando las operaciones de editar y eliminar,
 Trae datos de MySQL con JDBC aplicando las 5 fases del acceso a datos. En esta práctica el DAO solo hace consultas (`SELECT`): los datos se cargan directamente en MySQL con `INSERT` y `UPDATE`. Agregar, actualizar y eliminar desde la aplicación se trabajará en las próximas clases.
 
 **Actividades:**
-- **Act. 01 — Básico:** agregar la columna `fecha_nacimiento`, cargar fechas en MySQL y mostrarlas en el listado (`listarPersonas()`)
+- **Act. 01 — Básico:** agregar la columna `fecha_nacimiento`, cargar fechas en MySQL y mostrarlas en el listado (`getLista()`)
 - **Act. 02 — Intermedio:** implementar búsqueda por nombre con `LIKE` usando GET
 - **Act. 03 — Avanzado:** llevar la entidad propia de la Práctica 2 a MySQL: tabla, conexión y listado desde la base de datos
 

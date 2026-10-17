@@ -214,7 +214,7 @@ const CONFIGS = [
   {
     actividad: 'Actividad 01 — Mostrar la fecha de nacimiento',
     nivel: 'basico',
-    descripcion: 'Agregar a la tabla <code>personas</code> la columna <code>fecha_nacimiento</code> (tipo DATE), cargar fechas <strong>directamente en MySQL</strong> y mostrarlas en el listado de la aplicación. El cambio recorre las capas que intervienen en una consulta: la tabla, el VO, el método <code>listarPersonas()</code> del DAO y la vista <code>persona-lista.jsp</code>. En esta práctica el DAO solo se usa para traer datos; agregar, actualizar y eliminar desde la aplicación se trabajará en las próximas clases.',
+    descripcion: 'Agregar a la tabla <code>personas</code> la columna <code>fecha_nacimiento</code> (tipo DATE), cargar fechas <strong>directamente en MySQL</strong> y mostrarlas en el listado de la aplicación. El cambio recorre las capas que intervienen en una consulta: la tabla, el VO, el método <code>getLista()</code> del DAO y la vista <code>persona-lista.jsp</code>. En esta práctica el DAO solo se usa para traer datos; agregar, actualizar y eliminar desde la aplicación se trabajará en las próximas clases.',
     carpetaProyecto: 'mini-crud-sql',
     urlBase: 'http://localhost:8080/mini-crud/persona',
     zipPrefijo: 'Actividad1',
@@ -294,12 +294,11 @@ const CONFIGS = [
       { tipo: 'crear',     ruta: 'src/main/resources/',             nombre: 'db.properties' },
       { tipo: 'crear',     ruta: 'src/main/java/modelo/conexion/',  nombre: 'Conexion.java' },
       { tipo: 'modificar', ruta: 'src/main/java/modelo/dao/',       nombre: 'ProductoDAO.java' },
-      { tipo: 'modificar', ruta: 'src/main/java/controlador/',      nombre: 'ProductoControladorServlet.java' },
       { tipo: 'modificar', ruta: 'src/main/webapp/WEB-INF/vista/',  nombre: 'producto-lista.jsp' },
       { tipo: 'modificar', ruta: 'src/main/webapp/css/',            nombre: 'styles.css' },
     ],
     verificacion: 'El listado debe mostrar exactamente los registros que devuelve <code>SELECT * FROM productos</code> en MySQL Workbench. Para comprobar que los datos vienen de la base: agregar una fila nueva con un <code>INSERT</code> en Workbench y recargar la página; la fila nueva debe aparecer sin volver a compilar. Los botones Agregar, Editar y Eliminar deben verse en gris y no hacer nada.',
-    alertaDeploy: 'Si aparece <code>Communications link failure</code> o <code>Access denied</code>, revisar la URL, el usuario y la contraseña de <code>db.properties</code> y que el servicio de MySQL esté iniciado. Si aparece <code>Table ... doesn\'t exist</code>, revisar que la tabla esté creada en la base indicada en <code>db.properties</code>. Si el listado sale vacío, revisar que el Servlet llama al método nuevo y no a <code>getLista()</code>, y que los nombres de columna en <code>rs.getXxx("...")</code> coinciden con los de la tabla.',
+    alertaDeploy: 'Si aparece <code>Communications link failure</code> o <code>Access denied</code>, revisar la URL, el usuario y la contraseña de <code>db.properties</code> y que el servicio de MySQL esté iniciado. Si aparece <code>Table ... doesn\'t exist</code>, revisar que la tabla esté creada en la base indicada en <code>db.properties</code>. Si el listado sale vacío, revisar que <code>getLista()</code> del DAO ya consulta la base y no devuelve el <code>ArrayList</code> en memoria, y que los nombres de columna en <code>rs.getXxx("...")</code> coinciden con los de la tabla.',
     capturas: [
       { icono: '🗄️', titulo: 'Datos en MySQL',      desc: 'MySQL Workbench mostrando el resultado de <code>SELECT * FROM</code> la tabla de la entidad, con al menos 4 registros.' },
       { icono: '📋', titulo: 'Listado desde la BD', desc: 'El listado de la aplicación con los mismos registros que en MySQL y los botones deshabilitados. La URL debe ser visible.' },
@@ -421,7 +420,7 @@ function buildPasos(cfg) {
 <span class="a">SELECT</span> * <span class="a">FROM</span> personas;</div>
           </div>
         </div>
-        <div class="tip"><div class="tip-lbl">Qué cambia en el código</div><strong>PersonaVO:</strong> atributo <code>java.sql.Date fechaNacimiento</code>, un constructor <strong>nuevo</strong> de 3 parámetros (sin borrar el de 2, que el Servlet y otros métodos del DAO siguen usando), getter y setter. <strong>PersonaDAO:</strong> solo <code>listarPersonas()</code>; en la fase 5 leer <code>rs.getDate("fecha_nacimiento")</code>. <strong>persona-lista.jsp:</strong> columna nueva con <code>\${p.fechaNacimiento}</code> y el <code>colspan</code> de la fila vacía de 3 a 4.</div>
+        <div class="tip"><div class="tip-lbl">Qué cambia en el código</div><strong>PersonaVO:</strong> atributo <code>java.sql.Date fechaNacimiento</code>, un constructor <strong>nuevo</strong> de 3 parámetros (sin borrar el de 2, que el Servlet y otros métodos del DAO siguen usando), getter y setter. <strong>PersonaDAO:</strong> solo <code>getLista()</code>; en la fase 5 leer <code>rs.getDate("fecha_nacimiento")</code>. <strong>persona-lista.jsp:</strong> columna nueva con <code>\${p.fechaNacimiento}</code> y el <code>colspan</code> de la fila vacía de 3 a 4.</div>
       ` : ''}
       ${esAct02 ? `
         <div class="tip"><div class="tip-lbl">Mismo proyecto que Actividad 01</div>Continuar trabajando sobre el mismo proyecto <strong>mini-crud-sql</strong> modificado en la Actividad 01. No es necesario descargar nada nuevo.</div>
@@ -433,7 +432,7 @@ function buildPasos(cfg) {
 <span class="a">VALUES</span> (5, 'Ana'), (6, 'Mariana'), (7, 'Fabiana'), (8, 'Diego');</div>
           </div>
         </div>
-        <div class="tip"><div class="tip-lbl">El % va en el parámetro</div>El SQL es <code>SELECT * FROM personas WHERE nombre LIKE ?</code> y el valor se asigna con <code>ps.setString(1, "%" + termino + "%")</code>. Para las fases 4 y 5, tomar como modelo <code>obtenerPersonaPorCodigo()</code> (ResultSet en un try anidado) y <code>listarPersonas()</code> (recorrer con <code>while</code>).</div>
+        <div class="tip"><div class="tip-lbl">El % va en el parámetro</div>El SQL es <code>SELECT * FROM personas WHERE nombre LIKE ?</code> y el valor se asigna con <code>ps.setString(1, "%" + termino + "%")</code>. Para las fases 4 y 5, tomar como modelo <code>obtenerXCodigo()</code> (ResultSet en un try anidado) y <code>getLista()</code> (recorrer con <code>while</code>).</div>
         <div class="tip"><div class="tip-lbl">Búsquedas con GET, no con POST</div>El formulario de búsqueda usa <code>method="get"</code> porque no modifica datos. El término buscado queda en la URL, lo que permite compartir o guardar el link de los resultados. El patrón PRG solo aplica a operaciones que escriben en la BD.</div>
       ` : ''}
       ${esAct03 ? `
@@ -461,7 +460,7 @@ function buildPasos(cfg) {
         </div>
         <div class="tip"><div class="tip-lbl">Tipos de Java a MySQL</div><code>int</code> → <code>INT</code> y se lee con <code>rs.getInt()</code> · <code>String</code> → <code>VARCHAR(n)</code> y se lee con <code>rs.getString()</code> · <code>double</code> → <code>DECIMAL(8,2)</code> o <code>DOUBLE</code> y se lee con <code>rs.getDouble()</code>.</div>
         <div class="alerta"><div class="alerta-lbl">Paso 2 — Conectar el proyecto a la base</div>Copiar desde <a href="https://github.com/eliizquierdo/material_programacion_avanzada2026/blob/main/proyectos-teoricos/mini-crud-sql/mini-crud-sql.zip" target="_blank" rel="noopener" style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:12px;">mini-crud-sql.zip →</a> la clase <code>modelo/conexion/Conexion.java</code> y el archivo <code>src/main/resources/db.properties</code> (crear la carpeta <code>resources</code> si no existe). Revisar que el usuario y la contraseña de <code>db.properties</code> sean los de la propia máquina. Agregar al <code>pom.xml</code> la dependencia del conector (ver el recuadro siguiente).</div>
-        <div class="tip"><div class="tip-lbl">Paso 3 — El método de listado en el DAO</div>En <code>ProductoDAO</code>, agregar <code>listarProductos()</code>, que devuelve <code>List&lt;ProductoVO&gt;</code> y aplica las 5 fases con <code>SELECT * FROM productos</code>, tomando como modelo <code>listarPersonas()</code> de <code>mini-crud-sql</code>. Por ahora no borrar los métodos que trabajan con el <code>ArrayList</code>. En el Servlet, el listado pasa a usar <code>dao.listarProductos()</code> en lugar de <code>dao.getLista()</code>.</div>
+        <div class="tip"><div class="tip-lbl">Paso 3 — El método de listado en el DAO</div>En <code>ProductoDAO</code>, cambiar el contenido de <code>getLista()</code> para que aplique las 5 fases con <code>SELECT * FROM productos</code>, tomando como modelo <code>getLista()</code> de <code>mini-crud-sql</code>. El método conserva su nombre y sigue devolviendo <code>ArrayList&lt;ProductoVO&gt;</code>, así que el Servlet no cambia: sigue llamando a <code>dao.getLista()</code>. Por ahora los demás métodos del DAO siguen trabajando con el <code>ArrayList</code>.</div>
         <div class="tip"><div class="tip-lbl">Paso 4 — Deshabilitar los botones</div>En <code>producto-lista.jsp</code>, reemplazar los botones Editar y Eliminar de cada fila, y el botón Agregar, por botones deshabilitados:
           <div class="term" style="margin-top:10px;">
             <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="term-lbl">producto-lista.jsp — botón deshabilitado</span></div>
