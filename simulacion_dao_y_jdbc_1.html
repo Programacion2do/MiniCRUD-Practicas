@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-950">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación DAO y JDBC - Programación Avanzada UTU</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        fase1: '#38bdf8',
+                        fase2: '#f59e0b',
+                        fase3: '#a855f7',
+                        fase4: '#f97316',
+                        fase5: '#10b981',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html, body {
+            height: 100vh;
+            max-height: 100vh;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        .token-keyword { color: #f43f5e; font-weight: 600; }
+        .token-class { color: #38bdf8; font-weight: 600; }
+        .token-string { color: #34d399; }
+        .token-comment { color: #64748b; font-style: italic; }
+        .token-method { color: #fbbf24; }
+
+        .code-line {
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            padding-left: 0.5rem;
+            display: flex;
+            align-items: center;
+            min-height: 1.35rem;
+        }
+        
+        .code-line.active-fase1 { background-color: rgba(56, 189, 248, 0.15); border-left-color: #38bdf8; }
+        .code-line.active-fase2 { background-color: rgba(245, 158, 11, 0.15); border-left-color: #f59e0b; }
+        .code-line.active-fase3 { background-color: rgba(168, 85, 247, 0.15); border-left-color: #a855f7; }
+        .code-line.active-fase4 { background-color: rgba(249, 115, 22, 0.15); border-left-color: #f97316; }
+        .code-line.active-fase5 { background-color: rgba(16, 185, 129, 0.15); border-left-color: #10b981; }
+        .code-line.active-neutral { background-color: rgba(203, 213, 225, 0.12); border-left-color: #94a3b8; }
+        .code-line.active-error { background-color: rgba(244, 63, 94, 0.2); border-left-color: #f43f5e; }
+
+        @keyframes pipeFlow {
+            0% { background-position: 0 0; }
+            100% { background-position: 30px 0; }
+        }
+        .animated-pipe {
+            background: repeating-linear-gradient(90deg, #f59e0b, #f59e0b 10px, #1e293b 10px, #1e293b 20px);
+            background-size: 30px 100%;
+            animation: pipeFlow 1s linear infinite;
+        }
+
+        .glow-active {
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col bg-slate-950 text-slate-100 font-sans antialiased overflow-hidden">
+
+    <!-- HEADER & PHASE BAR COMPACTA -->
+    <header class="h-14 bg-slate-900 border-b border-slate-800 px-3 flex items-center justify-between shrink-0 gap-2">
+        <div class="flex items-center space-x-2 shrink-0 min-w-0">
+            <div class="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold shrink-0">
+                <i class="fa-solid fa-database text-sm"></i>
+            </div>
+            <div class="min-w-0">
+                <h4 class="text-xs sm:text-sm font-bold text-white tracking-wide flex items-center gap-1.5 whitespace-nowrap">
+                    <span>Simulación DAO + JDBC</span>
+                    <span class="hidden sm:inline-block text-[9px] bg-slate-800 text-sky-400 border border-slate-700 px-1.5 py-0.5 rounded-full font-mono">mini-crud-sql</span>
+                </h4>
+                <p class="text-[10px] text-slate-400 truncate">Programación Avanzada · UTU Uruguay</p>
+            </div>
+        </div>
+
+        <div class="hidden md:flex items-center space-x-1 font-mono text-[10px] shrink-0">
+            <div id="p-fase-1" class="phase-badge px-1.5 py-0.5 rounded border border-slate-800 text-slate-500 flex items-center gap-1 transition">
+                <span class="w-3.5 h-3.5 rounded-full bg-slate-800 text-[9px] flex items-center justify-center font-bold">1</span>
+                <span>SQL</span>
+            </div>
+            <i class="fa-solid fa-chevron-right text-[7px] text-slate-700"></i>
+            <div id="p-fase-2" class="phase-badge px-1.5 py-0.5 rounded border border-slate-800 text-slate-500 flex items-center gap-1 transition">
+                <span class="w-3.5 h-3.5 rounded-full bg-slate-800 text-[9px] flex items-center justify-center font-bold">2</span>
+                <span>Conexión</span>
+            </div>
+            <i class="fa-solid fa-chevron-right text-[7px] text-slate-700"></i>
+            <div id="p-fase-3" class="phase-badge px-1.5 py-0.5 rounded border border-slate-800 text-slate-500 flex items-center gap-1 transition">
+                <span class="w-3.5 h-3.5 rounded-full bg-slate-800 text-[9px] flex items-center justify-center font-bold">3</span>
+                <span>PrepStmt</span>
+            </div>
+            <i class="fa-solid fa-chevron-right text-[7px] text-slate-700"></i>
+            <div id="p-fase-4" class="phase-badge px-1.5 py-0.5 rounded border border-slate-800 text-slate-500 flex items-center gap-1 transition">
+                <span class="w-3.5 h-3.5 rounded-full bg-slate-800 text-[9px] flex items-center justify-center font-bold">4</span>
+                <span>Ejecutar</span>
+            </div>
+            <i class="fa-solid fa-chevron-right text-[7px] text-slate-700"></i>
+            <div id="p-fase-5" class="phase-badge px-1.5 py-0.5 rounded border border-slate-800 text-slate-500 flex items-center gap-1 transition">
+                <span class="w-3.5 h-3.5 rounded-full bg-slate-800 text-[9px] flex items-center justify-center font-bold">5</span>
+                <span>ResultSet</span>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-1.5 shrink-0">
+            <select id="operationSelect" onchange="changeOperation(this.value)" title="Operación a simular" class="bg-slate-950 border border-slate-700 text-[11px] text-sky-300 font-mono rounded-lg px-2 py-1 focus:outline-none focus:border-sky-500 cursor-pointer max-w-[150px] sm:max-w-[200px] truncate">
+            </select>
+            <select id="whatIfSelect" onchange="changeCase(this.value)" title="¿Qué pasaría si...?" class="bg-slate-950 border border-slate-700 text-[11px] text-amber-300 font-mono rounded-lg px-2 py-1 focus:outline-none focus:border-amber-500 cursor-pointer max-w-[150px] sm:max-w-[220px] truncate">
+            </select>
+            <button onclick="toggleDrawer()" class="px-2 py-1 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg flex items-center gap-1 transition whitespace-nowrap" title="Configuración de BD y Casos">
+                <i class="fa-solid fa-sliders text-amber-400"></i>
+                <span class="hidden lg:inline">Datos y tabla</span>
+            </button>
+            <button onclick="openSummaryModal()" class="px-2 py-1 text-xs bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-slate-700 rounded-lg flex items-center gap-1 transition whitespace-nowrap" title="Ver Resumen">
+                <i class="fa-solid fa-list-check"></i>
+                <span class="hidden lg:inline">Resumen</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN WORKSPACE -->
+    <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-3 p-3 overflow-hidden" style="height: calc(100vh - 3.5rem - 3.5rem);">
+
+        <!-- LEFT PANEL: PersonaDAO Code Viewer (5 cols) -->
+        <section class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-xl flex flex-col overflow-hidden shadow-lg">
+            <div class="bg-slate-950 border-b border-slate-800 px-3 py-2 flex items-center justify-between">
+                <span class="text-xs font-mono font-medium text-slate-300 flex items-center gap-2">
+                    <i class="fa-solid fa-file-code text-sky-400"></i> PersonaDAO.java
+                </span>
+                <span class="text-[10px] bg-slate-800 text-slate-400 border border-slate-700 px-2 py-0.5 rounded font-mono">
+                    paquete: modelo.dao
+                </span>
+            </div>
+
+            <div id="codeContainer" class="flex-1 bg-[#0d1117] p-2 overflow-y-auto font-mono text-[11px] leading-relaxed relative">
+            </div>
+
+            <div id="fase1Note" class="p-2.5 bg-sky-950/40 border-t border-sky-800/40 text-[11px] text-sky-300 flex items-start gap-2 hidden">
+                <i class="fa-solid fa-lightbulb text-sky-400 mt-0.5 shrink-0"></i>
+                <p class="leading-tight">
+                    <strong>Nota FASE 1:</strong> El SQL se escribe primero porque <code class="bg-sky-900/60 px-1 rounded text-sky-200">prepareStatement(sql)</code> lo necesita en el encabezado del try. Hasta que se prepara y se ejecuta es solo un texto (<code class="bg-sky-900/60 px-1 rounded text-sky-200">String</code>) en la memoria de Java: todavía no viaja a la base de datos.
+                </p>
+            </div>
+        </section>
+
+        <!-- RIGHT PANEL: Visual Diagram (7 cols) -->
+        <section class="lg:col-span-7 flex flex-col gap-3 overflow-hidden">
+            <div class="flex-1 bg-slate-900 border border-slate-800 rounded-xl p-3 flex flex-col overflow-hidden shadow-lg relative">
+                
+                <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-between border-b border-slate-800/80 pb-1.5">
+                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-network-wired text-amber-400"></i> Diagrama JAVA &rarr; DAO &rarr; MySQL</span>
+                    <span id="diagramStatus" class="text-[10px] text-slate-400 font-mono">Estado: Listo</span>
+                </div>
+
+                <div class="flex-1 grid grid-cols-12 gap-2 overflow-y-auto pr-1">
+                    <!-- ZONE 1: JAVA MEMORY (4 cols) -->
+                    <div class="col-span-4 bg-slate-950/80 border border-slate-800 rounded-lg p-2.5 flex flex-col">
+                        <div class="text-[11px] font-bold text-sky-400 flex items-center gap-1 mb-2 font-mono">
+                            <i class="fa-brands fa-java text-sky-400 text-sm"></i> MEMORIA JAVA
+                        </div>
+
+                        <div class="flex-1 bg-slate-900 border border-sky-500/30 rounded-lg p-2 flex flex-col">
+                            <div class="text-[10px] font-mono text-slate-400 mb-1.5 flex justify-between">
+                                <span id="memLabel">ArrayList&lt;PersonaVO&gt; lista</span>
+                                <span id="listaSizeBadge" class="text-sky-300 font-bold">[0]</span>
+                            </div>
+                            <div id="listaContainer" class="flex-1 bg-slate-950 rounded border border-slate-800 p-1.5 space-y-1.5 overflow-y-auto flex flex-col justify-start">
+                                <span class="text-[10px] text-slate-600 italic text-center my-auto">(Lista vacía)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ZONE 2: DAO & JDBC CHANNEL (4 cols) -->
+                    <div class="col-span-4 bg-slate-950/80 border border-slate-800 rounded-lg p-2.5 flex flex-col justify-between">
+                        <div class="text-[11px] font-bold text-amber-400 flex items-center gap-1 mb-2 font-mono">
+                            <i class="fa-solid fa-gears text-amber-400"></i> DAO & CONEXIÓN
+                        </div>
+
+                        <div id="dbPropsCard" class="bg-slate-900 border border-amber-500/40 rounded p-1.5 text-[10px] font-mono mb-2 transition-all opacity-40">
+                            <div class="text-amber-400 font-bold border-b border-slate-800 pb-0.5 mb-1 flex items-center justify-between">
+                                <span>db.properties</span>
+                                <i class="fa-solid fa-file-lines"></i>
+                            </div>
+                            <div class="text-slate-400 truncate">db.url=jdbc:mysql://.../institutoWeb</div>
+                            <div class="text-slate-400">db.username=java_dev</div>
+                            <div class="text-slate-500">db.password=********</div>
+                        </div>
+
+                        <div class="my-auto py-2 flex flex-col items-center">
+                            <div id="pipeStatusLabel" class="text-[10px] font-mono text-slate-500 mb-1">Sin Conexión</div>
+                            <div id="connectionPipe" class="w-full h-3 bg-slate-800 rounded-full border border-slate-700 overflow-hidden relative">
+                                <div id="pipeFlowInner" class="w-full h-full hidden"></div>
+                            </div>
+                        </div>
+
+                        <div id="psCard" class="bg-slate-900 border border-purple-500/30 rounded p-2 text-[10px] font-mono opacity-40 transition-all">
+                            <div class="text-purple-400 font-bold mb-0.5">PreparedStatement ps</div>
+                            <div id="psSqlText" class="text-slate-400 truncate italic">null</div>
+                        </div>
+                    </div>
+
+                    <!-- ZONE 3: MYSQL DATABASE (4 cols) -->
+                    <div class="col-span-4 bg-slate-950/80 border border-slate-800 rounded-lg p-2.5 flex flex-col">
+                        <div class="text-[11px] font-bold text-emerald-400 flex items-center justify-between mb-2 font-mono">
+                            <span class="flex items-center gap-1"><i class="fa-solid fa-database text-emerald-400"></i> MYSQL BD</span>
+                            <span class="text-[10px] text-slate-500">institutoWeb</span>
+                        </div>
+
+                        <div class="flex-1 bg-slate-900 border border-slate-800 rounded overflow-hidden flex flex-col">
+                            <div class="bg-slate-950 px-2 py-1 text-[10px] font-mono font-bold text-slate-300 border-b border-slate-800 flex justify-between items-center">
+                                <span id="tableNameLabel">Tabla: personas</span>
+                                <span id="tableRsLabel" class="text-emerald-400">ResultSet rs</span>
+                            </div>
+                            <div class="flex-1 overflow-y-auto">
+                                <table class="w-full text-left font-mono text-[10px]">
+                                    <thead class="bg-slate-950/60 text-slate-400 border-b border-slate-800">
+                                        <tr>
+                                            <th class="py-1 px-1.5 w-6"></th>
+                                            <th class="py-1 px-1">codigo</th>
+                                            <th class="py-1 px-1">nombre</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="mysqlTableBody" class="divide-y divide-slate-800/60 text-slate-300">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="browserWindow" class="mt-2 bg-slate-950 border border-slate-800 rounded-lg overflow-hidden flex flex-col h-28 hidden">
+                    <div class="bg-slate-900 px-3 py-1 border-b border-slate-800 flex items-center justify-between gap-2 text-[10px] font-mono text-slate-400">
+                        <div class="flex items-center space-x-1 min-w-0">
+                            <span class="w-2 h-2 rounded-full bg-red-500 shrink-0"></span>
+                            <span class="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+                            <span id="browserUrl" class="ml-2 text-slate-300 truncate">http://localhost:8080/mini-crud-sql/persona</span>
+                        </div>
+                        <span id="browserVista" class="text-sky-400 shrink-0">persona-lista.jsp &lt;c:forEach&gt;</span>
+                    </div>
+                    <div id="browserBody" class="p-2 overflow-y-auto flex-1 bg-slate-900/50"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- BOTTOM PANEL: LIVE OBJECT STATES & DIDACTIC EXPLANATION -->
+    <footer class="h-28 bg-slate-900 border-t border-slate-800 px-4 py-2 grid grid-cols-12 gap-3 shrink-0">
+        <div class="col-span-5 bg-slate-950 border border-slate-800 rounded-lg p-2 flex flex-col justify-between font-mono text-[11px]">
+            <div class="text-slate-400 text-[10px] uppercase font-bold border-b border-slate-800 pb-0.5 flex justify-between">
+                <span><i class="fa-solid fa-microchip text-sky-400"></i> Estado de los Objetos</span>
+                <span id="stepCounterBadge" class="text-sky-400">Paso 0 / 0</span>
+            </div>
+            <div class="grid grid-cols-2 gap-x-2 gap-y-1 text-[10px] mt-1">
+                <div class="truncate"><span class="text-sky-400 font-bold">sql:</span> <span id="st-sql" class="text-slate-400">null</span></div>
+                <div class="truncate"><span class="text-amber-400 font-bold">con:</span> <span id="st-con" class="text-slate-400">null</span></div>
+                <div class="truncate"><span class="text-purple-400 font-bold">ps:</span> <span id="st-ps" class="text-slate-400">null</span></div>
+                <div class="truncate"><span class="text-emerald-400 font-bold">rs:</span> <span id="st-rs" class="text-slate-400">null</span></div>
+            </div>
+            <div class="border-t border-slate-900 pt-1 text-[10px] flex justify-between text-slate-300">
+                <span id="st-ret-label">lista (ArrayList&lt;PersonaVO&gt;):</span>
+                <span id="st-ret" class="text-sky-300 font-bold truncate ml-2">—</span>
+            </div>
+        </div>
+
+        <div class="col-span-7 bg-slate-950 border border-slate-800 rounded-lg p-2.5 flex flex-col justify-between">
+            <div class="text-[10px] uppercase font-bold text-amber-400 flex items-center justify-between gap-1">
+                <span><i class="fa-solid fa-graduation-cap"></i> Explicación didáctica</span>
+                <span id="datosActuales" class="normal-case font-mono text-slate-400"></span>
+            </div>
+            <div id="explanationText" class="text-xs text-slate-200 leading-snug my-auto">
+                Hacer clic en <strong>"Paso siguiente"</strong> o presionar la <strong>flecha derecha (&rarr;)</strong> para iniciar el recorrido.
+            </div>
+            <div class="text-[10px] text-slate-500 font-mono text-right">
+                Atajos: <kbd class="bg-slate-800 px-1 rounded text-slate-300">&rarr;</kbd> Sig | <kbd class="bg-slate-800 px-1 rounded text-slate-300">&leftarrow;</kbd> Ant | <kbd class="bg-slate-800 px-1 rounded text-slate-300">Espacio</kbd> Play | <kbd class="bg-slate-800 px-1 rounded text-slate-300">R</kbd> Reiniciar
+            </div>
+        </div>
+    </footer>
+
+    <!-- FIXED CONTROLS BAR AT BOTTOM -->
+    <div class="h-12 bg-slate-950 border-t border-slate-800 px-4 flex items-center justify-between shrink-0 font-mono text-xs">
+        <div class="flex items-center space-x-2">
+            <button onclick="prevStep()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition flex items-center gap-1">
+                <i class="fa-solid fa-arrow-left"></i> <span class="hidden sm:inline">Anterior</span>
+            </button>
+            <button onclick="togglePlay()" id="btnPlay" class="px-3 py-1.5 bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/30 rounded-lg transition flex items-center gap-1">
+                <i class="fa-solid fa-play" id="playIcon"></i> <span id="playText" class="hidden sm:inline">Reproducir</span>
+            </button>
+            <button onclick="nextStep()" id="btnNext" class="px-5 py-1.5 bg-sky-600 hover:bg-sky-500 text-white font-bold rounded-lg shadow-lg shadow-sky-600/30 transition flex items-center gap-2 text-sm">
+                <span>Paso Siguiente</span> <i class="fa-solid fa-arrow-right"></i>
+            </button>
+            <button onclick="resetSimulation()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition flex items-center gap-1">
+                <i class="fa-solid fa-rotate-left"></i> <span class="hidden sm:inline">Reiniciar</span>
+            </button>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-2 text-slate-400 text-[11px]">
+                <span>Velocidad:</span>
+                <input type="range" id="speedRange" min="500" max="3000" step="250" value="1500" class="w-20 accent-sky-500 cursor-pointer" onchange="updateSpeed(this.value)">
+                <span id="speedValue" class="w-8">1.5s</span>
+            </div>
+            <button onclick="toggleFullscreen()" class="text-slate-400 hover:text-white transition" title="Pantalla completa">
+                <i class="fa-solid fa-expand text-sm"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- SIDE DRAWER: MySQL Table Editor & What-If Mode -->
+    <div id="sideDrawer" class="fixed inset-y-0 right-0 w-80 bg-slate-900 border-l border-slate-800 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out z-50 flex flex-col">
+        <div class="p-3 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
+            <h3 class="text-xs font-bold text-white font-mono flex items-center gap-2">
+                <i class="fa-solid fa-sliders text-amber-400"></i> Panel de Configuración
+            </h3>
+            <button onclick="toggleDrawer()" class="text-slate-400 hover:text-white text-sm">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="p-4 overflow-y-auto flex-1 space-y-6 text-xs font-sans">
+            <div id="panelDatos">
+                <h4 class="font-bold text-amber-400 mb-2 font-mono flex items-center gap-1">
+                    <i class="fa-solid fa-keyboard"></i> Datos de la operación
+                </h4>
+                <p id="ayudaDatos" class="text-[11px] text-slate-400 mb-3"></p>
+                <form onsubmit="aplicarDatos(event)" class="space-y-2">
+                    <div class="grid grid-cols-3 gap-2 items-center">
+                        <label for="opCodigo" class="text-[11px] text-slate-400">Código</label>
+                        <input type="number" id="opCodigo" min="1" class="col-span-2 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white font-mono text-xs focus:outline-none focus:border-amber-500">
+                    </div>
+                    <div id="filaNombreOp" class="grid grid-cols-3 gap-2 items-center">
+                        <label for="opNombre" class="text-[11px] text-slate-400">Nombre</label>
+                        <input type="text" id="opNombre" maxlength="10" placeholder="máx. 10" class="col-span-2 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white font-mono text-xs focus:outline-none focus:border-amber-500">
+                    </div>
+                    <div id="datosErrorMsg" class="text-[11px] text-rose-400 font-mono hidden bg-rose-950/40 p-1.5 rounded border border-rose-800/50"></div>
+                    <button type="submit" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-1 rounded text-xs font-mono transition">
+                        Aplicar datos y reiniciar
+                    </button>
+                </form>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-sky-400 mb-2 font-mono flex items-center gap-1">
+                    <i class="fa-solid fa-table"></i> Tabla 'personas' en MySQL
+                </h4>
+                <p class="text-[11px] text-slate-400 mb-3">La tabla se comparte entre todas las operaciones: lo que se agrega, modifica o elimina se ve después en <code class="text-emerald-400">getLista()</code>. También se pueden agregar o quitar filas a mano.</p>
+
+                <form onsubmit="addPersonRow(event)" class="space-y-2 mb-3">
+                    <div class="grid grid-cols-3 gap-2">
+                        <input type="number" id="newCodigo" placeholder="Código" required class="col-span-1 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white font-mono text-xs focus:outline-none focus:border-sky-500">
+                        <input type="text" id="newNombre" placeholder="Nombre (máx. 10)" maxlength="10" required class="col-span-2 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white font-mono text-xs focus:outline-none focus:border-sky-500">
+                    </div>
+                    <div id="drawerErrorMsg" class="text-[11px] text-rose-400 font-mono hidden bg-rose-950/40 p-1.5 rounded border border-rose-800/50"></div>
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1 rounded text-xs font-mono transition">
+                        + Agregar fila a MySQL
+                    </button>
+                </form>
+
+                <div id="drawerTableList" class="space-y-1 max-h-40 overflow-y-auto"></div>
+                <button onclick="restaurarDatos()" class="mt-2 w-full bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 py-1 rounded text-[11px] font-mono transition">
+                    <i class="fa-solid fa-rotate-left"></i> Restaurar datos iniciales (Juan, María, Carlos)
+                </button>
+            </div>
+
+            <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
+                <h4 class="font-bold text-amber-400 mb-1 font-mono">Modo "¿Qué pasaría si...?"</h4>
+                <p class="text-[11px] text-slate-400 leading-relaxed">
+                    En el segundo menú desplegable de arriba se elige un caso de error de la operación activa, para analizar cómo responde el bloque <code class="text-rose-400">catch (SQLException e)</code> y el cierre automático de los recursos.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUMMARY TIMELINE MODAL -->
+    <div id="summaryModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl max-w-xl w-full p-5 shadow-2xl flex flex-col space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="text-sm font-bold text-white font-mono flex items-center gap-2">
+                    <i class="fa-solid fa-flag-checkered text-emerald-400"></i> <span id="summaryTitle">Resumen del recorrido JDBC</span>
+                </h3>
+                <button onclick="closeSummaryModal()" class="text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div id="summaryList" class="space-y-2 text-xs font-mono text-slate-300 max-h-80 overflow-y-auto pr-1"></div>
+
+            <div class="pt-2 flex justify-end">
+                <button onclick="closeSummaryModal()" class="px-4 py-1.5 bg-sky-600 hover:bg-sky-500 text-white font-bold rounded-lg text-xs transition">
+                    Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT SIMULADOR Y LÓGICA PASO A PASO -->
+    <script>
+        /* =====================================================================
+           SIMULADOR DAO + JDBC · mini-crud-sql
+           ---------------------------------------------------------------------
+           Organización:
+           - mysqlData: la tabla "personas" simulada. Se comparte entre todas
+             las operaciones (lo que se agrega, modifica o elimina se ve al
+             volver a getLista()).
+           - ESCENARIOS: un objeto por operación del PersonaDAO. Cada uno tiene:
+               id, nombre, tipo ('lista' | 'consulta' | 'escritura'),
+               usaFase5, casos (los "¿Qué pasaría si...?"),
+               datos (qué datos de entrada pide: codigo, nombre),
+               codigo(caso)  -> líneas de Java a mostrar,
+               pasos(caso)   -> lista de pasos del recorrido,
+               resumen(caso) -> textos del modal "Resumen".
+           - El motor (updateUI, controles, renderizadores) funciona igual
+             para cualquier escenario.
+
+           CÓMO AGREGAR UN ESCENARIO NUEVO
+           1. Copiar uno de los objetos de ESCENARIOS y cambiar id y nombre.
+           2. Escribir su código en codigo(caso), idéntico al del proyecto.
+           3. En pasos(caso), usar nuevoRecorrido(lineas) y llamar a
+              r.paso(textoDeLaLinea, fase, explicacion, estado, cambios, extra)
+              una vez por paso. "textoDeLaLinea" es un fragmento único de la
+              línea a resaltar (o su número, empezando en 0).
+           4. Agregar sus casos de error en "casos".
+           ===================================================================== */
+
+        const DATOS_INICIALES = [
+            { codigo: 1, nombre: "Juan" },
+            { codigo: 2, nombre: "María" },
+            { codigo: 3, nombre: "Carlos" }
+        ];
+        let mysqlData = DATOS_INICIALES.map(r => ({ ...r }));
+
+        let escenario = null;      // escenario (operación) activo
+        let caso = "normal";       // caso "¿Qué pasaría si...?" activo
+        let datos = { codigo: 2, nombre: "Ana" };
+        let steps = [];
+        let currentStep = 0;
+        let aplicado = false;      // si los cambios de una escritura ya se guardaron en la tabla
+        let isPlaying = false;
+        let playInterval = null;
+        let playSpeed = 1500;
+
+        /* ---------- utilidades de texto ---------- */
+        const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        const c = (t, color = "text-sky-300") => `<code class="${color}">${esc(t)}</code>`;
+        const ERR = t => `<span class="text-rose-400 font-bold">${t}</span>`;
+        const lineas = txt => txt.replace(/^\n/, "").replace(/\n$/, "").split("\n");
+        const filaTxt = r => `(${r.codigo}, "${r.nombre}")`;
+
+        /* ---------- constructor de recorridos ---------- */
+        function nuevoRecorrido(codigo) {
+            const st = {
+                sql: "null", con: "null", ps: "null", rs: "null", ret: "",
+                mem: [], listItems: null,
+                rows: mysqlData.map(r => ({ ...r })), hl: -1, hlKind: "cursor",
+                pipe: false, psOn: false, psText: "null", browser: null, tableMissing: false
+            };
+            const pasos = [];
+            const L = t => {
+                if (typeof t === "number") return t;
+                const i = codigo.findIndex(l => l.includes(t));
+                if (i < 0) console.warn("Línea no encontrada:", t);
+                return i;
+            };
+            const setMem = (nombre, valor) => {
+                const m = st.mem.find(x => x[0] === nombre);
+                if (m) m[1] = valor; else st.mem.push([nombre, valor]);
+            };
+            const paso = (linea, fase, desc, status, cambios = {}, extra = {}) => {
+                Object.assign(st, cambios);
+                pasos.push({ ...JSON.parse(JSON.stringify(st)), line: L(linea), fase, desc, status, ...extra });
+            };
+            const cerrar = (extra = {}) => Object.assign({ con: "cerrado", ps: "cerrado", pipe: false, psOn: false, hl: -1 }, extra);
+            return { pasos, st, paso, setMem, cerrar };
+        }
+
+        /* Pasos comunes de error de conexión (contraseña incorrecta en db.properties) */
+        function falloConexion(r, retorno, explicacionRetorno, lineaMensaje = null, textoMensaje = "") {
+            r.paso("Conexion.obtener()", "fase2",
+                `${ERR("FALLO EN FASE 2:")} ${c("Conexion.obtener()", "text-rose-300")} lee ${c("db.properties", "text-amber-300")}, pero MySQL rechaza la contraseña (Access denied). Se lanza una ${c("SQLException", "text-rose-400")}.`,
+                "Error de autenticación", { con: "ERROR (Access denied)" }, { error: true });
+            r.paso("catch (SQLException e)", null,
+                `El flujo salta directamente al ${c("catch (SQLException e)", "text-rose-400")}: no llega a crearse el ${c("PreparedStatement", "text-purple-300")}.`,
+                "SQLException capturada", { con: "null" }, { error: true });
+            r.paso("System.err.println", null,
+                `Se imprime el mensaje de error en la consola del servidor y ${c("e.printStackTrace()")} muestra el detalle.`,
+                "Error en consola", {}, { error: true });
+            if (lineaMensaje) {
+                r.setMem("String mensaje", textoMensaje);
+                r.paso(lineaMensaje, null, `Dentro del ${c("catch")}, ${c("mensaje")} pasa a ${c(textoMensaje)}.`, "Mensaje de error", {}, { error: true });
+            }
+            r.paso("return", null, explicacionRetorno, "Retorno", { ret: retorno });
+        }
+
+        /* =====================================================================
+           ESCENARIOS
+           ===================================================================== */
+        const ESCENARIOS = [
+
+            /* ------------------------- 1. getLista() ------------------------- */
+            {
+                id: "getLista", nombre: "Consulta: getLista()", tipo: "lista", usaFase5: true, datos: [],
+                casos: [
+                    { id: "normal", nombre: "Recorrido normal" },
+                    { id: "vacia", nombre: "¿Y si la tabla está vacía?" },
+                    { id: "bad_pass", nombre: "¿Y si la contraseña es incorrecta?" },
+                    { id: "bad_table", nombre: "¿Y si la tabla no existe?" },
+                    { id: "bad_col", nombre: "¿Y si la columna está mal escrita?" },
+                    { id: "sql_null", nombre: "¿Y si sql es null?" }
+                ],
+                codigo(k) {
+                    let cod = lineas(`
+public ArrayList<PersonaVO> getLista() {
+    ArrayList<PersonaVO> lista = new ArrayList<>();
+    // FASE 1: Definir la sentencia SQL
+    String sql = "SELECT * FROM personas";
+
+    // FASES 2, 3 y 4: conexión, PreparedStatement y ejecución en try-with-resources
+    try (Connection con = Conexion.obtener();
+         PreparedStatement ps = con.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+
+        // FASE 5: Leer el ResultSet
+        while (rs.next()) {
+            lista.add(new PersonaVO(
+                    rs.getInt("codigo"),
+                    rs.getString("nombre")));
+        }
+    } catch (SQLException e) {
+        System.err.println("Error al listar personas: " + e.getMessage());
+        e.printStackTrace();
+    }
+    return lista;
+}`);
+                    if (k === "bad_table") cod[3] = `    String sql = "SELECT * FROM persona"; // ERROR: la tabla se llama personas`;
+                    if (k === "sql_null") cod[3] = `    String sql = null; // ERROR: no hay sentencia`;
+                    if (k === "bad_col") cod[13] = `                    rs.getInt("codigo_erroneo"), // ERROR: columna inexistente`;
+                    return cod;
+                },
+                pasos(k) {
+                    const r = nuevoRecorrido(this.codigo(k));
+                    const sqlTxt = k === "bad_table" ? `"SELECT * FROM persona"` : k === "sql_null" ? "null" : `"SELECT * FROM personas"`;
+                    if (k === "vacia") r.st.rows = [];
+                    const filas = r.st.rows;
+
+                    r.paso("getLista()", null,
+                        `Inicio de ${c("getLista()")}. El Servlet lo invoca al recibir ${c("GET /persona")} para mostrar el listado.`,
+                        "Método iniciado");
+                    r.paso("ArrayList<PersonaVO> lista =", null,
+                        `Se crea la lista vacía ${c("ArrayList<PersonaVO> lista")} en la memoria de Java.`,
+                        "Lista creada", { listItems: [] });
+                    r.paso("String sql", "fase1",
+                        k === "sql_null"
+                            ? `<strong>FASE 1:</strong> ${c("String sql = null;", "text-rose-400")}: la variable no apunta a ninguna sentencia SQL.`
+                            : `<strong>FASE 1:</strong> Se define la sentencia en ${c("String sql")}. Por ahora es solo un texto en la memoria de Java.`,
+                        "FASE 1: SQL definido", { sql: sqlTxt }, { note: true, error: k === "sql_null" });
+
+                    if (k === "bad_pass") {
+                        falloConexion(r, "lista vacía",
+                            `Se ejecuta ${c("return lista;")}: el método devuelve la lista <strong>vacía</strong> (nunca null) y la aplicación no se cae. El JSP muestra "No hay personas registradas".`);
+                        r.pasos[r.pasos.length - 1].browser = { kind: "lista", items: [] };
+                        return r.pasos;
+                    }
+                    r.paso("Conexion.obtener()", "fase2",
+                        `<strong>FASE 2:</strong> ${c("Conexion.obtener()", "text-amber-300")} lee ${c("db.properties", "text-amber-300")} y abre la conexión con MySQL.`,
+                        "FASE 2: Conexión abierta", { con: "ConnectionImpl@3d4e", pipe: true });
+
+                    if (k === "sql_null") {
+                        r.paso("prepareStatement(sql)", "fase3",
+                            `${ERR("FALLO EN FASE 3:")} ${c("con.prepareStatement(null)", "text-rose-300")} no tiene sentencia que preparar y lanza una excepción.`,
+                            "Error al preparar", { ps: "ERROR (sql null)" }, { error: true });
+                        r.paso("catch (SQLException e)", null,
+                            `El ${c("catch", "text-rose-400")} atrapa el error y el try-with-resources cierra la conexión que se había abierto.`,
+                            "Excepción capturada", r.cerrar({ ps: "null" }), { error: true });
+                        r.paso("return lista;", null, `Se devuelve la lista vacía.`, "Retorno sin datos", { ret: "lista vacía" });
+                        return r.pasos;
+                    }
+                    r.paso("prepareStatement(sql)", "fase3",
+                        `<strong>FASE 3:</strong> Se prepara el ${c("PreparedStatement ps", "text-purple-300")} con la sentencia SQL.`,
+                        "FASE 3: PreparedStatement listo", { ps: "PreparedStatement@7f1a", psOn: true, psText: sqlTxt.replace(/"/g, "") });
+
+                    if (k === "bad_table") {
+                        r.paso("executeQuery()", "fase4",
+                            `${ERR("FALLO EN FASE 4:")} MySQL responde ${c("Table 'institutoWeb.persona' doesn't exist", "text-rose-300")}. La tabla se llama ${c("personas", "text-emerald-400")}.`,
+                            "Error: tabla inexistente", { rs: "ERROR", tableMissing: true }, { error: true });
+                        r.paso("catch (SQLException e)", null,
+                            `El ${c("catch", "text-rose-400")} atrapa la ${c("SQLException")} y el try-with-resources cierra ${c("ps")} y ${c("con")}.`,
+                            "Recursos cerrados", r.cerrar({ rs: "null" }), { error: true });
+                        r.paso("return lista;", null, `Se devuelve la lista vacía.`, "Retorno sin datos", { ret: "lista vacía", tableMissing: false });
+                        return r.pasos;
+                    }
+                    r.paso("executeQuery()", "fase4",
+                        `<strong>FASE 4:</strong> ${c("ps.executeQuery()", "text-orange-300")} ejecuta la consulta. MySQL devuelve el ${c("ResultSet rs", "text-emerald-300")} con el cursor <strong>antes</strong> de la primera fila.`,
+                        "FASE 4: ResultSet obtenido", { rs: "ResultSet (cursor antes de la fila 1)", hl: -1 });
+
+                    const lista = [];
+                    for (let i = 0; i < filas.length; i++) {
+                        const f = filas[i];
+                        r.paso("while (rs.next())", "fase5",
+                            `<strong>FASE 5:</strong> ${c("rs.next()", "text-emerald-400")} mueve el cursor a la fila ${i + 1} ${esc(filaTxt(f))} y devuelve ${c("true", "text-emerald-300")}: se entra al bucle.`,
+                            `Cursor en la fila ${i + 1}`, { rs: `ResultSet (fila ${i + 1})`, hl: i, hlKind: "cursor" });
+                        if (k === "bad_col") {
+                            r.paso("codigo_erroneo", "fase5",
+                                `${ERR("EXCEPCIÓN EN FASE 5:")} ${c('rs.getInt("codigo_erroneo")', "text-rose-300")} falla porque el ResultSet no tiene esa columna.`,
+                                "Error: columna inexistente", { rs: "ERROR (columna)" }, { error: true });
+                            r.paso("catch (SQLException e)", null,
+                                `La lectura se interrumpe, se ejecuta el ${c("catch", "text-rose-400")} y se cierran ${c("rs")}, ${c("ps")} y ${c("con")}.`,
+                                "Recursos cerrados", r.cerrar({ rs: "cerrado" }), { error: true });
+                            r.paso("return lista;", null, `Se devuelve la lista vacía: no llegó a agregarse ninguna persona.`, "Retorno sin datos", { ret: "lista vacía" });
+                            return r.pasos;
+                        }
+                        r.paso('rs.getInt("codigo")', "fase5",
+                            `${c('rs.getInt("codigo")', "text-emerald-300")} lee el valor ${c(f.codigo, "text-amber-300")} de la fila actual.`,
+                            `Leyendo código ${f.codigo}`);
+                        r.paso('rs.getString("nombre")', "fase5",
+                            `${c('rs.getString("nombre")', "text-emerald-300")} lee ${c('"' + f.nombre + '"', "text-amber-300")}.`,
+                            `Leyendo nombre "${f.nombre}"`);
+                        lista.push({ ...f });
+                        r.paso("lista.add(new PersonaVO(", "fase5",
+                            `Con esos dos valores se crea ${c(`new PersonaVO(${f.codigo}, "${f.nombre}")`)} y ${c("lista.add(...)")} lo guarda en la lista.`,
+                            `Agregado a la lista (${lista.length}/${filas.length})`, { listItems: lista.map(x => ({ ...x })) });
+                    }
+                    r.paso("while (rs.next())", "fase5",
+                        filas.length
+                            ? `<strong>FASE 5:</strong> ${c("rs.next()", "text-emerald-400")} ya no encuentra más filas y devuelve ${c("false", "text-rose-400")}: termina el bucle.`
+                            : `<strong>FASE 5:</strong> La tabla está vacía: ${c("rs.next()", "text-emerald-400")} devuelve ${c("false", "text-rose-400")} la primera vez y nunca se entra al bucle.`,
+                        "Fin del bucle", { rs: "ResultSet (sin más filas)", hl: -1 });
+                    r.paso("} catch (SQLException e)", null,
+                        `<strong>TRY-WITH-RESOURCES:</strong> al terminar el bloque, Java cierra los recursos automáticamente en orden inverso: ${c("rs.close() → ps.close() → con.close()", "text-slate-300")}.`,
+                        "Recursos cerrados", r.cerrar({ rs: "cerrado" }));
+                    r.paso("return lista;", null,
+                        `Se ejecuta ${c("return lista;")}. El Servlet la guarda con ${c('request.setAttribute("personas", dao.getLista())')} y hace forward a ${c("persona-lista.jsp")}, donde ${c("<c:forEach>")} arma la tabla.`,
+                        "Lista devuelta al Servlet", { ret: `${lista.length} PersonaVO`, browser: { kind: "lista", items: lista } });
+                    return r.pasos;
+                },
+                resumen(k) {
+                    return [
+                        `Se definió la sentencia ${c("SELECT * FROM personas")}.`,
+                        `Se abrió la conexión con ${c("Conexion.obtener()", "text-amber-300")}, que lee ${c("db.properties", "text-amber-300")}.`,
+                        `Se preparó el ${c("PreparedStatement ps", "text-purple-300")}.`,
+                        `${c("executeQuery()", "text-orange-300")} devolvió el ${c("ResultSet rs", "text-emerald-300")}.`,
+                        `${c("while (rs.next())", "text-emerald-300")} recorrió las filas y creó un ${c("PersonaVO")} por cada una.`,
+                        `La lista volvió al Servlet y se mostró en ${c("persona-lista.jsp")}.`
+                    ];
+                }
+            },
+
+            /* --------------------- 2. obtenerXCodigo() ---------------------- */
+            {
+                id: "obtenerXCodigo", nombre: "Búsqueda: obtenerXCodigo()", tipo: "consulta", usaFase5: true, datos: ["codigo"],
+                casos: [
+                    { id: "normal", nombre: "Recorrido normal" },
+                    { id: "no_existe", nombre: "¿Y si el código no existe?" },
+                    { id: "bad_pass", nombre: "¿Y si la contraseña es incorrecta?" }
+                ],
+                codigo() {
+                    return lineas(`
+public PersonaVO obtenerXCodigo(int cod) {
+    // FASE 1: Definir la sentencia SQL
+    String sql = "SELECT * FROM personas WHERE codigo = ?";
+    PersonaVO persona = null;
+
+    // FASES 2 y 3: conexión y PreparedStatement en try-with-resources
+    try (Connection con = Conexion.obtener();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+        // FASE 3: Asignar parámetros
+        ps.setInt(1, cod);
+        // FASE 4: Ejecutar (ResultSet en try anidado)
+        try (ResultSet rs = ps.executeQuery()) {
+            // FASE 5: Leer el ResultSet (if, porque codigo es clave única)
+            if (rs.next()) {
+                persona = new PersonaVO(
+                        rs.getInt("codigo"),
+                        rs.getString("nombre"));
+            }
+        }
+    } catch (SQLException e) {
+        System.err.println("Error al obtener persona: " + e.getMessage());
+        e.printStackTrace();
+    }
+    return persona;
+}`);
+                },
+                pasos(k) {
+                    const r = nuevoRecorrido(this.codigo(k));
+                    const cod = k === "no_existe" ? 99 : datos.codigo;
+                    const idx = r.st.rows.findIndex(f => f.codigo === cod);
+                    const fila = r.st.rows[idx];
+
+                    r.paso("obtenerXCodigo(int cod)", null,
+                        `Inicio de ${c("obtenerXCodigo()")} con ${c("cod = " + cod, "text-amber-300")}. El Servlet lo invoca, por ejemplo, al hacer clic en Editar: ${c("GET /persona?action=cargarEditar&codigo=" + cod)}.`,
+                        "Método iniciado", { mem: [["int cod", cod]] });
+                    r.paso("String sql", "fase1",
+                        `<strong>FASE 1:</strong> Se define la sentencia. El ${c("?", "text-amber-300")} marca el lugar donde irá el código.`,
+                        "FASE 1: SQL definido", { sql: `"SELECT * FROM personas WHERE codigo = ?"` }, { note: true });
+                    r.setMem("PersonaVO persona", "null");
+                    r.paso("PersonaVO persona = null", null,
+                        `${c("persona")} empieza en ${c("null")}: si no se encuentra ninguna fila, el método devuelve ${c("null")}.`,
+                        "Variable persona = null");
+
+                    if (k === "bad_pass") {
+                        falloConexion(r, "null", `Se ejecuta ${c("return persona;")} con ${c("persona")} en ${c("null")}. El Servlet redirige al listado.`);
+                        return r.pasos;
+                    }
+                    r.paso("Conexion.obtener()", "fase2",
+                        `<strong>FASE 2:</strong> ${c("Conexion.obtener()", "text-amber-300")} abre la conexión con MySQL.`,
+                        "FASE 2: Conexión abierta", { con: "ConnectionImpl@3d4e", pipe: true });
+                    r.paso("prepareStatement(sql)", "fase3",
+                        `<strong>FASE 3:</strong> Se prepara el ${c("PreparedStatement ps", "text-purple-300")}. Todavía tiene el ${c("?")} sin valor.`,
+                        "FASE 3: PreparedStatement listo", { ps: "PreparedStatement@7f1a", psOn: true, psText: "SELECT * FROM personas WHERE codigo = ?" });
+                    r.paso("ps.setInt(1, cod)", "fase3",
+                        `<strong>FASE 3:</strong> ${c("ps.setInt(1, cod)", "text-purple-300")} pone ${c(cod, "text-amber-300")} en el lugar del primer ${c("?")} (las posiciones empiezan en 1, no en 0).`,
+                        "FASE 3: ? asignado", { psText: `SELECT * FROM personas WHERE codigo = ${cod}` });
+                    r.paso("ps.executeQuery()", "fase4",
+                        `<strong>FASE 4:</strong> ${c("ps.executeQuery()", "text-orange-300")} ejecuta la consulta. El ${c("ResultSet")} va en un <strong>try anidado</strong> porque el ${c("?")} hay que asignarlo <em>antes</em> de ejecutar: por eso no puede ir en el encabezado del primer try, como en ${c("getLista()")}. ` +
+                        (fila ? `MySQL encuentra 1 fila.` : `MySQL no encuentra ninguna fila con ese código.`),
+                        "FASE 4: ResultSet obtenido",
+                        { rs: fila ? "ResultSet (1 fila, cursor antes)" : "ResultSet (0 filas)", hl: idx, hlKind: "match" });
+
+                    if (fila) {
+                        r.paso("if (rs.next())", "fase5",
+                            `<strong>FASE 5:</strong> ${c("rs.next()", "text-emerald-400")} mueve el cursor a la única fila y devuelve ${c("true")}. Se usa ${c("if")} y no ${c("while")} porque ${c("codigo")} es clave primaria: como máximo hay una fila.`,
+                            "Cursor en la fila encontrada", { rs: "ResultSet (fila 1)", hl: idx, hlKind: "cursor" });
+                        r.paso('rs.getInt("codigo")', "fase5", `${c('rs.getInt("codigo")', "text-emerald-300")} lee ${c(fila.codigo, "text-amber-300")}.`, "Leyendo código");
+                        r.paso('rs.getString("nombre")', "fase5", `${c('rs.getString("nombre")', "text-emerald-300")} lee ${c('"' + fila.nombre + '"', "text-amber-300")}.`, "Leyendo nombre");
+                        r.setMem("PersonaVO persona", `${fila.codigo} · ${fila.nombre}`);
+                        r.paso("persona = new PersonaVO(", "fase5",
+                            `Se crea ${c(`new PersonaVO(${fila.codigo}, "${fila.nombre}")`)} y se guarda en ${c("persona")}.`,
+                            "PersonaVO creada");
+                    } else {
+                        r.paso("if (rs.next())", "fase5",
+                            `<strong>FASE 5:</strong> ${c("rs.next()", "text-emerald-400")} devuelve ${c("false", "text-rose-400")}: no hay ninguna fila. No se entra al ${c("if")} y ${c("persona")} sigue en ${c("null")}.`,
+                            "Sin resultados", { rs: "ResultSet (sin filas)", hl: -1 });
+                    }
+                    r.paso(19, null,
+                        `Al salir del try anidado se cierra el ${c("ResultSet")}: ${c("rs.close()", "text-slate-300")}.`,
+                        "rs cerrado", { rs: "cerrado", hl: -1 });
+                    r.paso("} catch (SQLException e)", null,
+                        `Al terminar el try principal se cierran ${c("ps")} y ${c("con")}, en orden inverso a como se abrieron.`,
+                        "Recursos cerrados", r.cerrar());
+                    r.paso("return persona;", null,
+                        fila
+                            ? `Se devuelve la persona. El Servlet la guarda con ${c('request.setAttribute("persona", persona)')} y hace forward a ${c("persona-editar.jsp")}, que muestra el formulario precargado.`
+                            : `Se devuelve ${c("null")}. Como no hay persona para editar, el Servlet redirige al listado.`,
+                        fila ? "Persona devuelta al Servlet" : "Devuelve null",
+                        fila
+                            ? { ret: `PersonaVO ${fila.codigo}`, browser: { kind: "editar", persona: { ...fila } } }
+                            : { ret: "null", browser: { kind: "lista", items: r.st.rows, prg: true } });
+                    return r.pasos;
+                },
+                resumen() {
+                    return [
+                        `Se definió ${c("SELECT * FROM personas WHERE codigo = ?")}.`,
+                        `Se abrió la conexión con ${c("Conexion.obtener()", "text-amber-300")}.`,
+                        `Se preparó el ${c("PreparedStatement", "text-purple-300")} y ${c("setInt(1, cod)", "text-purple-300")} completó el ${c("?")}.`,
+                        `${c("executeQuery()", "text-orange-300")} se ejecutó en un try anidado (el ? se asigna antes).`,
+                        `${c("if (rs.next())", "text-emerald-300")} leyó como máximo una fila (codigo es clave primaria).`,
+                        `Si la encontró, el Servlet hizo forward a ${c("persona-editar.jsp")}; si no, redirigió al listado.`
+                    ];
+                }
+            },
+
+            /* --------------------------- 3. agregar() --------------------------- */
+            {
+                id: "agregar", nombre: "Alta: agregar()", tipo: "escritura", usaFase5: false, sinFase5: "INSERT no devuelve ResultSet",
+                datos: ["codigo", "nombre"],
+                casos: [
+                    { id: "normal", nombre: "Recorrido normal" },
+                    { id: "duplicado", nombre: "¿Y si el código ya existe?" },
+                    { id: "bad_pass", nombre: "¿Y si la contraseña es incorrecta?" }
+                ],
+                codigo() {
+                    return lineas(`
+public String agregar(PersonaVO p) {
+    // FASE 1: Definir la sentencia SQL
+    String sql = "INSERT INTO personas(codigo, nombre) VALUES (?, ?)";
+    String mensaje = "Error al agregar persona.";
+
+    // FASES 2 y 3: conexión y PreparedStatement en try-with-resources
+    try (Connection con = Conexion.obtener();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+        // FASE 3: Asignar parámetros
+        ps.setInt(1, p.getCodigo());
+        ps.setString(2, p.getNombre());
+        // FASE 4: Ejecutar (INSERT no tiene FASE 5)
+        int filasAfectadas = ps.executeUpdate();
+        if (filasAfectadas > 0) {
+            mensaje = "Persona agregada.";
+        }
+    } catch (SQLException e) {
+        System.err.println("Error al agregar persona: " + e.getMessage());
+        e.printStackTrace();
+    }
+    return mensaje;
+}`);
+                },
+                pasos(k) {
+                    const r = nuevoRecorrido(this.codigo(k));
+                    let cod = datos.codigo;
+                    const nom = datos.nombre;
+                    if (k === "duplicado" && r.st.rows.length) cod = r.st.rows[0].codigo;
+                    const idxDup = r.st.rows.findIndex(f => f.codigo === cod);
+
+                    r.paso("agregar(PersonaVO p)", null,
+                        `Inicio de ${c("agregar()")}. El formulario hizo ${c("POST")} con ${c("action=agregar")}; el Servlet creó ${c(`new PersonaVO(${cod}, "${nom}")`)} y llama a ${c("dao.agregar(p)")}.`,
+                        "Método iniciado", { mem: [["PersonaVO p", `${cod} · ${nom}`]] });
+                    r.paso("String sql", "fase1",
+                        `<strong>FASE 1:</strong> Se define el INSERT. Cada ${c("?", "text-amber-300")} marca un valor que se completa después.`,
+                        "FASE 1: SQL definido", { sql: `"INSERT INTO personas(codigo, nombre) VALUES (?, ?)"` }, { note: true });
+                    r.setMem("String mensaje", `"Error al agregar persona."`);
+                    r.paso("String mensaje", null,
+                        `${c("mensaje")} empieza con el texto de error: solo cambia si el INSERT realmente agrega la fila.`,
+                        "Mensaje inicial");
+
+                    if (k === "bad_pass") {
+                        falloConexion(r, `"Error al agregar persona."`, `Se devuelve ${c('"Error al agregar persona."')}: la tabla no cambió.`);
+                        return r.pasos;
+                    }
+                    r.paso("Conexion.obtener()", "fase2",
+                        `<strong>FASE 2:</strong> ${c("Conexion.obtener()", "text-amber-300")} abre la conexión con MySQL.`,
+                        "FASE 2: Conexión abierta", { con: "ConnectionImpl@3d4e", pipe: true });
+                    r.paso("prepareStatement(sql)", "fase3",
+                        `<strong>FASE 3:</strong> Se prepara el ${c("PreparedStatement ps", "text-purple-300")} con los dos ${c("?")} todavía vacíos.`,
+                        "FASE 3: PreparedStatement listo", { ps: "PreparedStatement@7f1a", psOn: true, psText: "INSERT INTO personas(codigo, nombre) VALUES (?, ?)" });
+                    r.paso("ps.setInt(1, p.getCodigo())", "fase3",
+                        `<strong>FASE 3:</strong> ${c("ps.setInt(1, p.getCodigo())", "text-purple-300")}: el <strong>primer</strong> ${c("?")} recibe el código ${c(cod, "text-amber-300")}. Las posiciones empiezan en 1, no en 0.`,
+                        "FASE 3: ? 1 = codigo", { psText: `INSERT INTO personas(codigo, nombre) VALUES (${cod}, ?)` });
+                    r.paso("ps.setString(2, p.getNombre())", "fase3",
+                        `<strong>FASE 3:</strong> ${c("ps.setString(2, p.getNombre())", "text-purple-300")}: el <strong>segundo</strong> ${c("?")} recibe ${c("'" + nom + "'", "text-amber-300")}.`,
+                        "FASE 3: ? 2 = nombre", { psText: `INSERT INTO personas(codigo, nombre) VALUES (${cod}, '${nom}')` });
+
+                    if (idxDup >= 0) {
+                        r.paso("ps.executeUpdate()", "fase4",
+                            `${ERR("FALLO EN FASE 4:")} MySQL rechaza el INSERT: ${c(`Duplicate entry '${cod}' for key 'PRIMARY'`, "text-rose-300")}. Ya existe una persona con ese código (clave primaria).`,
+                            "Error: clave duplicada", { hl: idxDup, hlKind: "error" }, { error: true });
+                        r.paso("catch (SQLException e)", null,
+                            `El flujo salta al ${c("catch", "text-rose-400")}: no se ejecuta el ${c("if")} y ${c("mensaje")} no cambia. El try-with-resources cierra ${c("ps")} y ${c("con")}.`,
+                            "Excepción capturada", r.cerrar(), { error: true });
+                        r.paso("System.err.println", null, `Se imprime el error en la consola del servidor.`, "Error en consola", {}, { error: true });
+                        r.paso("return mensaje;", null,
+                            `Se devuelve ${c('"Error al agregar persona."')}. Por eso, en el proyecto el Servlet valida la unicidad <strong>antes</strong> con ${c("obtenerXCodigo()")}, para mostrar un mensaje claro en el formulario.`,
+                            "Devuelve el mensaje de error", { ret: `"Error al agregar persona."` });
+                        return r.pasos;
+                    }
+                    const despues = [...r.st.rows, { codigo: cod, nombre: nom }];
+                    r.setMem("int filasAfectadas", 1);
+                    r.paso("ps.executeUpdate()", "fase4",
+                        `<strong>FASE 4:</strong> ${c("ps.executeUpdate()", "text-orange-300")} envía el INSERT. MySQL agrega la fila ${esc(filaTxt({ codigo: cod, nombre: nom }))} y devuelve ${c("1")} (filas afectadas). La FASE 5 no aplica: un INSERT no devuelve ResultSet.`,
+                        "FASE 4: fila insertada", { rows: despues, hl: despues.length - 1, hlKind: "nueva" });
+                    r.paso("if (filasAfectadas > 0)", null, `${c("1 > 0")} es verdadero: se entra al ${c("if")}.`, "Condición verdadera");
+                    r.setMem("String mensaje", `"Persona agregada."`);
+                    r.paso('mensaje = "Persona agregada."', null, `${c("mensaje")} pasa a ${c('"Persona agregada."')}.`, "Mensaje actualizado");
+                    r.paso("} catch (SQLException e)", null,
+                        `Termina el bloque try: el try-with-resources cierra ${c("ps.close() → con.close()", "text-slate-300")}.`,
+                        "Recursos cerrados", r.cerrar());
+                    r.paso("return mensaje;", null,
+                        `Se devuelve ${c('"Persona agregada."')}. El Servlet aplica <strong>PRG</strong>: ${c("response.sendRedirect(...)")} hace que el navegador pida de nuevo el listado, que ya muestra la persona agregada.`,
+                        "Persona agregada", { ret: `"Persona agregada."`, browser: { kind: "lista", items: despues, prg: true } }, { aplicar: despues });
+                    return r.pasos;
+                },
+                resumen() {
+                    return [
+                        `Se definió ${c("INSERT INTO personas(codigo, nombre) VALUES (?, ?)")}.`,
+                        `Se abrió la conexión con ${c("Conexion.obtener()", "text-amber-300")}.`,
+                        `Se preparó el ${c("PreparedStatement", "text-purple-300")}; ${c("setInt(1, ...)")} y ${c("setString(2, ...)")} completaron los ?.`,
+                        `${c("executeUpdate()", "text-orange-300")} insertó la fila y devolvió las filas afectadas.`,
+                        `No aplica: un INSERT no devuelve ResultSet.`,
+                        `El Servlet aplicó PRG (sendRedirect) y el listado muestra la persona nueva.`
+                    ];
+                }
+            },
+
+            /* -------------------------- 4. actualizar() -------------------------- */
+            {
+                id: "actualizar", nombre: "Modificación: actualizar()", tipo: "escritura", usaFase5: false, sinFase5: "UPDATE no devuelve ResultSet",
+                datos: ["codigo", "nombre"],
+                casos: [
+                    { id: "normal", nombre: "Recorrido normal" },
+                    { id: "no_existe", nombre: "¿Y si el código no existe?" },
+                    { id: "orden", nombre: "¿Y si se invierte el orden de los set?" },
+                    { id: "sin_where", nombre: "¿Y si se olvida el WHERE?" },
+                    { id: "bad_pass", nombre: "¿Y si la contraseña es incorrecta?" }
+                ],
+                codigo(k) {
+                    const cod = lineas(`
+public String actualizar(PersonaVO p) {
+    // FASE 1: Definir la sentencia SQL
+    String sql = "UPDATE personas SET nombre = ? WHERE codigo = ?";
+    String mensaje = "Persona no encontrada.";
+
+    // FASES 2 y 3: conexión y PreparedStatement en try-with-resources
+    try (Connection con = Conexion.obtener();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+        // FASE 3: Asignar parámetros
+        ps.setString(1, p.getNombre());
+        ps.setInt(2, p.getCodigo());
+        // FASE 4: Ejecutar (devuelve cuántas filas cambiaron)
+        int filasAfectadas = ps.executeUpdate();
+        if (filasAfectadas > 0) {
+            mensaje = "Persona actualizada.";
+        }
+    } catch (SQLException e) {
+        System.err.println("Error al actualizar persona: " + e.getMessage());
+        e.printStackTrace();
+        mensaje = "Error al actualizar persona.";
+    }
+    return mensaje;
+}`);
+                    if (k === "orden") {
+                        cod[10] = `        ps.setInt(1, p.getCodigo());     // ERROR: orden invertido`;
+                        cod[11] = `        ps.setString(2, p.getNombre());  // ERROR: orden invertido`;
+                    }
+                    if (k === "sin_where") {
+                        cod[2] = `    String sql = "UPDATE personas SET nombre = ?"; // ERROR: falta el WHERE`;
+                        cod[11] = `        // (sin WHERE no hay segundo ?)`;
+                    }
+                    return cod;
+                },
+                pasos(k) {
+                    const r = nuevoRecorrido(this.codigo(k));
+                    const cod = k === "no_existe" ? 99 : datos.codigo;
+                    const nom = datos.nombre;
+                    const idx = r.st.rows.findIndex(f => f.codigo === cod);
+                    const sqlBase = k === "sin_where" ? "UPDATE personas SET nombre = ?" : "UPDATE personas SET nombre = ? WHERE codigo = ?";
+
+                    r.paso("actualizar(PersonaVO p)", null,
+                        `Inicio de ${c("actualizar()")}. El formulario de ${c("persona-editar.jsp")} hizo ${c("POST")} con ${c("action=editar")}; el Servlet creó ${c(`new PersonaVO(${cod}, "${nom}")`)}. El código no se puede cambiar (en el formulario es readonly).`,
+                        "Método iniciado", { mem: [["PersonaVO p", `${cod} · ${nom}`]] });
+                    r.paso("String sql", "fase1",
+                        k === "sin_where"
+                            ? `<strong>FASE 1:</strong> ${ERR("Atención:")} la sentencia no tiene ${c("WHERE", "text-rose-400")}. Así afecta a <strong>todas</strong> las filas de la tabla.`
+                            : `<strong>FASE 1:</strong> Se define el UPDATE: el primer ${c("?")} es el nombre nuevo (SET) y el segundo, el código (WHERE).`,
+                        "FASE 1: SQL definido", { sql: `"${sqlBase}"` }, { note: true, error: k === "sin_where" });
+                    r.setMem("String mensaje", `"Persona no encontrada."`);
+                    r.paso("String mensaje", null,
+                        `${c("mensaje")} empieza en ${c('"Persona no encontrada."')}: solo cambia si el UPDATE modifica alguna fila.`,
+                        "Mensaje inicial");
+
+                    if (k === "bad_pass") {
+                        falloConexion(r, `"Error al actualizar persona."`, `Se devuelve ${c('"Error al actualizar persona."')}: la tabla no cambió.`, 'mensaje = "Error al actualizar', `"Error al actualizar persona."`);
+                        return r.pasos;
+                    }
+                    r.paso("Conexion.obtener()", "fase2",
+                        `<strong>FASE 2:</strong> ${c("Conexion.obtener()", "text-amber-300")} abre la conexión con MySQL.`,
+                        "FASE 2: Conexión abierta", { con: "ConnectionImpl@3d4e", pipe: true });
+                    r.paso("prepareStatement(sql)", "fase3",
+                        `<strong>FASE 3:</strong> Se prepara el ${c("PreparedStatement ps", "text-purple-300")}.`,
+                        "FASE 3: PreparedStatement listo", { ps: "PreparedStatement@7f1a", psOn: true, psText: sqlBase });
+
+                    let filas = 0, despues = r.st.rows.map(f => ({ ...f })), hl = -1, desc4;
+                    if (k === "orden") {
+                        r.paso("ps.setInt(1, p.getCodigo())", "fase3",
+                            `<strong>FASE 3:</strong> ${ERR("Orden invertido:")} ${c("setInt(1, ...)")} pone el código ${c(cod)} en el <strong>primer</strong> ${c("?")}, que es el del SET (nombre).`,
+                            "? 1 recibe el código", { psText: `UPDATE personas SET nombre = ${cod} WHERE codigo = ?` }, { error: true });
+                        r.paso("ps.setString(2, p.getNombre())", "fase3",
+                            `${c("setString(2, ...)")} pone ${c("'" + nom + "'")} en el <strong>segundo</strong> ${c("?")}, el del WHERE: ahora se busca una persona cuyo código sea ${c("'" + nom + "'")}.`,
+                            "? 2 recibe el nombre", { psText: `UPDATE personas SET nombre = ${cod} WHERE codigo = '${nom}'` }, { error: true });
+                        desc4 = `<strong>FASE 4:</strong> Ningún código es igual a ${c("'" + nom + "'")}: el UPDATE no modifica nada y ${c("executeUpdate()")} devuelve ${c("0")}. No hay error, pero tampoco se actualizó la persona: por eso importa el orden de los ?.`;
+                    } else if (k === "sin_where") {
+                        r.paso("ps.setString(1, p.getNombre())", "fase3",
+                            `<strong>FASE 3:</strong> ${c("setString(1, ...)")} pone ${c("'" + nom + "'")} en el único ${c("?")}.`,
+                            "? 1 = nombre", { psText: `UPDATE personas SET nombre = '${nom}'` });
+                        filas = despues.length;
+                        despues = despues.map(f => ({ ...f, nombre: nom }));
+                        hl = "todas";
+                        desc4 = `${ERR("FASE 4 sin WHERE:")} ${c("executeUpdate()")} cambia el nombre de <strong>todas</strong> las filas a ${c("'" + nom + "'")} y devuelve ${c(filas)}. MySQL no avisa: el error es del programador. (Esta simulación no guarda este cambio.)`;
+                    } else {
+                        r.paso("ps.setString(1, p.getNombre())", "fase3",
+                            `<strong>FASE 3:</strong> ${c("ps.setString(1, p.getNombre())", "text-purple-300")}: el primer ${c("?")} (SET) recibe ${c("'" + nom + "'", "text-amber-300")}.`,
+                            "FASE 3: ? 1 = nombre", { psText: `UPDATE personas SET nombre = '${nom}' WHERE codigo = ?` });
+                        r.paso("ps.setInt(2, p.getCodigo())", "fase3",
+                            `<strong>FASE 3:</strong> ${c("ps.setInt(2, p.getCodigo())", "text-purple-300")}: el segundo ${c("?")} (WHERE) recibe ${c(cod, "text-amber-300")}. Es el orden inverso al del INSERT, porque sigue el orden de los ? en el SQL.`,
+                            "FASE 3: ? 2 = codigo", { psText: `UPDATE personas SET nombre = '${nom}' WHERE codigo = ${cod}` });
+                        if (idx >= 0) {
+                            filas = 1; hl = idx;
+                            despues[idx].nombre = nom;
+                            desc4 = `<strong>FASE 4:</strong> ${c("ps.executeUpdate()", "text-orange-300")} ejecuta el UPDATE. MySQL busca la fila con ${c("codigo = " + cod)}, cambia su nombre de ${c('"' + r.st.rows[idx].nombre + '"')} a ${c('"' + nom + '"')} y devuelve ${c("1")}. La FASE 5 no aplica.`;
+                        } else {
+                            desc4 = `<strong>FASE 4:</strong> No hay ninguna fila con ${c("codigo = " + cod)}: el UPDATE no modifica nada y ${c("executeUpdate()")} devuelve ${c("0")}. No es un error de SQL.`;
+                        }
+                    }
+                    r.setMem("int filasAfectadas", filas);
+                    r.paso("ps.executeUpdate()", "fase4", desc4, filas ? `FASE 4: ${filas} fila(s) modificada(s)` : "FASE 4: 0 filas",
+                        { rows: despues, hl, hlKind: "modificada" }, { error: k === "sin_where" });
+                    if (filas > 0) {
+                        r.paso("if (filasAfectadas > 0)", null, `${c(filas + " > 0")} es verdadero: se entra al ${c("if")}.`, "Condición verdadera");
+                        r.setMem("String mensaje", `"Persona actualizada."`);
+                        r.paso('mensaje = "Persona actualizada."', null, `${c("mensaje")} pasa a ${c('"Persona actualizada."')}.`, "Mensaje actualizado");
+                    } else {
+                        r.paso("if (filasAfectadas > 0)", null, `${c("0 > 0")} es falso: no se entra al ${c("if")} y ${c("mensaje")} queda en ${c('"Persona no encontrada."')}.`, "Condición falsa");
+                    }
+                    r.paso("} catch (SQLException e)", null,
+                        `Termina el bloque try: el try-with-resources cierra ${c("ps.close() → con.close()", "text-slate-300")}.`,
+                        "Recursos cerrados", r.cerrar());
+                    const ok = k === "normal" && filas > 0;
+                    r.paso("return mensaje;", null,
+                        ok
+                            ? `Se devuelve ${c('"Persona actualizada."')}. El Servlet aplica <strong>PRG</strong> (${c("sendRedirect")}) y el listado muestra el nombre nuevo.`
+                            : `Se devuelve ${c(filas ? '"Persona actualizada."' : '"Persona no encontrada."')}.` + (k === "sin_where" ? " Aunque el mensaje dice que salió bien, se cambiaron todas las filas." : ""),
+                        "Retorno del mensaje",
+                        { ret: filas ? `"Persona actualizada."` : `"Persona no encontrada."`, browser: { kind: "lista", items: despues, prg: true } },
+                        ok ? { aplicar: despues } : {});
+                    return r.pasos;
+                },
+                resumen() {
+                    return [
+                        `Se definió ${c("UPDATE personas SET nombre = ? WHERE codigo = ?")}.`,
+                        `Se abrió la conexión con ${c("Conexion.obtener()", "text-amber-300")}.`,
+                        `${c("setString(1, nombre)")} y ${c("setInt(2, codigo)")}: el orden lo marca el SQL (SET primero, WHERE después).`,
+                        `${c("executeUpdate()", "text-orange-300")} devolvió cuántas filas cambiaron (0 si el código no existe).`,
+                        `No aplica: un UPDATE no devuelve ResultSet.`,
+                        `El Servlet aplicó PRG y el listado muestra el cambio.`
+                    ];
+                }
+            },
+
+            /* --------------------------- 5. eliminar() --------------------------- */
+            {
+                id: "eliminar", nombre: "Baja: eliminar()", tipo: "escritura", usaFase5: false, sinFase5: "DELETE no devuelve ResultSet",
+                datos: ["codigo"],
+                casos: [
+                    { id: "normal", nombre: "Recorrido normal" },
+                    { id: "no_existe", nombre: "¿Y si el código no existe?" },
+                    { id: "sin_where", nombre: "¿Y si se olvida el WHERE?" },
+                    { id: "bad_pass", nombre: "¿Y si la contraseña es incorrecta?" }
+                ],
+                codigo(k) {
+                    const cod = lineas(`
+public String eliminar(int codigo) {
+    // FASE 1: Definir la sentencia SQL
+    String sql = "DELETE FROM personas WHERE codigo = ?";
+    String mensaje = "Persona no encontrada.";
+
+    // FASES 2 y 3: conexión y PreparedStatement en try-with-resources
+    try (Connection con = Conexion.obtener();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+        // FASE 3: Asignar parámetros
+        ps.setInt(1, codigo);
+        // FASE 4: Ejecutar (devuelve cuántas filas se borraron)
+        int filasAfectadas = ps.executeUpdate();
+        if (filasAfectadas > 0) {
+            mensaje = "Persona eliminada.";
+        }
+    } catch (SQLException e) {
+        System.err.println("Error al eliminar persona: " + e.getMessage());
+        e.printStackTrace();
+        mensaje = "Error al eliminar persona.";
+    }
+    return mensaje;
+}`);
+                    if (k === "sin_where") {
+                        cod[2] = `    String sql = "DELETE FROM personas"; // ERROR: falta el WHERE`;
+                        cod[10] = `        // (sin WHERE no hay ningún ?)`;
+                    }
+                    return cod;
+                },
+                pasos(k) {
+                    const r = nuevoRecorrido(this.codigo(k));
+                    const cod = k === "no_existe" ? 99 : datos.codigo;
+                    const idx = r.st.rows.findIndex(f => f.codigo === cod);
+                    const sqlBase = k === "sin_where" ? "DELETE FROM personas" : "DELETE FROM personas WHERE codigo = ?";
+
+                    r.paso("eliminar(int codigo)", null,
+                        `Inicio de ${c("eliminar()")} con ${c("codigo = " + cod, "text-amber-300")}. El botón Eliminar de la tabla es un formulario ${c("POST")} con ${c("confirm()")} y el código en un campo oculto; el Servlet llama a ${c("dao.eliminar(codigo)")}.`,
+                        "Método iniciado", { mem: [["int codigo", cod]] });
+                    r.paso("String sql", "fase1",
+                        k === "sin_where"
+                            ? `<strong>FASE 1:</strong> ${ERR("Atención:")} la sentencia no tiene ${c("WHERE", "text-rose-400")}: borraría <strong>todas</strong> las filas.`
+                            : `<strong>FASE 1:</strong> Se define el DELETE. El ${c("WHERE codigo = ?")} limita el borrado a una sola fila.`,
+                        "FASE 1: SQL definido", { sql: `"${sqlBase}"` }, { note: true, error: k === "sin_where" });
+                    r.setMem("String mensaje", `"Persona no encontrada."`);
+                    r.paso("String mensaje", null, `${c("mensaje")} empieza en ${c('"Persona no encontrada."')}.`, "Mensaje inicial");
+
+                    if (k === "bad_pass") {
+                        falloConexion(r, `"Error al eliminar persona."`, `Se devuelve ${c('"Error al eliminar persona."')}: la tabla no cambió.`, 'mensaje = "Error al eliminar', `"Error al eliminar persona."`);
+                        return r.pasos;
+                    }
+                    r.paso("Conexion.obtener()", "fase2",
+                        `<strong>FASE 2:</strong> ${c("Conexion.obtener()", "text-amber-300")} abre la conexión con MySQL.`,
+                        "FASE 2: Conexión abierta", { con: "ConnectionImpl@3d4e", pipe: true });
+                    r.paso("prepareStatement(sql)", "fase3",
+                        `<strong>FASE 3:</strong> Se prepara el ${c("PreparedStatement ps", "text-purple-300")}.`,
+                        "FASE 3: PreparedStatement listo", { ps: "PreparedStatement@7f1a", psOn: true, psText: sqlBase });
+
+                    let filas = 0, despues = r.st.rows.map(f => ({ ...f })), hl = -1, desc4;
+                    if (k === "sin_where") {
+                        filas = despues.length; hl = "todas"; despues = [];
+                        desc4 = `${ERR("FASE 4 sin WHERE:")} ${c("executeUpdate()")} borra <strong>todas</strong> las filas y devuelve ${c(filas)}. MySQL no avisa. (Esta simulación no guarda este cambio.)`;
+                    } else {
+                        r.paso("ps.setInt(1, codigo)", "fase3",
+                            `<strong>FASE 3:</strong> ${c("ps.setInt(1, codigo)", "text-purple-300")} pone ${c(cod, "text-amber-300")} en el único ${c("?")}.`,
+                            "FASE 3: ? asignado", { psText: `DELETE FROM personas WHERE codigo = ${cod}` });
+                        if (idx >= 0) {
+                            filas = 1; hl = idx;
+                            despues = despues.filter(f => f.codigo !== cod);
+                            desc4 = `<strong>FASE 4:</strong> ${c("ps.executeUpdate()", "text-orange-300")} ejecuta el DELETE. MySQL borra la fila ${esc(filaTxt(r.st.rows[idx]))} y devuelve ${c("1")}. La FASE 5 no aplica.`;
+                        } else {
+                            desc4 = `<strong>FASE 4:</strong> No hay ninguna fila con ${c("codigo = " + cod)}: no se borra nada y ${c("executeUpdate()")} devuelve ${c("0")}.`;
+                        }
+                    }
+                    r.setMem("int filasAfectadas", filas);
+                    /* primero se marca la fila en rojo y en el paso siguiente desaparece */
+                    r.paso("ps.executeUpdate()", "fase4", desc4, filas ? `FASE 4: ${filas} fila(s) borrada(s)` : "FASE 4: 0 filas",
+                        { hl, hlKind: "borrada" }, { error: k === "sin_where" });
+                    if (filas > 0) {
+                        r.paso("if (filasAfectadas > 0)", null, `${c(filas + " > 0")} es verdadero: se entra al ${c("if")}. La fila ya no está en la tabla.`, "Condición verdadera",
+                            { rows: despues, hl: -1 });
+                        r.setMem("String mensaje", `"Persona eliminada."`);
+                        r.paso('mensaje = "Persona eliminada."', null, `${c("mensaje")} pasa a ${c('"Persona eliminada."')}.`, "Mensaje actualizado");
+                    } else {
+                        r.paso("if (filasAfectadas > 0)", null, `${c("0 > 0")} es falso: ${c("mensaje")} queda en ${c('"Persona no encontrada."')}.`, "Condición falsa");
+                    }
+                    r.paso("} catch (SQLException e)", null,
+                        `Termina el bloque try: el try-with-resources cierra ${c("ps.close() → con.close()", "text-slate-300")}.`,
+                        "Recursos cerrados", r.cerrar());
+                    const ok = k === "normal" && filas > 0;
+                    r.paso("return mensaje;", null,
+                        ok
+                            ? `Se devuelve ${c('"Persona eliminada."')}. El Servlet aplica <strong>PRG</strong> (${c("sendRedirect")}) y el listado ya no muestra esa fila.`
+                            : `Se devuelve ${c(filas ? '"Persona eliminada."' : '"Persona no encontrada."')}.`,
+                        "Retorno del mensaje",
+                        { ret: filas ? `"Persona eliminada."` : `"Persona no encontrada."`, browser: { kind: "lista", items: despues, prg: true } },
+                        ok ? { aplicar: despues } : {});
+                    return r.pasos;
+                },
+                resumen() {
+                    return [
+                        `Se definió ${c("DELETE FROM personas WHERE codigo = ?")}.`,
+                        `Se abrió la conexión con ${c("Conexion.obtener()", "text-amber-300")}.`,
+                        `${c("setInt(1, codigo)", "text-purple-300")} completó el único ?.`,
+                        `${c("executeUpdate()", "text-orange-300")} devolvió cuántas filas se borraron (0 si el código no existe).`,
+                        `No aplica: un DELETE no devuelve ResultSet.`,
+                        `El Servlet aplicó PRG y el listado ya no muestra la persona.`
+                    ];
+                }
+            }
+        ];
+
+        /* =====================================================================
+           RESALTADO DE SINTAXIS JAVA
+           ===================================================================== */
+        function highlightSyntax(line) {
+            if (!line.trim()) return "&nbsp;";
+            const tokenRegex = /("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\/\/.*$|[\w]+|[^\w\s]+|\s+)/g;
+            let html = "";
+            let match;
+            while ((match = tokenRegex.exec(line)) !== null) {
+                const token = match[0];
+                const e = esc(token);
+                if (token.startsWith("//")) html += `<span class="token-comment">${e}</span>`;
+                else if (token.startsWith('"') || token.startsWith("'")) html += `<span class="token-string">${e}</span>`;
+                else if (/^(public|return|try|catch|new|while|if|null|int|true|false)$/.test(token)) html += `<span class="token-keyword">${e}</span>`;
+                else if (/^(ArrayList|PersonaVO|String|Connection|Conexion|PreparedStatement|ResultSet|SQLException|System)$/.test(token)) html += `<span class="token-class">${e}</span>`;
+                else if (/^(getLista|obtenerXCodigo|agregar|actualizar|eliminar|obtener|prepareStatement|executeQuery|executeUpdate|next|getInt|getString|setInt|setString|add|getCodigo|getNombre|println|getMessage|printStackTrace)$/.test(token)) html += `<span class="token-method">${e}</span>`;
+                else html += e;
+            }
+            return html;
+        }
+
+        function renderCode() {
+            const container = document.getElementById("codeContainer");
+            container.innerHTML = "";
+            escenario.codigo(caso).forEach((line, idx) => {
+                const div = document.createElement("div");
+                div.id = `code-line-${idx}`;
+                div.className = "code-line";
+                div.innerHTML = `
+                    <span class="w-6 text-right text-slate-600 select-none text-[10px] font-mono mr-3 shrink-0">${idx + 1}</span>
+                    <span class="whitespace-pre">${highlightSyntax(line)}</span>`;
+                container.appendChild(div);
+            });
+        }
+
+        /* =====================================================================
+           ACTUALIZACIÓN DE LA INTERFAZ SEGÚN EL PASO ACTUAL
+           ===================================================================== */
+        function updateUI() {
+            if (!steps.length) return;
+            const step = steps[currentStep];
+
+            // 1. Línea de código
+            document.querySelectorAll(".code-line").forEach(el => el.className = "code-line");
+            const lineEl = document.getElementById(`code-line-${step.line}`);
+            if (lineEl) {
+                lineEl.classList.add(step.error ? "active-error" : step.fase ? `active-${step.fase}` : "active-neutral");
+                lineEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            }
+
+            // 2. Nota de la FASE 1
+            document.getElementById("fase1Note").classList.toggle("hidden", !step.note);
+
+            // 3. Barra de fases
+            const actual = step.fase ? parseInt(step.fase.replace("fase", "")) : 0;
+            const maxAlcanzada = Math.max(0, ...steps.slice(0, currentStep + 1).map(s => s.fase ? parseInt(s.fase.replace("fase", "")) : 0));
+            for (let n = 1; n <= 5; n++) {
+                const badge = document.getElementById(`p-fase-${n}`);
+                const base = "phase-badge px-1.5 py-0.5 rounded border flex items-center gap-1 transition";
+                if (n === 5 && !escenario.usaFase5) {
+                    badge.className = `${base} border-slate-800 text-slate-600 opacity-50 line-through`;
+                    badge.title = `No aplica: ${escenario.sinFase5}`;
+                    continue;
+                }
+                badge.title = "";
+                if (n === actual) badge.className = `${base} text-white font-bold bg-sky-600 border-sky-400 shadow-lg shadow-sky-500/20`;
+                else if (n < maxAlcanzada || (n === maxAlcanzada && n !== actual)) badge.className = `${base} text-emerald-300 bg-emerald-950/60 border-emerald-800`;
+                else badge.className = `${base} border-slate-800 text-slate-500`;
+            }
+
+            // 4. Diagrama
+            document.getElementById("diagramStatus").textContent = step.status;
+            const pipeFlow = document.getElementById("pipeFlowInner");
+            const pipeLabel = document.getElementById("pipeStatusLabel");
+            const dbPropsCard = document.getElementById("dbPropsCard");
+            const psCard = document.getElementById("psCard");
+            const psSqlText = document.getElementById("psSqlText");
+            if (step.pipe) {
+                pipeFlow.className = "w-full h-full animated-pipe";
+                pipeLabel.textContent = "Conexión activa con MySQL (puerto 3306)";
+                pipeLabel.className = "text-[10px] font-mono text-amber-400 font-bold mb-1";
+                dbPropsCard.classList.remove("opacity-40");
+                dbPropsCard.classList.add("glow-active");
+            } else {
+                pipeFlow.className = "w-full h-full hidden";
+                pipeLabel.textContent = "Sin conexión";
+                pipeLabel.className = "text-[10px] font-mono text-slate-500 mb-1";
+                dbPropsCard.classList.add("opacity-40");
+                dbPropsCard.classList.remove("glow-active");
+            }
+            if (step.psOn) {
+                psCard.classList.remove("opacity-40");
+                psSqlText.textContent = step.psText;
+                psSqlText.className = "text-purple-300 font-mono font-bold break-words whitespace-normal";
+            } else {
+                psCard.classList.add("opacity-40");
+                psSqlText.textContent = "null";
+                psSqlText.className = "text-slate-400 truncate italic";
+            }
+
+            // 5. Tabla MySQL
+            renderMySQLTable(step);
+
+            // 6. Memoria de Java
+            renderMemoria(step);
+
+            // 7. Navegador
+            const browser = document.getElementById("browserWindow");
+            if (step.browser) {
+                browser.classList.remove("hidden");
+                renderBrowser(step.browser);
+            } else {
+                browser.classList.add("hidden");
+            }
+
+            // 8. Estado de los objetos
+            document.getElementById("st-sql").textContent = step.sql;
+            document.getElementById("st-con").textContent = step.con;
+            document.getElementById("st-ps").textContent = step.ps;
+            document.getElementById("st-rs").textContent = escenario.tipo === "escritura" ? "no se usa" : step.rs;
+            if (escenario.tipo === "lista") {
+                document.getElementById("st-ret-label").innerHTML = "lista (ArrayList&lt;PersonaVO&gt;):";
+                document.getElementById("st-ret").textContent = step.listItems ? `[${step.listItems.length} elementos]` : "aún no existe";
+            } else {
+                document.getElementById("st-ret-label").textContent = "valor devuelto:";
+                document.getElementById("st-ret").textContent = step.ret || "—";
+            }
+            document.getElementById("stepCounterBadge").textContent = `Paso ${currentStep + 1} / ${steps.length}`;
+
+            // 9. Explicación
+            document.getElementById("explanationText").innerHTML = step.desc;
+
+            // 10. Al llegar al último paso de una escritura correcta, el cambio queda guardado en la tabla
+            if (step.aplicar && !aplicado) {
+                mysqlData = step.aplicar.map(r => ({ ...r }));
+                aplicado = true;
+                renderDrawerList();
+            }
+        }
+
+        function renderMySQLTable(step) {
+            const tbody = document.getElementById("mysqlTableBody");
+            const label = document.getElementById("tableNameLabel");
+            document.getElementById("tableRsLabel").textContent = escenario.tipo === "escritura" ? "executeUpdate()" : "ResultSet rs";
+            tbody.innerHTML = "";
+
+            if (step.tableMissing) {
+                label.innerHTML = `Tabla: <span class="text-rose-400 font-bold">persona</span> <span class="text-[9px] bg-rose-950 text-rose-400 border border-rose-800 px-1 rounded font-mono">No existe</span>`;
+                tbody.innerHTML = `
+                    <tr><td colspan="3" class="p-3 text-center bg-rose-950/40 text-rose-300">
+                        <i class="fa-solid fa-triangle-exclamation text-rose-400 text-sm mb-1 block"></i>
+                        <div class="font-bold text-[10px] font-mono">Table 'institutoWeb.persona' doesn't exist</div>
+                        <div class="text-[10px] text-slate-400 mt-1 font-sans">En la BD la tabla se llama <code class="text-emerald-400 font-mono">personas</code></div>
+                    </td></tr>`;
+                return;
+            }
+            label.textContent = "Tabla: personas";
+            if (!step.rows.length) {
+                tbody.innerHTML = `<tr><td colspan="3" class="py-3 text-center text-slate-500 italic font-sans text-[11px]">(Tabla personas vacía)</td></tr>`;
+                return;
+            }
+            const estilos = {
+                cursor: ["bg-amber-500/20 text-amber-200 font-bold border-l-2 border-amber-400", '<i class="fa-solid fa-arrow-right text-amber-400 animate-pulse"></i>'],
+                match: ["bg-sky-500/15 text-sky-200 font-bold border-l-2 border-sky-400", '<i class="fa-solid fa-magnifying-glass text-sky-400"></i>'],
+                nueva: ["bg-emerald-500/20 text-emerald-200 font-bold border-l-2 border-emerald-400", '<i class="fa-solid fa-plus text-emerald-400"></i>'],
+                modificada: ["bg-violet-500/20 text-violet-200 font-bold border-l-2 border-violet-400", '<i class="fa-solid fa-pen text-violet-300"></i>'],
+                borrada: ["bg-rose-500/20 text-rose-300 line-through border-l-2 border-rose-400", '<i class="fa-solid fa-trash text-rose-400"></i>'],
+                error: ["bg-rose-500/20 text-rose-200 font-bold border-l-2 border-rose-400", '<i class="fa-solid fa-ban text-rose-400"></i>']
+            };
+            step.rows.forEach((row, idx) => {
+                const activa = step.hl === "todas" || idx === step.hl;
+                const tr = document.createElement("tr");
+                tr.className = activa ? estilos[step.hlKind][0] : "hover:bg-slate-800/40";
+                tr.innerHTML = `
+                    <td class="py-1 px-1.5 text-center">${activa ? estilos[step.hlKind][1] : ""}</td>
+                    <td class="py-1 px-1 font-mono">${row.codigo}</td>
+                    <td class="py-1 px-1 font-mono">${esc(row.nombre)}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderMemoria(step) {
+            const container = document.getElementById("listaContainer");
+            const badge = document.getElementById("listaSizeBadge");
+            const label = document.getElementById("memLabel");
+            container.innerHTML = "";
+            if (escenario.tipo === "lista") {
+                label.innerHTML = "ArrayList&lt;PersonaVO&gt; lista";
+                const items = step.listItems || [];
+                badge.textContent = step.listItems ? `[${items.length}]` : "";
+                if (!step.listItems) {
+                    container.innerHTML = `<span class="text-[10px] text-slate-600 italic text-center my-auto">(La lista todavía no existe)</span>`;
+                    return;
+                }
+                if (!items.length) {
+                    container.innerHTML = `<span class="text-[10px] text-slate-600 italic text-center my-auto">(Lista vacía)</span>`;
+                    return;
+                }
+                items.forEach(item => {
+                    const card = document.createElement("div");
+                    card.className = "bg-slate-900 border border-sky-500/40 rounded p-1.5 text-[10px] font-mono text-sky-200 flex justify-between items-center shadow-sm";
+                    card.innerHTML = `<span><strong>PersonaVO:</strong> ${item.codigo}</span><span class="text-slate-400">${esc(item.nombre)}</span>`;
+                    container.appendChild(card);
+                });
+                return;
+            }
+            label.textContent = "Variables del método";
+            badge.textContent = "";
+            if (!step.mem.length) {
+                container.innerHTML = `<span class="text-[10px] text-slate-600 italic text-center my-auto">(Sin variables)</span>`;
+                return;
+            }
+            step.mem.forEach(([nombre, valor]) => {
+                const card = document.createElement("div");
+                card.className = "bg-slate-900 border border-sky-500/40 rounded p-1.5 text-[10px] font-mono shadow-sm";
+                card.innerHTML = `<div class="text-slate-400">${esc(nombre)}</div><div class="text-sky-200 font-bold break-words">${esc(valor)}</div>`;
+                container.appendChild(card);
+            });
+        }
+
+        function renderBrowser(b) {
+            const url = document.getElementById("browserUrl");
+            const vista = document.getElementById("browserVista");
+            const body = document.getElementById("browserBody");
+            if (b.kind === "editar") {
+                url.textContent = `http://localhost:8080/mini-crud-sql/persona?action=cargarEditar&codigo=${b.persona.codigo}`;
+                vista.textContent = "persona-editar.jsp (formulario precargado)";
+                body.innerHTML = `
+                    <div class="grid grid-cols-3 gap-2 text-[11px] items-center max-w-sm">
+                        <label class="text-slate-400">Código</label>
+                        <input value="${b.persona.codigo}" readonly class="col-span-2 bg-slate-800 border border-slate-700 rounded px-2 py-0.5 text-slate-400 font-mono">
+                        <label class="text-slate-400">Nombre</label>
+                        <input value="${esc(b.persona.nombre)}" readonly class="col-span-2 bg-slate-900 border border-sky-600 rounded px-2 py-0.5 text-white font-mono">
+                    </div>`;
+                return;
+            }
+            url.textContent = "http://localhost:8080/mini-crud-sql/persona";
+            vista.innerHTML = b.prg ? "PRG: sendRedirect → GET /persona → persona-lista.jsp" : "persona-lista.jsp &lt;c:forEach&gt;";
+            const filas = b.items.length
+                ? b.items.map(i => `<tr class="hover:bg-slate-800/50"><td class="py-1 px-2 font-mono text-sky-300">${i.codigo}</td><td class="py-1 px-2 font-medium">${esc(i.nombre)}</td></tr>`).join("")
+                : `<tr><td colspan="2" class="py-2 text-center text-slate-500 italic">No hay personas registradas</td></tr>`;
+            body.innerHTML = `
+                <table class="w-full text-left font-sans text-[11px] border-collapse">
+                    <thead><tr class="border-b border-slate-700 text-slate-400 font-semibold"><th class="py-0.5 px-2">Código</th><th class="py-0.5 px-2">Nombre</th></tr></thead>
+                    <tbody class="divide-y divide-slate-800 text-slate-200">${filas}</tbody>
+                </table>`;
+        }
+
+        /* =====================================================================
+           SELECCIÓN DE OPERACIÓN, CASO Y DATOS DE ENTRADA
+           ===================================================================== */
+        function cargarOperaciones() {
+            const sel = document.getElementById("operationSelect");
+            sel.innerHTML = ESCENARIOS.map(e => `<option value="${e.id}">${e.nombre}</option>`).join("");
+        }
+
+        function datosPorDefecto() {
+            const codigos = mysqlData.map(r => r.codigo);
+            const libre = (codigos.length ? Math.max(...codigos) : 0) + 1;
+            switch (escenario.id) {
+                case "agregar": datos = { codigo: libre, nombre: "Ana" }; break;
+                case "actualizar": datos = { codigo: codigos[0] ?? 1, nombre: "Marta" }; break;
+                case "eliminar": datos = { codigo: codigos[codigos.length - 1] ?? 1, nombre: "" }; break;
+                default: datos = { codigo: codigos[0] ?? 1, nombre: "" };
+            }
+        }
+
+        function changeOperation(id) {
+            escenario = ESCENARIOS.find(e => e.id === id);
+            const selCaso = document.getElementById("whatIfSelect");
+            selCaso.innerHTML = escenario.casos.map(k => `<option value="${k.id}">${k.nombre}</option>`).join("");
+            caso = "normal";
+            datosPorDefecto();
+            actualizarPanelDatos();
+            reconstruir();
+        }
+
+        function changeCase(id) {
+            caso = id;
+            reconstruir();
+        }
+
+        function reconstruir() {
+            pausePlay();
+            aplicado = false;
+            renderCode();
+            steps = escenario.pasos(caso);
+            currentStep = 0;
+            updateUI();
+            renderResumen();
+            const usaDatos = escenario.datos.length && caso !== "no_existe";
+            document.getElementById("datosActuales").innerHTML = usaDatos
+                ? `Datos: ${escenario.datos.map(d => `${d} = <span class="text-amber-300">${esc(datos[d])}</span>`).join(", ")}`
+                : "";
+        }
+
+        function actualizarPanelDatos() {
+            const box = document.getElementById("panelDatos");
+            box.classList.toggle("hidden", !escenario.datos.length);
+            document.getElementById("filaNombreOp").classList.toggle("hidden", !escenario.datos.includes("nombre"));
+            document.getElementById("opCodigo").value = datos.codigo;
+            document.getElementById("opNombre").value = datos.nombre;
+            const ayudas = {
+                obtenerXCodigo: "Código de la persona a buscar.",
+                agregar: "Código y nombre de la persona nueva (el nombre admite hasta 10 caracteres).",
+                actualizar: "Código de la persona a modificar y su nombre nuevo.",
+                eliminar: "Código de la persona a eliminar."
+            };
+            document.getElementById("ayudaDatos").textContent = ayudas[escenario.id] || "";
+            document.getElementById("datosErrorMsg").classList.add("hidden");
+        }
+
+        function aplicarDatos(e) {
+            e.preventDefault();
+            const cod = parseInt(document.getElementById("opCodigo").value);
+            const nom = document.getElementById("opNombre").value.trim();
+            const err = document.getElementById("datosErrorMsg");
+            let msg = "";
+            if (!(cod > 0)) msg = "El código debe ser un número mayor que 0.";
+            else if (escenario.datos.includes("nombre") && !nom) msg = "El nombre es obligatorio.";
+            else if (nom.length > 10) msg = "El nombre admite hasta 10 caracteres (VARCHAR(10)).";
+            if (msg) {
+                err.textContent = msg;
+                err.classList.remove("hidden");
+                return;
+            }
+            err.classList.add("hidden");
+            datos = { codigo: cod, nombre: nom };
+            reconstruir();
+        }
+
+        function renderResumen() {
+            const textos = escenario.resumen(caso);
+            const colores = ["sky", "amber", "purple", "orange", "emerald"];
+            let html = textos.slice(0, 5).map((t, i) => {
+                const col = colores[i];
+                const noAplica = i === 4 && !escenario.usaFase5;
+                return `<div class="p-2 bg-${col}-950/30 border border-${col}-800/40 rounded flex items-start gap-2 ${noAplica ? "opacity-50" : ""}">
+                    <span class="w-5 h-5 bg-${col}-500/20 text-${col}-400 rounded-full flex items-center justify-center font-bold text-[10px] shrink-0">${i + 1}</span>
+                    <div><strong>FASE ${i + 1}:</strong> ${t}</div></div>`;
+            }).join("");
+            html += `<div class="p-2 bg-slate-800/60 border border-slate-700 rounded flex items-start gap-2">
+                    <i class="fa-solid fa-lock text-slate-400 mt-0.5"></i>
+                    <div><strong>CIERRE AUTOMÁTICO:</strong> el try-with-resources cerró los recursos en orden inverso al de apertura.</div></div>
+                <div class="p-2 bg-slate-800/60 border border-slate-700 rounded flex items-start gap-2">
+                    <i class="fa-solid fa-reply text-sky-400 mt-0.5"></i>
+                    <div><strong>RETORNO:</strong> ${textos[5]}</div></div>`;
+            document.getElementById("summaryList").innerHTML = html;
+            document.getElementById("summaryTitle").textContent = `Resumen: ${escenario.nombre}`;
+        }
+
+        /* =====================================================================
+           CONTROLES
+           ===================================================================== */
+        function nextStep() {
+            if (currentStep < steps.length - 1) { currentStep++; updateUI(); }
+            else pausePlay();
+        }
+        function prevStep() {
+            if (currentStep > 0) { currentStep--; updateUI(); }
+        }
+        function resetSimulation() {
+            /* al reiniciar se recalcula el recorrido con los datos actuales de la tabla */
+            reconstruir();
+        }
+        function togglePlay() { isPlaying ? pausePlay() : startPlay(); }
+        function startPlay() {
+            if (currentStep >= steps.length - 1) { currentStep = 0; updateUI(); }
+            isPlaying = true;
+            document.getElementById("playIcon").className = "fa-solid fa-pause";
+            document.getElementById("playText").textContent = "Pausa";
+            playInterval = setInterval(() => {
+                if (currentStep < steps.length - 1) nextStep(); else pausePlay();
+            }, playSpeed);
+        }
+        function pausePlay() {
+            isPlaying = false;
+            document.getElementById("playIcon").className = "fa-solid fa-play";
+            document.getElementById("playText").textContent = "Reproducir";
+            if (playInterval) clearInterval(playInterval);
+        }
+        function updateSpeed(val) {
+            playSpeed = parseInt(val);
+            document.getElementById("speedValue").textContent = `${(playSpeed / 1000).toFixed(1)}s`;
+            if (isPlaying) { pausePlay(); startPlay(); }
+        }
+
+        /* =====================================================================
+           PANEL LATERAL, RESUMEN, PANTALLA COMPLETA Y EDITOR DE LA TABLA
+           ===================================================================== */
+        function toggleDrawer() {
+            document.getElementById("sideDrawer").classList.toggle("translate-x-full");
+            renderDrawerList();
+        }
+        function openSummaryModal() { document.getElementById("summaryModal").classList.remove("hidden"); }
+        function closeSummaryModal() { document.getElementById("summaryModal").classList.add("hidden"); }
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+            else if (document.exitFullscreen) document.exitFullscreen();
+        }
+
+        function renderDrawerList() {
+            const list = document.getElementById("drawerTableList");
+            list.innerHTML = "";
+            if (!mysqlData.length) {
+                list.innerHTML = `<div class="text-[11px] text-slate-500 italic">(Tabla vacía)</div>`;
+                return;
+            }
+            mysqlData.forEach((row, idx) => {
+                const item = document.createElement("div");
+                item.className = "flex items-center justify-between bg-slate-950 p-1.5 rounded border border-slate-800 font-mono text-[11px]";
+                item.innerHTML = `<span>[${row.codigo}] ${esc(row.nombre)}</span>
+                    <button onclick="deletePersonRow(${idx})" class="text-rose-400 hover:text-rose-300 px-1" title="Quitar fila"><i class="fa-solid fa-trash text-xs"></i></button>`;
+                list.appendChild(item);
+            });
+        }
+
+        function addPersonRow(e) {
+            e.preventDefault();
+            const codInput = document.getElementById("newCodigo");
+            const nomInput = document.getElementById("newNombre");
+            const errEl = document.getElementById("drawerErrorMsg");
+            const cod = parseInt(codInput.value);
+            const nom = nomInput.value.trim();
+            let msg = "";
+            if (!(cod > 0)) msg = "El código debe ser un número mayor que 0.";
+            else if (!nom || nom.length > 10) msg = "El nombre es obligatorio y admite hasta 10 caracteres.";
+            else if (mysqlData.some(p => p.codigo === cod)) msg = `El código ${cod} ya existe en MySQL (clave primaria duplicada).`;
+            if (msg) { errEl.textContent = msg; errEl.classList.remove("hidden"); return; }
+            errEl.classList.add("hidden");
+            mysqlData.push({ codigo: cod, nombre: nom });
+            codInput.value = ""; nomInput.value = "";
+            renderDrawerList();
+            reconstruir();
+        }
+
+        function deletePersonRow(index) {
+            mysqlData.splice(index, 1);
+            renderDrawerList();
+            reconstruir();
+        }
+
+        function restaurarDatos() {
+            mysqlData = DATOS_INICIALES.map(r => ({ ...r }));
+            renderDrawerList();
+            datosPorDefecto();
+            actualizarPanelDatos();
+            reconstruir();
+        }
+
+        /* Atajos de teclado (no se activan mientras se escribe en un campo) */
+        window.addEventListener("keydown", (e) => {
+            if (["INPUT", "SELECT", "TEXTAREA"].includes(e.target.tagName)) return;
+            if (e.key === "ArrowRight") nextStep();
+            if (e.key === "ArrowLeft") prevStep();
+            if (e.key === " ") { e.preventDefault(); togglePlay(); }
+            if (e.key.toLowerCase() === "r") resetSimulation();
+        });
+
+        window.onload = () => {
+            cargarOperaciones();
+            changeOperation("getLista");
+            renderDrawerList();
+        };
+    </script>
+</body>
+</html>
