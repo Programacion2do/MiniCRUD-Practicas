@@ -16,14 +16,14 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column;}
-
+ 
 .header{padding:36px 40px 20px;max-width:720px;margin:0 auto;width:100%;}
 .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-bottom:12px;}
 .eyebrow::before{content:'● ';}
 h1{font-family:'JetBrains Mono',monospace;font-size:clamp(18px,3.5vw,26px);font-weight:800;line-height:1.2;margin-bottom:8px;}
 h1 span{color:var(--amber);}
 .subtitle{color:var(--muted);font-size:13.5px;max-width:540px;line-height:1.6;}
-
+ 
 /* ── Pestañas ── */
 .tabs-wrap{max-width:720px;margin:0 auto;padding:0 40px 24px;width:100%;}
 .tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
@@ -48,7 +48,7 @@ h1 span{color:var(--amber);}
 .tab-level.basico{background:var(--green-soft);color:var(--green);border:1px solid rgba(123,216,143,.3);}
 .tab-level.intermedio{background:var(--blue-soft);color:var(--blue);border:1px solid rgba(122,162,247,.3);}
 .tab-level.avanzado{background:var(--red-soft);color:var(--red);border:1px solid rgba(247,118,142,.3);}
-
+ 
 .progress-wrap{max-width:720px;margin:0 auto;padding:0 40px 20px;width:100%;}
 .progress-dots{display:flex;align-items:center;gap:6px;}
 .dot-step{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--muted);transition:all .25s;flex-shrink:0;}
@@ -58,27 +58,27 @@ h1 span{color:var(--amber);}
 .dot-sep.done{background:rgba(242,161,84,.4);}
 .progress-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:10px;}
 .progress-label span{color:var(--amber);}
-
+ 
 .step-area{max-width:720px;margin:0 auto;padding:0 40px;width:100%;flex:1;}
-
+ 
 .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:28px 28px 24px;}
 .card h2{font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:700;margin-bottom:14px;}
 .card p{font-size:13.5px;color:var(--muted);line-height:1.75;margin-bottom:10px;}
 .card p:last-child{margin-bottom:0;}
 .card p strong{color:var(--text);}
 code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--panel-2);padding:1px 5px;border-radius:4px;color:var(--amber);}
-
+ 
 .step-badge{display:inline-flex;align-items:center;gap:10px;margin-bottom:16px;}
 .step-badge-num{width:44px;height:44px;border-radius:50%;background:var(--amber-soft);border:1.5px solid rgba(242,161,84,.5);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--amber);}
 .step-badge-title{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:800;}
 .step-badge-title span{color:var(--amber);}
-
+ 
 .substeps{list-style:none;padding:0;margin:12px 0;}
 .substeps li{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-bottom:1px solid rgba(52,54,74,.4);font-size:13.5px;color:var(--muted);line-height:1.65;}
 .substeps li:last-child{border-bottom:none;}
 .substeps li strong{color:var(--text);}
 .substep-num{flex-shrink:0;width:24px;height:24px;border-radius:50%;background:var(--amber-soft);border:1px solid rgba(242,161,84,.3);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;color:var(--amber);margin-top:2px;}
-
+ 
 .file-list{margin:12px 0;display:flex;flex-direction:column;gap:6px;}
 .file-row{display:flex;align-items:baseline;gap:8px;padding:7px 12px;background:var(--panel-2);border-radius:6px;border:1px solid var(--border);}
 .file-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;text-transform:uppercase;padding:2px 7px;border-radius:4px;flex-shrink:0;}
@@ -86,7 +86,7 @@ code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--pane
 .file-badge.crear{background:rgba(123,216,143,.15);color:var(--green);border:1px solid rgba(123,216,143,.3);}
 .file-path{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted);}
 .file-path span{color:var(--text);font-weight:600;}
-
+ 
 .term{background:#14151d;border:1px solid var(--border);border-radius:8px;margin:12px 0;overflow:hidden;}
 .term-bar{background:var(--panel-2);border-bottom:1px solid var(--border);padding:7px 12px;display:flex;gap:6px;align-items:center;}
 .tdot{width:10px;height:10px;border-radius:50%;background:var(--border);}
@@ -95,35 +95,35 @@ code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--pane
 .term-body .c{color:var(--muted);}
 .term-body .a{color:var(--amber);}
 .term-body .b{color:var(--blue);}
-
+ 
 .tip{background:var(--green-soft);border:1px solid rgba(123,216,143,.3);border-radius:10px;padding:13px 17px;margin:12px 0;font-size:13px;color:var(--text);line-height:1.65;}
 .tip-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--green);letter-spacing:.06em;margin-bottom:5px;}
 .tip-lbl::before{content:'💡 ';}
 .alerta{background:var(--amber-soft);border:1px solid rgba(242,161,84,.35);border-radius:10px;padding:13px 17px;margin:12px 0;font-size:13px;color:var(--text);line-height:1.65;}
 .alerta-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--amber);letter-spacing:.06em;margin-bottom:5px;}
 .alerta-lbl::before{content:'⚠ ';}
-
+ 
 .preguntas{list-style:none;padding:0;margin:14px 0;display:flex;flex-direction:column;gap:8px;}
 .preguntas li{display:flex;gap:12px;align-items:flex-start;padding:11px 14px;background:var(--panel-2);border-radius:8px;border:1px solid var(--border);font-size:13px;color:var(--text);line-height:1.6;}
 .preguntas li::before{content:'?';flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--blue-soft);border:1px solid rgba(122,162,247,.3);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--blue);margin-top:1px;}
-
+ 
 .cap-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0;}
 .cap-card{background:var(--panel-2);border:1px solid var(--border);border-radius:8px;padding:13px 15px;}
 .cap-icon{font-size:22px;margin-bottom:7px;}
 .cap-title{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--amber);margin-bottom:5px;}
 .cap-desc{font-size:12.5px;color:var(--muted);line-height:1.55;}
-
+ 
 .tabla{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px;}
 .tabla th{text-align:left;padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);border-bottom:1px solid var(--border);}
 .tabla td{padding:9px 12px;border-bottom:1px solid rgba(52,54,74,.5);color:var(--text);}
 .tabla td:first-child{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--amber);}
-
+ 
 .crea-box{background:var(--panel-2);border:1.5px solid rgba(122,162,247,.35);border-radius:10px;padding:14px 18px;margin:12px 0;display:flex;align-items:flex-start;gap:14px;}
 .crea-icon{font-size:24px;flex-shrink:0;margin-top:2px;}
 .crea-info{}
 .crea-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--blue);letter-spacing:.06em;margin-bottom:4px;}
 .crea-task{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--text);}
-
+ 
 .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;padding:20px 0 40px;}
 .btn{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;padding:11px 22px;border-radius:8px;border:none;cursor:pointer;transition:all .2s;letter-spacing:.03em;}
 .btn-prev{background:var(--panel-2);border:1.5px solid var(--border);color:var(--muted);}
@@ -133,7 +133,7 @@ code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--pane
 .btn-finish{background:var(--green);color:#191a23;}
 .btn-finish:hover{background:#9de8ab;}
 .btn[hidden]{display:none;}
-
+ 
 .complete-card{text-align:center;padding:40px 28px;}
 .complete-icon{font-size:52px;margin-bottom:20px;}
 .complete-card h2{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:800;margin-bottom:12px;}
@@ -141,12 +141,12 @@ code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--pane
 .complete-card p{color:var(--muted);font-size:14px;max-width:460px;margin:0 auto;}
 .btn-restart{margin-top:24px;background:var(--panel-2);border:1.5px solid var(--border);color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:12px;padding:9px 18px;border-radius:8px;cursor:pointer;transition:all .2s;}
 .btn-restart:hover{border-color:var(--amber);color:var(--amber);}
-
+ 
 .step-panel{animation:fadeIn .3s ease;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-
+ 
 .footer{max-width:720px;margin:0 auto;padding:16px 40px 24px;border-top:1px solid var(--border);text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.7;width:100%;}
-
+ 
 @media(max-width:600px){
   .header,.tabs-wrap,.progress-wrap,.step-area{padding-left:20px;padding-right:20px;}
   .cap-grid{grid-template-columns:1fr;}
@@ -155,13 +155,13 @@ code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--pane
 </style>
 </head>
 <body>
-
+ 
 <div class="header">
   <div class="eyebrow">Programación Avanzada · UTU · Bachillerato Tecnológico</div>
   <h1>Guía de entrega — <span>Base de Datos</span></h1>
   <p class="subtitle">Seleccionar la actividad a entregar, luego seguir los pasos.</p>
 </div>
-
+ 
 <div class="tabs-wrap">
   <div class="tabs">
     <button class="tab-btn active" onclick="cambiarActividad(0)">
@@ -187,12 +187,12 @@ code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--pane
     </button>
   </div>
 </div>
-
+ 
 <div class="progress-wrap">
   <div class="progress-dots" id="progressDots"></div>
   <div class="progress-label" id="progressLabel"></div>
 </div>
-
+ 
 <div class="step-area">
   <div id="stepContainer"></div>
   <div class="nav">
@@ -201,21 +201,21 @@ code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--pane
     <button class="btn btn-finish" id="btnFinish" onclick="mostrarFin()" hidden>¡Listo! ✓</button>
   </div>
 </div>
-
+ 
 <div class="footer" id="footerEl"></div>
-
+ 
 <script>
-
+ 
 const TAREA_CREA = 'PRACTICA 3-MiniCrud con Base de Datos';
-
+ 
 const CONFIGS = [
-
+ 
   /* ── ACTIVIDAD 01 — Básico ── */
   {
     actividad: 'Actividad 01 — Mostrar la fecha de nacimiento',
     nivel: 'basico',
     descripcion: 'Agregar a la tabla <code>personas</code> la columna <code>fecha_nacimiento</code> (tipo DATE), cargar fechas <strong>directamente en MySQL</strong> y mostrarlas en el listado de la aplicación. El cambio recorre las capas que intervienen en una consulta: la tabla, el VO, el método <code>getLista()</code> del DAO y la vista <code>persona-lista.jsp</code>. En esta práctica el DAO solo se usa para traer datos; agregar, actualizar y eliminar desde la aplicación se trabajará en las próximas clases.',
-    carpetaProyecto: 'mini-crud-sql',
+    carpetaProyecto: 'mini-crud-sql-base',
     urlBase: 'http://localhost:8080/mini-crud/persona',
     zipPrefijo: 'Actividad1',
     zipEjemplo: 'Actividad1_GarciaMaria.zip',
@@ -244,13 +244,13 @@ const CONFIGS = [
     ],
     tipo: 'act01',
   },
-
+ 
   /* ── ACTIVIDAD 02 — Intermedio ── */
   {
     actividad: 'Actividad 02 — Búsqueda por nombre',
     nivel: 'intermedio',
     descripcion: 'Agregar un método <code>buscarPorNombre</code> al DAO que traiga de la base solo las personas cuyo nombre contiene un texto, usando SQL <code>LIKE</code>, e integrarlo con una acción nueva en el Servlet y un formulario de búsqueda en <code>persona-lista.jsp</code>. Los datos de prueba se cargan directamente en MySQL.',
-    carpetaProyecto: 'mini-crud-sql',
+    carpetaProyecto: 'mini-crud-sql-base',
     urlBase: 'http://localhost:8080/mini-crud/persona',
     zipPrefijo: 'Actividad2',
     zipEjemplo: 'Actividad2_GarciaMaria.zip',
@@ -279,7 +279,7 @@ const CONFIGS = [
     ],
     tipo: 'act02',
   },
-
+ 
   /* ── ACTIVIDAD 03 — Avanzado ── */
   {
     actividad: 'Actividad 03 — Llevar la entidad propia a MySQL',
@@ -318,13 +318,13 @@ const CONFIGS = [
     ],
     tipo: 'act03',
   },
-
+ 
 ];
 /* ════════════════════════════════════════════════════════════════ */
-
+ 
 let actividadActual = 0;
 let pasoActual = 0;
-
+ 
 /* ── Helpers ── */
 function renderArchivos(cfg) {
   return cfg.archivos.map(f =>
@@ -334,7 +334,7 @@ function renderArchivos(cfg) {
      </div>`
   ).join('');
 }
-
+ 
 function renderCapturas(cfg) {
   const cards = cfg.capturas.map(c =>
     `<div class="cap-card">
@@ -345,7 +345,7 @@ function renderCapturas(cfg) {
   ).join('');
   return `<div class="cap-grid">${cards}</div>`;
 }
-
+ 
 function renderTablaEntrega(cfg) {
   const filas = cfg.archivosEntrega.map((a, i) =>
     `<tr><td>${i + 1}</td><td>${a.nombre}</td><td>${a.desc}</td></tr>`
@@ -355,12 +355,12 @@ function renderTablaEntrega(cfg) {
     <tbody>${filas}</tbody>
   </table>`;
 }
-
+ 
 function buildPasos(cfg) {
   const esAct01 = cfg.tipo === 'act01';
   const esAct02 = cfg.tipo === 'act02';
   const esAct03 = cfg.tipo === 'act03';
-
+ 
   /* ── paso0: Leer consigna ── */
   const paso0 = {
     titulo: 'Leer la consigna',
@@ -374,27 +374,27 @@ function buildPasos(cfg) {
       <div class="tip"><div class="tip-lbl">No es necesario responderlas en voz alta</div>Son para activar lo que ya se sabe y detectar qué conviene repasar antes de escribir el código.</div>
     `
   };
-
+ 
   /* ── paso1: Preparar ── */
   const paso1 = {
     titulo: esAct03 ? 'Preparar la base y el proyecto' : 'Preparar los archivos del proyecto',
     html: `
       ${esAct01 ? `
-        <div class="tip"><div class="tip-lbl">Alcance de esta práctica</div>En esta práctica el DAO se usa solo para <strong>traer datos</strong> (consultas <code>SELECT</code>). Los datos se cargan directamente en MySQL Workbench con <code>INSERT</code> y <code>UPDATE</code>. Agregar, actualizar y eliminar desde la aplicación se trabajará en las próximas clases.</div>
-        <div class="tip"><div class="tip-lbl">Paso 1 — Descargar el proyecto</div>Descargar el proyecto <strong>mini-crud-sql</strong> y abrirlo en VS Code: <a href="https://github.com/eliizquierdo/material_programacion_avanzada2026/blob/main/proyectos-teoricos/mini-crud-sql/mini-crud-sql.zip" target="_blank" rel="noopener" style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:12px;word-break:break-all;">mini-crud-sql.zip →</a></div>
+        <div class="tip"><div class="tip-lbl">Alcance de esta práctica</div>En esta práctica el DAO se usa solo para <strong>traer datos</strong> (consultas <code>SELECT</code>). Los datos se cargan directamente en MySQL Workbench con <code>INSERT</code> y <code>UPDATE</code>. Agregar, actualizar y eliminar desde la aplicación se trabajará en las próximas clases, por eso en el proyecto base los botones Agregar, Editar y Eliminar vienen deshabilitados.</div>
+        <div class="tip"><div class="tip-lbl">Paso 1 — Descargar el proyecto</div>Descargar el proyecto <strong>mini-crud-sql-base</strong> y abrirlo en VS Code: <a href="https://github.com/eliizquierdo/material_programacion_avanzada2026/blob/main/proyectos-teoricos/mini-crud-sql-base/mini-crud-sql-base.zip" target="_blank" rel="noopener" style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:12px;word-break:break-all;">mini-crud-sql-base.zip →</a></div>
         <div class="alerta"><div class="alerta-lbl">Paso 2 — Configurar la base de datos en MySQL Workbench</div>
           Si la base de datos <strong>no existe todavía</strong>, ejecutar este script para crearla:
           <div class="term" style="margin-top:10px;">
             <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="term-lbl">MySQL Workbench — crear BD y tabla</span></div>
             <div class="term-body"><span class="a">CREATE DATABASE</span> institutoWeb;
 <span class="a">USE</span> institutoWeb;
-
+ 
 <span class="a">CREATE TABLE</span> personas (
   codigo <span class="b">INT</span>(8),
   nombre <span class="b">VARCHAR</span>(10) <span class="b">NOT NULL</span>,
   <span class="b">PRIMARY KEY</span> (codigo)
 );
-
+ 
 <span class="a">INSERT INTO</span> personas (codigo, nombre)
 <span class="a">VALUES</span> (1, 'Juan'), (2, 'María'), (3, 'Carlos');</div>
           </div>
@@ -404,18 +404,18 @@ function buildPasos(cfg) {
           <div class="term" style="margin-top:10px;">
             <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="term-lbl">MySQL Workbench — columna nueva y datos</span></div>
             <div class="term-body"><span class="a">USE</span> institutoWeb;
-
+ 
 <span class="c">-- 1. Agregar la columna sin perder los datos que ya existen</span>
 <span class="a">ALTER TABLE</span> personas <span class="a">ADD COLUMN</span> fecha_nacimiento <span class="b">DATE</span>;
-
+ 
 <span class="c">-- 2. Cargar fechas a personas que ya están en la tabla</span>
 <span class="a">UPDATE</span> personas <span class="a">SET</span> fecha_nacimiento = '2008-03-15' <span class="a">WHERE</span> codigo = 1;
 <span class="a">UPDATE</span> personas <span class="a">SET</span> fecha_nacimiento = '2007-11-02' <span class="a">WHERE</span> codigo = 2;
-
+ 
 <span class="c">-- 3. Agregar una persona nueva, ya con su fecha</span>
 <span class="a">INSERT INTO</span> personas (codigo, nombre, fecha_nacimiento)
 <span class="a">VALUES</span> (4, 'Lucía', '2008-07-21');
-
+ 
 <span class="c">-- 4. Comprobar el resultado</span>
 <span class="a">SELECT</span> * <span class="a">FROM</span> personas;</div>
           </div>
@@ -423,7 +423,7 @@ function buildPasos(cfg) {
         <div class="tip"><div class="tip-lbl">Qué cambia en el código</div><strong>PersonaVO:</strong> atributo <code>java.sql.Date fechaNacimiento</code>, un constructor <strong>nuevo</strong> de 3 parámetros (sin borrar el de 2, que el Servlet y otros métodos del DAO siguen usando), getter y setter. <strong>PersonaDAO:</strong> solo <code>getLista()</code>; en la fase 5 leer <code>rs.getDate("fecha_nacimiento")</code>. <strong>persona-lista.jsp:</strong> columna nueva con <code>\${p.fechaNacimiento}</code> y el <code>colspan</code> de la fila vacía de 3 a 4.</div>
       ` : ''}
       ${esAct02 ? `
-        <div class="tip"><div class="tip-lbl">Mismo proyecto que Actividad 01</div>Continuar trabajando sobre el mismo proyecto <strong>mini-crud-sql</strong> modificado en la Actividad 01. No es necesario descargar nada nuevo.</div>
+        <div class="tip"><div class="tip-lbl">Mismo proyecto que Actividad 01</div>Continuar trabajando sobre el mismo proyecto <strong>mini-crud-sql-base</strong> modificado en la Actividad 01. No es necesario descargar nada nuevo.</div>
         <div class="alerta"><div class="alerta-lbl">Cargar datos de prueba en MySQL</div>Para que la búsqueda tenga resultados interesantes, agregar algunas personas desde MySQL Workbench (el nombre admite hasta 10 caracteres):
           <div class="term" style="margin-top:10px;">
             <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="term-lbl">MySQL Workbench — datos de prueba</span></div>
@@ -432,7 +432,7 @@ function buildPasos(cfg) {
 <span class="a">VALUES</span> (5, 'Ana'), (6, 'Mariana'), (7, 'Fabiana'), (8, 'Diego');</div>
           </div>
         </div>
-        <div class="tip"><div class="tip-lbl">El % va en el parámetro</div>El SQL es <code>SELECT * FROM personas WHERE nombre LIKE ?</code> y el valor se asigna con <code>ps.setString(1, "%" + termino + "%")</code>. Para las fases 4 y 5, tomar como modelo <code>obtenerXCodigo()</code> (ResultSet en un try anidado) y <code>getLista()</code> (recorrer con <code>while</code>).</div>
+        <div class="tip"><div class="tip-lbl">El % va en el parámetro</div>El SQL es <code>SELECT * FROM personas WHERE nombre LIKE ?</code> y el valor se asigna con <code>ps.setString(1, "%" + termino + "%")</code>. Como el parámetro se asigna antes de ejecutar, el <code>ResultSet</code> no puede ir en el mismo encabezado del try: se abre en un try anidado, después del <code>setString</code>, con <code>try (ResultSet rs = ps.executeQuery()) { ... }</code>. La fase 5 es igual a la de <code>getLista()</code>: recorrer con <code>while</code>.</div>
         <div class="tip"><div class="tip-lbl">Búsquedas con GET, no con POST</div>El formulario de búsqueda usa <code>method="get"</code> porque no modifica datos. El término buscado queda en la URL, lo que permite compartir o guardar el link de los resultados. El patrón PRG solo aplica a operaciones que escriben en la BD.</div>
       ` : ''}
       ${esAct03 ? `
@@ -441,26 +441,26 @@ function buildPasos(cfg) {
           <div class="term" style="margin-top:10px;">
             <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="term-lbl">MySQL Workbench — tabla y datos (ejemplo con Producto)</span></div>
             <div class="term-body"><span class="a">USE</span> institutoWeb;
-
+ 
 <span class="a">CREATE TABLE</span> productos (
   codigo       <span class="b">INT PRIMARY KEY</span>,
   nombre       <span class="b">VARCHAR</span>(30) <span class="b">NOT NULL</span>,
   precio       <span class="b">DECIMAL</span>(8,2) <span class="b">NOT NULL</span>,
   descripcion  <span class="b">VARCHAR</span>(100)
 );
-
+ 
 <span class="a">INSERT INTO</span> productos (codigo, nombre, precio, descripcion)
 <span class="a">VALUES</span> (1, 'Teclado', 850.00, 'Teclado USB'),
        (2, 'Mouse', 420.50, 'Mouse óptico'),
        (3, 'Monitor', 6900.00, 'Monitor de 22 pulgadas'),
        (4, 'Auriculares', 1290.00, 'Con micrófono');
-
+ 
 <span class="a">SELECT</span> * <span class="a">FROM</span> productos;</div>
           </div>
         </div>
         <div class="tip"><div class="tip-lbl">Tipos de Java a MySQL</div><code>int</code> → <code>INT</code> y se lee con <code>rs.getInt()</code> · <code>String</code> → <code>VARCHAR(n)</code> y se lee con <code>rs.getString()</code> · <code>double</code> → <code>DECIMAL(8,2)</code> o <code>DOUBLE</code> y se lee con <code>rs.getDouble()</code>.</div>
-        <div class="alerta"><div class="alerta-lbl">Paso 2 — Conectar el proyecto a la base</div>Copiar desde <a href="https://github.com/eliizquierdo/material_programacion_avanzada2026/blob/main/proyectos-teoricos/mini-crud-sql/mini-crud-sql.zip" target="_blank" rel="noopener" style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:12px;">mini-crud-sql.zip →</a> la clase <code>modelo/conexion/Conexion.java</code> y el archivo <code>src/main/resources/db.properties</code> (crear la carpeta <code>resources</code> si no existe). Revisar que el usuario y la contraseña de <code>db.properties</code> sean los de la propia máquina. Agregar al <code>pom.xml</code> la dependencia del conector (ver el recuadro siguiente).</div>
-        <div class="tip"><div class="tip-lbl">Paso 3 — El método de listado en el DAO</div>En <code>ProductoDAO</code>, cambiar el contenido de <code>getLista()</code> para que aplique las 5 fases con <code>SELECT * FROM productos</code>, tomando como modelo <code>getLista()</code> de <code>mini-crud-sql</code>. El método conserva su nombre y sigue devolviendo <code>ArrayList&lt;ProductoVO&gt;</code>, así que el Servlet no cambia: sigue llamando a <code>dao.getLista()</code>. Por ahora los demás métodos del DAO siguen trabajando con el <code>ArrayList</code>.</div>
+        <div class="alerta"><div class="alerta-lbl">Paso 2 — Conectar el proyecto a la base</div>Copiar desde <a href="https://github.com/eliizquierdo/material_programacion_avanzada2026/blob/main/proyectos-teoricos/mini-crud-sql-base/mini-crud-sql-base.zip" target="_blank" rel="noopener" style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:12px;">mini-crud-sql-base.zip →</a> la clase <code>modelo/conexion/Conexion.java</code> y el archivo <code>src/main/resources/db.properties</code> (crear la carpeta <code>resources</code> si no existe). Revisar que el usuario y la contraseña de <code>db.properties</code> sean los de la propia máquina. Agregar al <code>pom.xml</code> la dependencia del conector (ver el recuadro siguiente).</div>
+        <div class="tip"><div class="tip-lbl">Paso 3 — El método de listado en el DAO</div>En <code>ProductoDAO</code>, cambiar el contenido de <code>getLista()</code> para que aplique las 5 fases con <code>SELECT * FROM productos</code>, tomando como modelo <code>getLista()</code> de <code>mini-crud-sql-base</code>. El método conserva su nombre y sigue devolviendo <code>ArrayList&lt;ProductoVO&gt;</code>, así que el Servlet no cambia: sigue llamando a <code>dao.getLista()</code>. Por ahora los demás métodos del DAO siguen trabajando con el <code>ArrayList</code>.</div>
         <div class="tip"><div class="tip-lbl">Paso 4 — Deshabilitar los botones</div>En <code>producto-lista.jsp</code>, reemplazar los botones Editar y Eliminar de cada fila, y el botón Agregar, por botones deshabilitados:
           <div class="term" style="margin-top:10px;">
             <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="term-lbl">producto-lista.jsp — botón deshabilitado</span></div>
@@ -489,11 +489,11 @@ function buildPasos(cfg) {
         </div>
         Si el <code>pom.xml</code> ya tiene esta dependencia (puede ser en versión diferente), no hace falta cambiarla.
       </div>` : ''}
-      <p>${esAct03 ? 'Crear o modificar los siguientes archivos del proyecto (con los nombres de la entidad propia):' : esAct02 ? 'Modificar los siguientes archivos (solo 3 archivos):' : 'Modificar los siguientes archivos del proyecto <strong>mini-crud-sql</strong>:'}</p>
+      <p>${esAct03 ? 'Crear o modificar los siguientes archivos del proyecto (con los nombres de la entidad propia):' : esAct02 ? 'Modificar los siguientes archivos (solo 3 archivos):' : 'Modificar los siguientes archivos del proyecto <strong>mini-crud-sql-base</strong>:'}</p>
       <div class="file-list">${renderArchivos(cfg)}</div>
     `
   };
-
+ 
   /* ── paso2: Desplegar ── */
   const paso2 = {
     titulo: 'Desplegar y probar en Tomcat',
@@ -503,7 +503,7 @@ function buildPasos(cfg) {
         <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="term-lbl">Terminal</span></div>
         <div class="term-body"><span class="c"># 1. Compilar el proyecto</span>
 mvn clean package
-
+ 
 <span class="c"># 2. Cuando aparezca BUILD SUCCESS, iniciar Tomcat</span>
 mvn cargo:run</div>
       </div>
@@ -518,7 +518,7 @@ mvn cargo:run</div>
       <div class="alerta"><div class="alerta-lbl">Si hay error</div>${cfg.alertaDeploy}</div>
     `
   };
-
+ 
   /* ── paso3: Capturas ── */
   const paso3 = {
     titulo: 'Tomar las capturas de pantalla',
@@ -529,7 +529,7 @@ mvn cargo:run</div>
       <p>Guardar las imágenes con nombres claros que coincidan con los nombres de la tabla de entrega del paso siguiente.</p>
     `
   };
-
+ 
   /* ── paso4: ZIP ── */
   const paso4 = {
     titulo: 'Comprimir el proyecto en ZIP',
@@ -556,7 +556,7 @@ mvn cargo:run</div>
 <span class="a">${cfg.zipEjemplo}</span>
   └── src/
   └── pom.xml
-
+ 
 <span class="c">✗ Incorrecto (carpeta extra adentro):</span>
 <span class="a">${cfg.zipEjemplo}</span>
   └── [nombre-del-proyecto]/   <span class="c">← carpeta extra</span>
@@ -565,7 +565,7 @@ mvn cargo:run</div>
       </div>
     `
   };
-
+ 
   /* ── paso5: CREA ── */
   const paso5 = {
     titulo: 'Entregar en CREA',
@@ -582,10 +582,10 @@ mvn cargo:run</div>
       ${cfg.notaEntrega ? `<div class="tip"><div class="tip-lbl">Antes de entregar</div>${cfg.notaEntrega}</div>` : ''}
     `
   };
-
+ 
   return [paso0, paso1, paso2, paso3, paso4, paso5];
 }
-
+ 
 /* ── Motor de pasos ── */
 function renderProgreso(pasos) {
   const dots = document.getElementById('progressDots');
@@ -604,15 +604,15 @@ function renderProgreso(pasos) {
   });
   label.innerHTML = `Paso <span>${pasoActual}</span> de <span>${pasos.length - 1}</span> — ${pasos[pasoActual].titulo}`;
 }
-
+ 
 function renderPaso() {
   const cfg = CONFIGS[actividadActual];
   const pasos = buildPasos(cfg);
   const paso = pasos[pasoActual];
   const container = document.getElementById('stepContainer');
-
+ 
   const badgeContent = paso.esLectura ? '📖' : String(pasoActual);
-
+ 
   container.innerHTML = `
     <div class="step-panel">
       <div class="card">
@@ -623,20 +623,20 @@ function renderPaso() {
         ${paso.html}
       </div>
     </div>`;
-
+ 
   /* sincronizar badge numérico */
   const badgeNum = document.querySelector('.step-badge-num');
   if (badgeNum && /^\d+$/.test(badgeNum.textContent.trim())) {
     badgeNum.textContent = pasoActual;
   }
-
+ 
   document.getElementById('btnPrev').hidden = pasoActual === 0;
   document.getElementById('btnNext').hidden = pasoActual === pasos.length - 1;
   document.getElementById('btnFinish').hidden = pasoActual !== pasos.length - 1;
   renderProgreso(pasos);
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
-
+ 
 function cambiarPaso(dir) {
   const pasos = buildPasos(CONFIGS[actividadActual]);
   const siguiente = pasoActual + dir;
@@ -645,7 +645,7 @@ function cambiarPaso(dir) {
     renderPaso();
   }
 }
-
+ 
 function cambiarActividad(idx) {
   actividadActual = idx;
   pasoActual = 0;
@@ -656,7 +656,7 @@ function cambiarActividad(idx) {
     `Programación Avanzada · Bachillerato Tecnológico · UTU (DGETP)  ·  Guía de entrega — ${CONFIGS[idx].actividad}`;
   renderPaso();
 }
-
+ 
 function mostrarFin() {
   const haySiguiente = actividadActual < CONFIGS.length - 1;
   if (haySiguiente) {
@@ -683,12 +683,12 @@ function mostrarFin() {
   document.getElementById('progressLabel').innerHTML = `<span>¡Todos los pasos completados!</span>`;
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
-
+ 
 function reiniciar() { pasoActual = 0; renderPaso(); }
-
+ 
 /* Iniciar */
 cambiarActividad(0);
-
+ 
 </script>
 </body>
 </html>
