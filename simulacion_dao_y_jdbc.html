@@ -454,6 +454,16 @@
            4. Agregar sus casos de error en "casos".
            ===================================================================== */
 
+        /* ---------------------------------------------------------------------
+           OPERACIONES VISIBLES
+           Para mostrar solo algunas operaciones, dejar en esta lista las que se
+           quieren ver (en el orden en que aparecen en el menú). Opciones:
+           "getLista", "obtenerXCodigo", "agregar", "actualizar", "eliminar".
+           También se puede elegir desde el enlace, sin tocar el archivo:
+           simulacion_dao_y_jdbc.html?ops=getLista,obtenerXCodigo
+           --------------------------------------------------------------------- */
+        const OPERACIONES_VISIBLES = ["getLista", "obtenerXCodigo", "agregar", "actualizar", "eliminar"];
+
         const DATOS_INICIALES = [
             { codigo: 1, nombre: "Juan" },
             { codigo: 2, nombre: "María" },
@@ -1422,9 +1432,20 @@ public String eliminar(int codigo) {
         /* =====================================================================
            SELECCIÓN DE OPERACIÓN, CASO Y DATOS DE ENTRADA
            ===================================================================== */
+        function operacionesVisibles() {
+            const desdeEnlace = new URLSearchParams(location.search).get("ops");
+            const ids = desdeEnlace ? desdeEnlace.split(",").map(x => x.trim()) : OPERACIONES_VISIBLES;
+            const visibles = ids.map(id => ESCENARIOS.find(e => e.id === id)).filter(Boolean);
+            return visibles.length ? visibles : [ESCENARIOS[0]];
+        }
+
         function cargarOperaciones() {
             const sel = document.getElementById("operationSelect");
-            sel.innerHTML = ESCENARIOS.map(e => `<option value="${e.id}">${e.nombre}</option>`).join("");
+            const visibles = operacionesVisibles();
+            sel.innerHTML = visibles.map(e => `<option value="${e.id}">${e.nombre}</option>`).join("");
+            /* con una sola operación, el menú se muestra pero no se puede cambiar */
+            sel.disabled = visibles.length === 1;
+            return visibles;
         }
 
         function datosPorDefecto() {
@@ -1631,8 +1652,8 @@ public String eliminar(int codigo) {
         });
 
         window.onload = () => {
-            cargarOperaciones();
-            changeOperation("getLista");
+            const visibles = cargarOperaciones();
+            changeOperation(visibles[0].id);
             renderDrawerList();
         };
     </script>
