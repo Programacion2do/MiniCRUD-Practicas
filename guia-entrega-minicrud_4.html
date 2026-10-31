@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Guía de entrega — CRUD con Base de Datos</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600;700&display=swap');
+:root{
+  --bg:#191a23;--panel:#22232f;--panel-2:#262838;--border:#34364a;
+  --text:#e7e7ee;--muted:#9497ab;
+  --amber:#f2a154;--amber-soft:rgba(242,161,84,.12);
+  --green:#7bd88f;--green-soft:rgba(123,216,143,.12);
+  --blue:#7aa2f7;--blue-soft:rgba(122,162,247,.12);
+  --red:#f7768e;--red-soft:rgba(247,118,142,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column;}
+ 
+.header{padding:36px 40px 20px;max-width:720px;margin:0 auto;width:100%;}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-bottom:12px;}
+.eyebrow::before{content:'● ';}
+h1{font-family:'JetBrains Mono',monospace;font-size:clamp(18px,3.5vw,26px);font-weight:800;line-height:1.2;margin-bottom:8px;}
+h1 span{color:var(--amber);}
+.subtitle{color:var(--muted);font-size:13.5px;max-width:540px;line-height:1.6;}
+ 
+/* ── Pestañas ── */
+.tabs-wrap{max-width:720px;margin:0 auto;padding:0 40px 24px;width:100%;}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.tab-btn{
+  display:flex;align-items:center;gap:8px;
+  background:var(--panel-2);border:1.5px solid var(--border);
+  border-radius:10px;padding:10px 14px;cursor:pointer;
+  font-family:'Inter',sans-serif;text-align:left;
+  transition:all .2s;min-width:0;width:100%;
+}
+.tab-btn:hover{border-color:rgba(242,161,84,.4);}
+.tab-btn.active{border-color:var(--amber);background:var(--amber-soft);}
+.tab-num{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
+  color:var(--muted);background:var(--panel);border:1px solid var(--border);
+  border-radius:6px;padding:2px 7px;flex-shrink:0;transition:all .2s;}
+.tab-btn.active .tab-num{color:var(--amber);border-color:rgba(242,161,84,.4);background:var(--amber-soft);}
+.tab-info{display:flex;flex-direction:column;gap:3px;min-width:0;}
+.tab-title{font-size:12.5px;font-weight:600;color:var(--muted);line-height:1.3;transition:color .2s;}
+.tab-btn.active .tab-title{color:var(--text);}
+.tab-level{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.06em;padding:1px 6px;border-radius:4px;align-self:flex-start;}
+.tab-level.basico{background:var(--green-soft);color:var(--green);border:1px solid rgba(123,216,143,.3);}
+.tab-level.intermedio{background:var(--blue-soft);color:var(--blue);border:1px solid rgba(122,162,247,.3);}
+.tab-level.avanzado{background:var(--red-soft);color:var(--red);border:1px solid rgba(247,118,142,.3);}
+ 
+.progress-wrap{max-width:720px;margin:0 auto;padding:0 40px 20px;width:100%;}
+.progress-dots{display:flex;align-items:center;gap:6px;}
+.dot-step{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--muted);transition:all .25s;flex-shrink:0;}
+.dot-step.done{background:var(--amber-soft);border-color:rgba(242,161,84,.5);color:var(--amber);}
+.dot-step.active{background:var(--amber);border-color:var(--amber);color:#191a23;}
+.dot-sep{flex:1;height:2px;background:var(--border);border-radius:2px;min-width:6px;}
+.dot-sep.done{background:rgba(242,161,84,.4);}
+.progress-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:10px;}
+.progress-label span{color:var(--amber);}
+ 
+.step-area{max-width:720px;margin:0 auto;padding:0 40px;width:100%;flex:1;}
+ 
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:28px 28px 24px;}
+.card h2{font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:700;margin-bottom:14px;}
+.card p{font-size:13.5px;color:var(--muted);line-height:1.75;margin-bottom:10px;}
+.card p:last-child{margin-bottom:0;}
+.card p strong{color:var(--text);}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--panel-2);padding:1px 5px;border-radius:4px;color:var(--amber);}
+ 
+.step-badge{display:inline-flex;align-items:center;gap:10px;margin-bottom:16px;}
+.step-badge-num{width:44px;height:44px;border-radius:50%;background:var(--amber-soft);border:1.5px solid rgba(242,161,84,.5);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--amber);}
+.step-badge-title{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:800;}
+.step-badge-title span{color:var(--amber);}
+ 
+.substeps{list-style:none;padding:0;margin:12px 0;}
+.substeps li{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-bottom:1px solid rgba(52,54,74,.4);font-size:13.5px;color:var(--muted);line-height:1.65;}
+.substeps li:last-child{border-bottom:none;}
+.substeps li strong{color:var(--text);}
+.substep-num{flex-shrink:0;width:24px;height:24px;border-radius:50%;background:var(--amber-soft);border:1px solid rgba(242,161,84,.3);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;color:var(--amber);margin-top:2px;}
+ 
+.file-list{margin:12px 0;display:flex;flex-direction:column;gap:6px;}
+.file-row{display:flex;align-items:baseline;gap:8px;padding:7px 12px;background:var(--panel-2);border-radius:6px;border:1px solid var(--border);}
+.file-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;text-transform:uppercase;padding:2px 7px;border-radius:4px;flex-shrink:0;}
+.file-badge.modificar{background:var(--amber-soft);color:var(--amber);border:1px solid rgba(242,161,84,.3);}
+.file-badge.crear{background:rgba(123,216,143,.15);color:var(--green);border:1px solid rgba(123,216,143,.3);}
+.file-path{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted);}
+.file-path span{color:var(--text);font-weight:600;}
+ 
+.term{background:#14151d;border:1px solid var(--border);border-radius:8px;margin:12px 0;overflow:hidden;}
+.term-bar{background:var(--panel-2);border-bottom:1px solid var(--border);padding:7px 12px;display:flex;gap:6px;align-items:center;}
+.tdot{width:10px;height:10px;border-radius:50%;background:var(--border);}
+.term-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-left:6px;}
+.term-body{padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.85;color:var(--green);white-space:pre-wrap;}
+.term-body .c{color:var(--muted);}
+.term-body .a{color:var(--amber);}
+.term-body .b{color:var(--blue);}
+ 
+.tip{background:var(--green-soft);border:1px solid rgba(123,216,143,.3);border-radius:10px;padding:13px 17px;margin:12px 0;font-size:13px;color:var(--text);line-height:1.65;}
+.tip-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--green);letter-spacing:.06em;margin-bottom:5px;}
+.tip-lbl::before{content:'💡 ';}
+.alerta{background:var(--amber-soft);border:1px solid rgba(242,161,84,.35);border-radius:10px;padding:13px 17px;margin:12px 0;font-size:13px;color:var(--text);line-height:1.65;}
+.alerta-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--amber);letter-spacing:.06em;margin-bottom:5px;}
+.alerta-lbl::before{content:'⚠ ';}
+ 
+.preguntas{list-style:none;padding:0;margin:14px 0;display:flex;flex-direction:column;gap:8px;}
+.preguntas li{display:flex;gap:12px;align-items:flex-start;padding:11px 14px;background:var(--panel-2);border-radius:8px;border:1px solid var(--border);font-size:13px;color:var(--text);line-height:1.6;}
+.preguntas li::before{content:'?';flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--blue-soft);border:1px solid rgba(122,162,247,.3);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--blue);margin-top:1px;}
+ 
+.cap-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0;}
+.cap-card{background:var(--panel-2);border:1px solid var(--border);border-radius:8px;padding:13px 15px;}
+.cap-icon{font-size:22px;margin-bottom:7px;}
+.cap-title{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--amber);margin-bottom:5px;}
+.cap-desc{font-size:12.5px;color:var(--muted);line-height:1.55;}
+ 
+.tabla{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px;}
+.tabla th{text-align:left;padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);border-bottom:1px solid var(--border);}
+.tabla td{padding:9px 12px;border-bottom:1px solid rgba(52,54,74,.5);color:var(--text);}
+.tabla td:first-child{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--amber);}
+ 
+.crea-box{background:var(--panel-2);border:1.5px solid rgba(122,162,247,.35);border-radius:10px;padding:14px 18px;margin:12px 0;display:flex;align-items:flex-start;gap:14px;}
+.crea-icon{font-size:24px;flex-shrink:0;margin-top:2px;}
+.crea-info{}
+.crea-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--blue);letter-spacing:.06em;margin-bottom:4px;}
+.crea-task{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--text);}
+ 
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;padding:20px 0 40px;}
+.btn{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;padding:11px 22px;border-radius:8px;border:none;cursor:pointer;transition:all .2s;letter-spacing:.03em;}
+.btn-prev{background:var(--panel-2);border:1.5px solid var(--border);color:var(--muted);}
+.btn-prev:hover{border-color:var(--amber);color:var(--amber);}
+.btn-next{background:var(--amber);color:#191a23;}
+.btn-next:hover{background:#f5b374;transform:translateX(2px);}
+.btn-finish{background:var(--green);color:#191a23;}
+.btn-finish:hover{background:#9de8ab;}
+.btn[hidden]{display:none;}
+ 
+.complete-card{text-align:center;padding:40px 28px;}
+.complete-icon{font-size:52px;margin-bottom:20px;}
+.complete-card h2{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:800;margin-bottom:12px;}
+.complete-card h2 span{color:var(--green);}
+.complete-card p{color:var(--muted);font-size:14px;max-width:460px;margin:0 auto;}
+.btn-restart{margin-top:24px;background:var(--panel-2);border:1.5px solid var(--border);color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:12px;padding:9px 18px;border-radius:8px;cursor:pointer;transition:all .2s;}
+.btn-restart:hover{border-color:var(--amber);color:var(--amber);}
+ 
+.step-panel{animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+ 
+.footer{max-width:720px;margin:0 auto;padding:16px 40px 24px;border-top:1px solid var(--border);text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.7;width:100%;}
+ 
+@media(max-width:600px){
+  .header,.tabs-wrap,.progress-wrap,.step-area{padding-left:20px;padding-right:20px;}
+  .cap-grid{grid-template-columns:1fr;}
+  .tabs{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+ 
+<div class="header">
+  <div class="eyebrow">Programación Avanzada · UTU · Bachillerato Tecnológico</div>
+  <h1>Guía de entrega — <span>CRUD con Base de Datos</span></h1>
+  <p class="subtitle">Seleccionar la actividad a entregar, luego seguir los pasos.</p>
+</div>
+ 
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="cambiarActividad(0)">
+      <div class="tab-num">01</div>
+      <div class="tab-info">
+        <span class="tab-title">Agregar el sueldo</span>
+        <span class="tab-level basico">Básico</span>
+      </div>
+    </button>
+    <button class="tab-btn" onclick="cambiarActividad(1)">
+      <div class="tab-num">02</div>
+      <div class="tab-info">
+        <span class="tab-title">Editar y eliminar en la BD</span>
+        <span class="tab-level intermedio">Intermedio</span>
+      </div>
+    </button>
+    <button class="tab-btn" onclick="cambiarActividad(2)">
+      <div class="tab-num">03</div>
+      <div class="tab-info">
+        <span class="tab-title">CRUD de la entidad propia</span>
+        <span class="tab-level avanzado">Avanzado</span>
+      </div>
+    </button>
+  </div>
+</div>
+ 
+<div class="progress-wrap">
+  <div class="progress-dots" id="progressDots"></div>
+  <div class="progress-label" id="progressLabel"></div>
+</div>
+ 
+<div class="step-area">
+  <div id="stepContainer"></div>
+  <div class="nav">
+    <button class="btn btn-prev" id="btnPrev" onclick="cambiarPaso(-1)">← Anterior</button>
+    <button class="btn btn-next" id="btnNext" onclick="cambiarPaso(1)">Siguiente →</button>
+    <button class="btn btn-finish" id="btnFinish" onclick="mostrarFin()" hidden>¡Listo! ✓</button>
+  </div>
+</div>
+ 
+<div class="footer" id="footerEl"></div>
+ 
+<script>
+ 
+const TAREA_CREA = 'PRACTICA 4-MiniCrud CRUD completo con Base de Datos';
+
+const CONFIGS = [
+
+  /* ── ACTIVIDAD 01 — Básico ── */
+  {
+    actividad: 'Actividad 01 — Agregar el sueldo: alta y listado',
+    nivel: 'basico',
+    descripcion: 'La dirección del instituto decidió registrar también el <strong>sueldo</strong> de cada persona. Agregar a la tabla <code>personas</code> la columna <code>sueldo</code>, mostrarla en el listado y permitir dar de alta personas con su sueldo <strong>desde el formulario de la aplicación</strong>. Para eso, los métodos <code>agregar()</code> y <code>obtenerXCodigo()</code> del DAO dejan de usar el <code>ArrayList</code> en memoria y pasan a trabajar con MySQL.',
+    carpetaProyecto: 'mini-crud-sql-base',
+    urlBase: 'http://localhost:8080/mini-crud/persona',
+    zipPrefijo: 'Actividad1',
+    zipEjemplo: 'Actividad1_GarciaMaria.zip',
+    archivos: [
+      { tipo: 'modificar', ruta: 'src/main/java/modelo/vo/',       nombre: 'PersonaVO.java' },
+      { tipo: 'modificar', ruta: 'src/main/java/modelo/dao/',      nombre: 'PersonaDAO.java' },
+      { tipo: 'modificar', ruta: 'src/main/java/controlador/',     nombre: 'PersonaControladorServlet.java' },
+      { tipo: 'modificar', ruta: 'src/main/webapp/WEB-INF/vista/', nombre: 'persona-form.jsp' },
+      { tipo: 'modificar', ruta: 'src/main/webapp/WEB-INF/vista/', nombre: 'persona-lista.jsp' },
+    ],
+    verificacion: 'El listado debe mostrar la columna <strong>Sueldo</strong> con los mismos valores que <code>SELECT * FROM personas</code> en MySQL Workbench. Al agregar una persona desde el formulario, debe aparecer en el listado y también en el <code>SELECT</code>. Si se intenta agregar un código que ya existe, el formulario debe mostrar el mensaje de error. Después de reiniciar Tomcat, la persona agregada debe seguir en el listado.',
+    alertaDeploy: 'Si al guardar aparece un error 500 con <code>NumberFormatException</code>, revisar que el campo del formulario se llame exactamente <code>name="sueldo"</code>. Si la persona no se guarda y no aparece ningún mensaje, revisar la consola de Tomcat: el <code>INSERT</code> debe tener 3 <code>?</code> y 3 <code>ps.setXxx()</code>. Si el código repetido no se detecta, <code>obtenerXCodigo()</code> sigue buscando en el <code>ArrayList</code> y no en la base.',
+    capturas: [
+      { icono: '📝', titulo: 'Formulario de alta', desc: 'El formulario de Agregar Persona con los campos completos, incluido el sueldo, antes de guardar. La URL debe ser visible.' },
+      { icono: '📋', titulo: 'Lista de personas',  desc: 'El listado con la columna Sueldo y la persona recién agregada. La URL debe ser visible.' },
+      { icono: '🗄️', titulo: 'Datos en MySQL',     desc: 'MySQL Workbench mostrando <code>SELECT * FROM personas</code>, con la columna <code>sueldo</code> y la persona agregada desde la aplicación.' },
+    ],
+    archivosEntrega: [
+      { nombre: 'Actividad1_ApellidoNombre.zip', desc: 'El proyecto completo comprimido' },
+      { nombre: 'captura-formulario.png',        desc: 'Formulario de alta con el sueldo completo' },
+      { nombre: 'captura-lista.png',             desc: 'Lista con la columna Sueldo y la persona nueva' },
+      { nombre: 'captura-mysql.png',             desc: 'Resultado del SELECT en MySQL Workbench' },
+    ],
+    notaEntrega: 'La captura de MySQL debe mostrar la persona agregada <strong>desde la aplicación</strong>: es la prueba de que <code>agregar()</code> ya guarda en la base.',
+    preguntasOrientadoras: [
+      '¿Qué tipo de dato de MySQL conviene para guardar un sueldo? ¿Con qué tipo de Java se representa en el VO y con qué método del <code>ResultSet</code> se lee?',
+      'Si el Servlet comprueba el código con <code>obtenerXCodigo()</code> antes de agregar, ¿qué pasaría si ese método siguiera buscando en el <code>ArrayList</code> y no en MySQL?',
+      '¿Por qué un <code>INSERT</code> se ejecuta con <code>executeUpdate()</code> y no tiene fase 5?',
+      'Antes de esta práctica, las personas agregadas desde el formulario desaparecían al reiniciar Tomcat. ¿Por qué ahora no?',
+    ],
+    tipo: 'act01',
+  },
+
+  /* ── ACTIVIDAD 02 — Intermedio ── */
+  {
+    actividad: 'Actividad 02 — Editar y eliminar en la BD',
+    nivel: 'intermedio',
+    descripcion: 'Completar el CRUD: los métodos <code>actualizar()</code> y <code>eliminar()</code> del DAO pasan a MySQL, el formulario de edición incorpora el sueldo y se habilitan los botones <strong>Editar</strong> y <strong>Eliminar</strong>. Al final, el <code>ArrayList</code> en memoria desaparece del DAO: todas las operaciones se hacen sobre la base.',
+    carpetaProyecto: 'mini-crud-sql-base',
+    urlBase: 'http://localhost:8080/mini-crud/persona',
+    zipPrefijo: 'Actividad2',
+    zipEjemplo: 'Actividad2_GarciaMaria.zip',
+    archivos: [
+      { tipo: 'modificar', ruta: 'src/main/java/modelo/dao/',      nombre: 'PersonaDAO.java' },
+      { tipo: 'modificar', ruta: 'src/main/java/controlador/',     nombre: 'PersonaControladorServlet.java' },
+      { tipo: 'modificar', ruta: 'src/main/webapp/WEB-INF/vista/', nombre: 'persona-editar.jsp' },
+      { tipo: 'modificar', ruta: 'src/main/webapp/WEB-INF/vista/', nombre: 'persona-lista.jsp' },
+    ],
+    verificacion: 'Al editar el sueldo de una persona, el listado debe mostrar el valor nuevo y <code>SELECT * FROM personas</code> en Workbench también. Al eliminar una persona (después de confirmar), debe desaparecer del listado y de la tabla. <code>PersonaDAO</code> ya no debe tener el <code>ArrayList</code> en memoria.',
+    alertaDeploy: 'Si al editar no cambia nada y no aparece ningún error, revisar el orden de los parámetros en <code>actualizar()</code>: el número de cada <code>ps.setXxx(n, ...)</code> corresponde al <code>?</code> número n del SQL, y el código va último porque está en el <code>WHERE</code>. Si al compilar aparece <code>cannot find symbol personasMemoria</code>, quedó algún método que todavía usa la lista: pasarlo a MySQL o borrarlo si ya no se usa.',
+    capturas: [
+      { icono: '✏️', titulo: 'Formulario de edición', desc: 'El formulario de Editar Persona con el sueldo modificado, antes de guardar. La URL debe ser visible.' },
+      { icono: '🗄️', titulo: 'Datos en MySQL',         desc: 'MySQL Workbench con <code>SELECT * FROM personas</code> después de editar una persona y eliminar otra.' },
+    ],
+    archivosEntrega: [
+      { nombre: 'Actividad2_ApellidoNombre.zip', desc: 'El proyecto completo comprimido' },
+      { nombre: 'captura-editar.png',            desc: 'Formulario de edición con el sueldo modificado' },
+      { nombre: 'captura-mysql.png',             desc: 'SELECT después de editar y eliminar' },
+    ],
+    notaEntrega: 'Esta actividad se entrega sobre el mismo proyecto que la Actividad 01. El ZIP debe incluir todos los cambios acumulados (sueldo + CRUD completo en MySQL).',
+    preguntasOrientadoras: [
+      '¿Qué devuelve <code>executeUpdate()</code>? ¿Cómo se usa ese valor para saber si la persona existía?',
+      'En <code>UPDATE personas SET nombre = ?, sueldo = ? WHERE codigo = ?</code>, ¿qué número de parámetro le corresponde al código? ¿Por qué?',
+      '¿Por qué eliminar se envía por <code>POST</code> y no con un enlace (<code>GET</code>)?',
+      'Cuando todos los métodos usan MySQL, ¿para qué sigue sirviendo el <code>ArrayList personasMemoria</code>?',
+    ],
+    tipo: 'act02',
+  },
+
+  /* ── ACTIVIDAD 03 — Avanzado ── */
+  {
+    actividad: 'Actividad 03 — CRUD completo de la entidad propia',
+    nivel: 'avanzado',
+    descripcion: 'Retomar el proyecto de la <strong>Actividad 03 de la Práctica 3</strong>, donde el listado de la entidad propia ya sale de MySQL y los botones están deshabilitados. Igual que con el sueldo de las personas, agregar a la entidad un <strong>atributo numérico nuevo</strong> y completar en el DAO las operaciones de agregar, buscar por código, actualizar y eliminar con JDBC. En esta guía se usa <strong>Producto</strong> con el atributo <strong>stock</strong> como ejemplo: reemplazar por la entidad propia.',
+    carpetaProyecto: 'el proyecto de la Actividad 03 de la Práctica 3',
+    urlBase: 'http://localhost:8080/&lt;nombre-del-proyecto&gt;/producto',
+    zipPrefijo: 'Actividad3',
+    zipEjemplo: 'Actividad3_GarciaMaria.zip',
+    archivos: [
+      { tipo: 'modificar', ruta: 'src/main/java/modelo/vo/',       nombre: 'ProductoVO.java' },
+      { tipo: 'modificar', ruta: 'src/main/java/modelo/dao/',      nombre: 'ProductoDAO.java' },
+      { tipo: 'modificar', ruta: 'src/main/java/controlador/',     nombre: 'ProductoControladorServlet.java' },
+      { tipo: 'modificar', ruta: 'src/main/webapp/WEB-INF/vista/', nombre: 'producto-lista.jsp' },
+      { tipo: 'modificar', ruta: 'src/main/webapp/WEB-INF/vista/', nombre: 'producto-form.jsp' },
+      { tipo: 'modificar', ruta: 'src/main/webapp/WEB-INF/vista/', nombre: 'producto-editar.jsp' },
+    ],
+    verificacion: 'El listado debe mostrar la columna nueva con los mismos valores que el <code>SELECT</code> en Workbench. Agregar, editar y eliminar desde la aplicación deben reflejarse en la tabla de MySQL. Al agregar un código que ya existe debe aparecer un mensaje de error. Los datos deben mantenerse al reiniciar Tomcat.',
+    alertaDeploy: 'Si aparece <code>Unknown column</code>, el nombre de la columna en el SQL del DAO no coincide con el de la tabla (o no se ejecutó el <code>ALTER TABLE</code>). Si aparece <code>Column count doesn\'t match</code>, la cantidad de columnas y de <code>?</code> del <code>INSERT</code> no es la misma. Si un botón no hace nada, revisar que el <code>action</code> del enlace o formulario coincida con un <code>case</code> del Servlet.',
+    capturas: [
+      { icono: '📋', titulo: 'Listado completo',  desc: 'El listado de la entidad con la columna nueva y los botones Agregar, Editar y Eliminar activos. La URL debe ser visible.' },
+      { icono: '✏️', titulo: 'Formulario',        desc: 'El formulario de alta o de edición con el campo nuevo completo. La URL debe ser visible.' },
+      { icono: '🗄️', titulo: 'Datos en MySQL',    desc: 'MySQL Workbench con <code>SELECT * FROM</code> la tabla, mostrando un registro agregado desde la aplicación.' },
+    ],
+    archivosEntrega: [
+      { nombre: 'Actividad3_ApellidoNombre.zip', desc: 'El proyecto completo comprimido' },
+      { nombre: 'entidad.sql',                   desc: 'Script de la Práctica 3 con el ALTER TABLE y los UPDATE agregados' },
+      { nombre: 'captura-lista.png',             desc: 'Listado con la columna nueva y los botones activos' },
+      { nombre: 'captura-formulario.png',        desc: 'Formulario con el campo nuevo' },
+      { nombre: 'captura-mysql.png',             desc: 'SELECT con el registro agregado desde la aplicación' },
+    ],
+    notaEntrega: 'Agregar al final de <code>entidad.sql</code> el <code>ALTER TABLE</code> y los <code>UPDATE</code> ejecutados en Workbench, para poder recrear la tabla al corregir.',
+    preguntasOrientadoras: [
+      '¿Qué métodos del DAO de la entidad todavía trabajan con el <code>ArrayList</code>? ¿Cuál de ellos usa el Servlet para comprobar que el código no se repita?',
+      'Si los métodos del DAO conservan su nombre y lo que reciben y devuelven, ¿por qué el Servlet casi no cambia al pasar a MySQL?',
+      '¿Qué método de <code>PreparedStatement</code> corresponde a cada tipo del atributo nuevo (<code>setInt</code>, <code>setDouble</code>, <code>setString</code>)?',
+      'Al agregar una columna con <code>ALTER TABLE</code>, ¿qué valor tienen los registros que ya existían? ¿Cómo se completa?',
+    ],
+    tipo: 'act03',
+  },
+
+];
+/* ════════════════════════════════════════════════════════════════ */
+ 
+let actividadActual = 0;
+let pasoActual = 0;
+ 
+/* ── Helpers ── */
+function renderArchivos(cfg) {
+  return cfg.archivos.map(f =>
+    `<div class="file-row">
+       <span class="file-badge ${f.tipo}">${f.tipo}</span>
+       <span class="file-path">${f.ruta}<span>${f.nombre}</span></span>
+     </div>`
+  ).join('');
+}
+ 
+function renderCapturas(cfg) {
+  const cards = cfg.capturas.map(c =>
+    `<div class="cap-card">
+       <div class="cap-icon">${c.icono}</div>
+       <div class="cap-title">Captura — ${c.titulo}</div>
+       <div class="cap-desc">${c.desc}</div>
+     </div>`
+  ).join('');
+  return `<div class="cap-grid">${cards}</div>`;
+}
+ 
+function renderTablaEntrega(cfg) {
+  const filas = cfg.archivosEntrega.map((a, i) =>
+    `<tr><td>${i + 1}</td><td>${a.nombre}</td><td>${a.desc}</td></tr>`
+  ).join('');
+  return `<table class="tabla">
+    <thead><tr><th>#</th><th>Archivo</th><th>Descripción</th></tr></thead>
+    <tbody>${filas}</tbody>
+  </table>`;
+}
+ 
+function buildPasos(cfg) {
+  const esAct01 = cfg.tipo === 'act01';
+  const esAct02 = cfg.tipo === 'act02';
+  const esAct03 = cfg.tipo === 'act03';
+ 
+  /* ── paso0: Leer consigna ── */
+  const paso0 = {
+    titulo: 'Leer la consigna',
+    esLectura: true,
+    html: `
+      <p>${cfg.descripcion}</p>
+      <p style="margin-top:12px;font-size:13.5px;color:var(--text);font-weight:600;">Antes de empezar, reflexionar sobre estas preguntas orientadoras:</p>
+      <ul class="preguntas">
+        ${cfg.preguntasOrientadoras.map(q => `<li><span>${q}</span></li>`).join('')}
+      </ul>
+      <div class="tip"><div class="tip-lbl">No es necesario responderlas en voz alta</div>Son para activar lo que ya se sabe y detectar qué conviene repasar antes de escribir el código.</div>
+    `
+  };
+ 
+  /* ── paso1: Preparar ── */
+  const paso1 = {
+    titulo: esAct03 ? 'Preparar la base y el proyecto' : 'Preparar los archivos del proyecto',
+    html: `
+      ${esAct01 ? `
+        <div class="tip"><div class="tip-lbl">Contexto de esta práctica</div>La dirección del instituto decidió registrar también el <strong>sueldo</strong> de cada persona. En la Práctica 3 el DAO solo consultaba la base; ahora se agrega el atributo nuevo en todas las capas y se pasan a MySQL las operaciones que todavía trabajaban en memoria.</div>
+        <div class="tip"><div class="tip-lbl">Paso 1 — Descargar el proyecto</div>Descargar el proyecto <strong>mini-crud-sql-base</strong> y abrirlo en VS Code: <a href="https://github.com/eliizquierdo/material_programacion_avanzada2026/blob/main/proyectos-teoricos/mini-crud-sql-base.zip" target="_blank" rel="noopener" style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:12px;word-break:break-all;">mini-crud-sql-base.zip →</a> Revisar que el usuario y la contraseña de <code>db.properties</code> sean los de la propia máquina.</div>
+        <div class="alerta"><div class="alerta-lbl">Paso 2 — Agregar la columna y cargar sueldos en MySQL</div>Ejecutar en MySQL Workbench el siguiente script. Si en la tabla quedaron otras personas de la Práctica 3, cargarles también un sueldo con un <code>UPDATE</code> por código:
+          <div class="term" style="margin-top:10px;">
+            <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="term-lbl">MySQL Workbench — columna nueva y datos</span></div>
+            <div class="term-body"><span class="a">USE</span> institutoWeb;
+
+<span class="c">-- 1. Agregar la columna sin perder los datos que ya existen</span>
+<span class="a">ALTER TABLE</span> personas <span class="a">ADD COLUMN</span> sueldo <span class="b">DECIMAL</span>(10,2);
+
+<span class="c">-- 2. Cargar el sueldo de las personas que ya están en la tabla</span>
+<span class="a">UPDATE</span> personas <span class="a">SET</span> sueldo = 45000.00 <span class="a">WHERE</span> codigo = 1;
+<span class="a">UPDATE</span> personas <span class="a">SET</span> sueldo = 52300.50 <span class="a">WHERE</span> codigo = 2;
+<span class="a">UPDATE</span> personas <span class="a">SET</span> sueldo = 38900.00 <span class="a">WHERE</span> codigo = 3;
+
+<span class="c">-- 3. Comprobar el resultado</span>
+<span class="a">SELECT</span> * <span class="a">FROM</span> personas;</div>
+          </div>
+        </div>
+        <div class="tip"><div class="tip-lbl">Qué cambia en el código</div><div><strong>PersonaVO:</strong> atributo <code>double sueldo</code>, un constructor <strong>nuevo</strong> de 3 parámetros (sin borrar el de 2), getter y setter.</div><div style="margin-top:8px;"><strong>PersonaDAO:</strong> <code>getLista()</code> lee <code>rs.getDouble("sueldo")</code>; <code>obtenerXCodigo()</code> pasa a <code>SELECT * FROM personas WHERE codigo = ?</code> y <code>agregar()</code> a <code>INSERT INTO personas(codigo, nombre, sueldo) VALUES (?, ?, ?)</code>.</div><div style="margin-top:8px;"><strong>PersonaControladorServlet:</strong> en <code>agregar()</code>, leer el sueldo con <code>Double.parseDouble(request.getParameter("sueldo"))</code>.</div><div style="margin-top:8px;"><strong>Vistas:</strong> campo Sueldo en <code>persona-form.jsp</code>; en <code>persona-lista.jsp</code>, columna con <code>\${p.sueldo}</code>, <code>colspan</code> de 3 a 4 y el botón Agregar Persona activo (ya está comentado en el archivo).</div></div>
+        <div class="alerta"><div class="alerta-lbl">¿Por qué también obtenerXCodigo()?</div>Antes de agregar, el Servlet comprueba con <code>obtenerXCodigo()</code> que el código no exista. Si siguiera buscando en el <code>ArrayList</code>, no encontraría a las personas guardadas en MySQL y el <code>INSERT</code> fallaría por clave primaria repetida, sin ningún mensaje.</div>
+      ` : ''}
+      ${esAct02 ? `
+        <div class="tip"><div class="tip-lbl">Mismo proyecto que Actividad 01</div>Continuar trabajando sobre el mismo proyecto <strong>mini-crud-sql-base</strong> modificado en la Actividad 01. No es necesario descargar nada nuevo ni cambiar la base de datos.</div>
+        <div class="tip"><div class="tip-lbl">Los métodos del DAO</div><div><strong>actualizar():</strong> <code>UPDATE personas SET nombre = ?, sueldo = ? WHERE codigo = ?</code>. Los parámetros van en el orden de los <code>?</code>: nombre (1), sueldo (2) y código (3).</div><div style="margin-top:8px;"><strong>eliminar():</strong> <code>DELETE FROM personas WHERE codigo = ?</code>.</div><div style="margin-top:8px;">Los dos se ejecutan con <code>executeUpdate()</code>, que devuelve la cantidad de filas afectadas: si es 0, el código no existía.</div></div>
+        <div class="tip"><div class="tip-lbl">Servlet y vistas</div><div><strong>PersonaControladorServlet:</strong> en <code>editar()</code>, leer el sueldo y usar el constructor de 3 parámetros. <code>eliminar()</code> y <code>cargarEditar()</code> no cambian.</div><div style="margin-top:8px;"><strong>persona-editar.jsp:</strong> campo Sueldo con <code>value="\${requestScope.persona.sueldo}"</code>.</div><div style="margin-top:8px;"><strong>persona-lista.jsp:</strong> reemplazar los botones deshabilitados Editar y Eliminar por el enlace y el formulario activos que están comentados.</div></div>
+        <div class="alerta"><div class="alerta-lbl">Al terminar — limpiar el DAO</div>Borrar de <code>PersonaDAO</code> el atributo <code>personasMemoria</code>, el constructor que lo crea y los métodos <code>estaPersona()</code>, <code>devolver()</code> y <code>cantidad()</code>. Compilar con <code>mvn clean package</code> para comprobar que nada dependía de ellos.</div>
+      ` : ''}
+      ${esAct03 ? `
+        <div class="tip"><div class="tip-lbl">Proyecto de partida</div>Trabajar sobre el proyecto de la <strong>Actividad 03 de la Práctica 3</strong>, con el listado de la entidad propia desde MySQL. Los ejemplos usan <strong>Producto</strong> con el atributo nuevo <strong>stock</strong>: reemplazar por la entidad propia. Otras ideas: <code>cantidadPaginas</code> para Libro, <code>duracionMinutos</code> para Película, <code>promedio</code> para Estudiante.</div>
+        <div class="alerta"><div class="alerta-lbl">Paso 1 — Agregar la columna en MySQL</div>Ejecutar en MySQL Workbench un script como este, adaptado a la entidad, y agregarlo al final de <code>entidad.sql</code>:
+          <div class="term" style="margin-top:10px;">
+            <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="term-lbl">MySQL Workbench — columna nueva (ejemplo con Producto)</span></div>
+            <div class="term-body"><span class="a">USE</span> institutoWeb;
+
+<span class="a">ALTER TABLE</span> productos <span class="a">ADD COLUMN</span> stock <span class="b">INT</span>;
+
+<span class="a">UPDATE</span> productos <span class="a">SET</span> stock = 25 <span class="a">WHERE</span> codigo = 1;
+<span class="a">UPDATE</span> productos <span class="a">SET</span> stock = 40 <span class="a">WHERE</span> codigo = 2;
+<span class="a">UPDATE</span> productos <span class="a">SET</span> stock = 8  <span class="a">WHERE</span> codigo = 3;
+<span class="a">UPDATE</span> productos <span class="a">SET</span> stock = 15 <span class="a">WHERE</span> codigo = 4;
+
+<span class="a">SELECT</span> * <span class="a">FROM</span> productos;</div>
+          </div>
+        </div>
+        <div class="tip"><div class="tip-lbl">Paso 2 — El DAO con JDBC</div><div>Tomar como modelo <code>PersonaDAO</code> de las Actividades 01 y 02. El SQL de cada método, para Producto:</div>
+          <div class="term" style="margin-top:10px;">
+            <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="term-lbl">ProductoDAO.java — SQL de cada método</span></div>
+            <div class="term-body"><span class="c">// obtenerXCodigo(int cod)</span>
+<span class="a">SELECT</span> * <span class="a">FROM</span> productos <span class="a">WHERE</span> codigo = ?
+
+<span class="c">// agregar(ProductoVO p)</span>
+<span class="a">INSERT INTO</span> productos(codigo, nombre, precio, descripcion, stock)
+<span class="a">VALUES</span> (?, ?, ?, ?, ?)
+
+<span class="c">// actualizar(ProductoVO p) — el código va último</span>
+<span class="a">UPDATE</span> productos <span class="a">SET</span> nombre = ?, precio = ?, descripcion = ?, stock = ?
+<span class="a">WHERE</span> codigo = ?
+
+<span class="c">// eliminar(int codigo)</span>
+<span class="a">DELETE FROM</span> productos <span class="a">WHERE</span> codigo = ?</div>
+          </div>
+          <div>Los métodos conservan su nombre y su firma, así el Servlet sigue llamándolos igual. Al final, borrar el <code>ArrayList</code> en memoria.</div>
+        </div>
+        <div class="tip"><div class="tip-lbl">Paso 3 — Servlet y vistas</div><div><strong>Servlet:</strong> leer el atributo nuevo en <code>agregar()</code> y <code>editar()</code> con <code>Integer.parseInt()</code> o <code>Double.parseDouble()</code>, según el tipo. Antes de agregar, comprobar con <code>obtenerXCodigo()</code> que el código no exista.</div><div style="margin-top:8px;"><strong>Vistas:</strong> columna nueva en el listado, campo nuevo en los formularios de alta y edición, y los botones Agregar, Editar y Eliminar habilitados otra vez.</div></div>
+      ` : ''}
+      <p>${esAct03 ? 'Modificar los siguientes archivos del proyecto (con los nombres de la entidad propia):' : esAct02 ? 'Modificar los siguientes archivos (4 archivos):' : 'Modificar los siguientes archivos del proyecto <strong>mini-crud-sql-base</strong>:'}</p>
+      <div class="file-list">${renderArchivos(cfg)}</div>
+    `
+  };
+
+  /* ── paso2: Desplegar ── */
+  const paso2 = {
+    titulo: 'Desplegar y probar en Tomcat',
+    html: `
+      <p>Con los archivos guardados, compilar y ejecutar el proyecto desde la terminal integrada de VS Code: <strong>Terminal → Nueva terminal</strong>.</p>
+      <div class="term">
+        <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="term-lbl">Terminal</span></div>
+        <div class="term-body"><span class="c"># 1. Compilar el proyecto</span>
+mvn clean package
+ 
+<span class="c"># 2. Cuando aparezca BUILD SUCCESS, iniciar Tomcat</span>
+mvn cargo:run</div>
+      </div>
+      <ul class="substeps">
+        <li><div class="substep-num">3</div><div>Cuando Tomcat inicie, abrir el navegador e ingresar a la URL del proyecto:</div></li>
+      </ul>
+      <div class="term">
+        <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="term-lbl">URL del proyecto</span></div>
+        <div class="term-body"><span class="a">${cfg.urlBase}</span></div>
+      </div>
+      <div class="tip"><div class="tip-lbl">Verificación</div>${cfg.verificacion}</div>
+      <div class="alerta"><div class="alerta-lbl">Si hay error</div>${cfg.alertaDeploy}</div>
+    `
+  };
+ 
+  /* ── paso3: Capturas ── */
+  const paso3 = {
+    titulo: 'Tomar las capturas de pantalla',
+    html: `
+      <p>Con el proyecto funcionando, tomar las siguientes capturas. La <strong>barra de direcciones del navegador</strong> debe quedar visible en todas las imágenes.</p>
+      ${renderCapturas(cfg)}
+      <div class="tip"><div class="tip-lbl">Cómo hacer una captura en Windows</div>Presionar <strong>Windows + Shift + S</strong> para seleccionar el área a capturar. La imagen se guarda en el portapapeles y también en <strong>Imágenes → Capturas de pantalla</strong>.</div>
+      <p>Guardar las imágenes con nombres claros que coincidan con los nombres de la tabla de entrega del paso siguiente.</p>
+    `
+  };
+ 
+  /* ── paso4: ZIP ── */
+  const paso4 = {
+    titulo: 'Comprimir el proyecto en ZIP',
+    html: `
+      <p>Abrir el Explorador de archivos, localizar la carpeta del proyecto y comprimirla.</p>
+      <ul class="substeps">
+        <li>
+          <div class="substep-num">a</div>
+          <div>Localizar la carpeta del proyecto (la que contiene <strong>src/</strong> y <strong>pom.xml</strong>).</div>
+        </li>
+        <li>
+          <div class="substep-num">b</div>
+          <div>Hacer clic derecho → <strong>Comprimir en archivo ZIP</strong> (o "Enviar a → Carpeta comprimida").</div>
+        </li>
+        <li>
+          <div class="substep-num">c</div>
+          <div>Renombrar el ZIP con el formato <strong>${cfg.zipPrefijo}_ApellidoNombre.zip</strong>. Ejemplo: <strong>${cfg.zipEjemplo}</strong></div>
+        </li>
+      </ul>
+      <div class="alerta"><div class="alerta-lbl">Verificar antes de comprimir</div>Comprimir la carpeta del proyecto directamente — no una carpeta que la contenga adentro.</div>
+      <div class="term">
+        <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="term-lbl">Estructura correcta dentro del ZIP</span></div>
+        <div class="term-body"><span class="b">✓ Correcto:</span>
+<span class="a">${cfg.zipEjemplo}</span>
+  └── src/
+  └── pom.xml
+ 
+<span class="c">✗ Incorrecto (carpeta extra adentro):</span>
+<span class="a">${cfg.zipEjemplo}</span>
+  └── [nombre-del-proyecto]/   <span class="c">← carpeta extra</span>
+        └── src/
+        └── pom.xml</div>
+      </div>
+    `
+  };
+ 
+  /* ── paso5: CREA ── */
+  const paso5 = {
+    titulo: 'Entregar en CREA',
+    html: `
+      <div class="crea-box">
+        <div class="crea-icon">📤</div>
+        <div class="crea-info">
+          <div class="crea-lbl">Tarea en CREA</div>
+          <div class="crea-task">${TAREA_CREA}</div>
+        </div>
+      </div>
+      <p>Ingresar a esa tarea y adjuntar los siguientes archivos:</p>
+      ${renderTablaEntrega(cfg)}
+      ${cfg.notaEntrega ? `<div class="tip"><div class="tip-lbl">Antes de entregar</div>${cfg.notaEntrega}</div>` : ''}
+    `
+  };
+ 
+  return [paso0, paso1, paso2, paso3, paso4, paso5];
+}
+ 
+/* ── Motor de pasos ── */
+function renderProgreso(pasos) {
+  const dots = document.getElementById('progressDots');
+  const label = document.getElementById('progressLabel');
+  dots.innerHTML = '';
+  pasos.forEach((_, i) => {
+    if (i > 0) {
+      const sep = document.createElement('div');
+      sep.className = 'dot-sep' + (i <= pasoActual ? ' done' : '');
+      dots.appendChild(sep);
+    }
+    const d = document.createElement('div');
+    d.className = 'dot-step' + (i < pasoActual ? ' done' : i === pasoActual ? ' active' : '');
+    d.textContent = pasos[i].esLectura ? '📖' : String(i);
+    dots.appendChild(d);
+  });
+  label.innerHTML = `Paso <span>${pasoActual}</span> de <span>${pasos.length - 1}</span> — ${pasos[pasoActual].titulo}`;
+}
+ 
+function renderPaso() {
+  const cfg = CONFIGS[actividadActual];
+  const pasos = buildPasos(cfg);
+  const paso = pasos[pasoActual];
+  const container = document.getElementById('stepContainer');
+ 
+  const badgeContent = paso.esLectura ? '📖' : String(pasoActual);
+ 
+  container.innerHTML = `
+    <div class="step-panel">
+      <div class="card">
+        <div class="step-badge">
+          <div class="step-badge-num">${badgeContent}</div>
+          <div class="step-badge-title">${paso.titulo}</div>
+        </div>
+        ${paso.html}
+      </div>
+    </div>`;
+ 
+  /* sincronizar badge numérico */
+  const badgeNum = document.querySelector('.step-badge-num');
+  if (badgeNum && /^\d+$/.test(badgeNum.textContent.trim())) {
+    badgeNum.textContent = pasoActual;
+  }
+ 
+  document.getElementById('btnPrev').hidden = pasoActual === 0;
+  document.getElementById('btnNext').hidden = pasoActual === pasos.length - 1;
+  document.getElementById('btnFinish').hidden = pasoActual !== pasos.length - 1;
+  renderProgreso(pasos);
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+ 
+function cambiarPaso(dir) {
+  const pasos = buildPasos(CONFIGS[actividadActual]);
+  const siguiente = pasoActual + dir;
+  if (siguiente >= 0 && siguiente < pasos.length) {
+    pasoActual = siguiente;
+    renderPaso();
+  }
+}
+ 
+function cambiarActividad(idx) {
+  actividadActual = idx;
+  pasoActual = 0;
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === idx);
+  });
+  document.getElementById('footerEl').textContent =
+    `Programación Avanzada · Bachillerato Tecnológico · UTU (DGETP)  ·  Guía de entrega — ${CONFIGS[idx].actividad}`;
+  renderPaso();
+}
+ 
+function mostrarFin() {
+  const haySiguiente = actividadActual < CONFIGS.length - 1;
+  if (haySiguiente) {
+    cambiarActividad(actividadActual + 1);
+    return;
+  }
+  /* Solo Act03 (última) muestra la pantalla de completado */
+  const container = document.getElementById('stepContainer');
+  container.innerHTML = `
+    <div class="step-panel">
+      <div class="card complete-card">
+        <div class="complete-icon">✅</div>
+        <h2>Práctico <span>completado</span></h2>
+        <p>Las tres actividades fueron entregadas en CREA. La docente puede revisar los proyectos y verificar que funcionan correctamente.</p>
+        <button class="btn-restart" onclick="cambiarActividad(0)" style="margin-top:14px;">↺ Ver desde el principio</button>
+      </div>
+    </div>`;
+  document.getElementById('btnPrev').hidden = true;
+  document.getElementById('btnNext').hidden = true;
+  document.getElementById('btnFinish').hidden = true;
+  const dots = document.getElementById('progressDots');
+  dots.querySelectorAll('.dot-step').forEach(d => { d.classList.remove('active'); d.classList.add('done'); });
+  dots.querySelectorAll('.dot-sep').forEach(d => d.classList.add('done'));
+  document.getElementById('progressLabel').innerHTML = `<span>¡Todos los pasos completados!</span>`;
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+ 
+function reiniciar() { pasoActual = 0; renderPaso(); }
+ 
+/* Iniciar */
+cambiarActividad(0);
+ 
+</script>
+</body>
+</html>

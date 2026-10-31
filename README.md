@@ -13,6 +13,8 @@ Cada guía es un archivo HTML autocontenido que se abre directamente en el naveg
 | 1 | Mini CRUD básico | [Abrir guía 1](https://programacion2do.github.io/MiniCRUD-Practicas/guia-entrega-minicrud_1.html) |
 | 2 | Mini CRUD con edición y eliminación | [Abrir guía 2](https://programacion2do.github.io/MiniCRUD-Practicas/guia-entrega-minicrud_2.html) |
 | 3 | Mini CRUD con Base de Datos | [Abrir guía 3](https://programacion2do.github.io/MiniCRUD-Practicas/guia-entrega-minicrud_3.html) |
+| 4 | CRUD completo con Base de Datos | [Abrir guía 4](https://programacion2do.github.io/MiniCRUD-Practicas/guia-entrega-minicrud_4.html) |
+| 5 | Herencia en la Base de Datos | [Abrir guía 5](https://programacion2do.github.io/MiniCRUD-Practicas/guia-entrega-minicrud_5.html) |
  
 ### [`guia-entrega-minicrud_1.html`](https://programacion2do.github.io/MiniCRUD-Practicas/guia-entrega-minicrud_1.html)
 **PRÁCTICA 1 — Mini CRUD básico**  
@@ -40,6 +42,28 @@ Trae datos de MySQL con JDBC aplicando las 5 fases del acceso a datos. En esta p
 - **Act. 03 — Avanzado:** llevar la entidad propia de la Práctica 2 a MySQL: tabla, conexión y listado desde la base de datos
 
 ---
+
+### [`guia-entrega-minicrud_4.html`](https://programacion2do.github.io/MiniCRUD-Practicas/guia-entrega-minicrud_4.html)
+**PRÁCTICA 4 — CRUD completo con Base de Datos**  
+El instituto decidió registrar también el sueldo de cada persona. Se agrega el atributo nuevo en todas las capas y se completan los métodos del DAO para agregar, buscar por código, actualizar y eliminar directamente en MySQL, hasta que el `ArrayList` en memoria desaparece del proyecto.
+
+**Actividades:**
+- **Act. 01 — Básico:** agregar la columna `sueldo`, mostrarla en el listado y dar de alta personas desde la aplicación (`agregar()` y `obtenerXCodigo()` con JDBC)
+- **Act. 02 — Intermedio:** editar y eliminar personas en la BD (`actualizar()` y `eliminar()` con JDBC) y quitar el `ArrayList` del DAO
+- **Act. 03 — Avanzado:** CRUD completo de la entidad propia en MySQL, con un atributo numérico nuevo
+
+---
+
+### [`guia-entrega-minicrud_5.html`](https://programacion2do.github.io/MiniCRUD-Practicas/guia-entrega-minicrud_5.html)
+**PRÁCTICA 5 — Herencia en la Base de Datos**  
+El instituto necesita registrar a sus profesores. `ProfesorVO` hereda de `PersonaVO` (con especialidad y horas semanales) y en MySQL la tabla `profesores` se une a `personas` por el código, con clave foránea, `INNER JOIN` y transacciones.
+
+**Actividades:**
+- **Act. 01 — Básico:** crear la tabla `profesores`, la clase `ProfesorVO` y el listado de profesores con `INNER JOIN`
+- **Act. 02 — Intermedio:** alta y edición de profesores con transacciones (`commit` / `rollback`) y baja con `ON DELETE CASCADE`
+- **Act. 03 — Avanzado:** agregar una subclase a la entidad propia, con su tabla hija y su CRUD completo
+
+---
  
 ## Material complementario
  
@@ -57,6 +81,8 @@ Trae datos de MySQL con JDBC aplicando las 5 fases del acceso a datos. En esta p
 | 1 | [practica-minicrud_1.pdf](https://programacion2do.github.io/MiniCRUD-Practicas/practica-minicrud_1.pdf) |
 | 2 | [practica-minicrud_2.pdf](https://programacion2do.github.io/MiniCRUD-Practicas/practica-minicrud_2.pdf) |
 | 3 | [practica-minicrud_3.pdf](https://programacion2do.github.io/MiniCRUD-Practicas/practica-minicrud_3.pdf) |
+| 4 | [practica-minicrud_4.pdf](https://programacion2do.github.io/MiniCRUD-Practicas/practica-minicrud_4.pdf) |
+| 5 | [practica-minicrud_5.pdf](https://programacion2do.github.io/MiniCRUD-Practicas/practica-minicrud_5.pdf) |
  
 ---
  
@@ -88,11 +114,15 @@ MiniCRUD-Practicas/
 ├── guia-entrega-minicrud_1.html
 ├── guia-entrega-minicrud_2.html
 ├── guia-entrega-minicrud_3.html
+├── guia-entrega-minicrud_4.html
+├── guia-entrega-minicrud_5.html
 ├── Guia-entrega-GitHub.html
 ├── guia-mvc-crema-tinta.html
 ├── practica-minicrud_1.pdf
 ├── practica-minicrud_2.pdf
 ├── practica-minicrud_3.pdf
+├── practica-minicrud_4.pdf
+├── practica-minicrud_5.pdf
 └── README.md
 ```
  
