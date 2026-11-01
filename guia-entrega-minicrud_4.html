@@ -207,9 +207,9 @@ code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--pane
 <script>
  
 const TAREA_CREA = 'PRACTICA 4-MiniCrud CRUD completo con Base de Datos';
-
+ 
 const CONFIGS = [
-
+ 
   /* ── ACTIVIDAD 01 — Básico ── */
   {
     actividad: 'Actividad 01 — Agregar el sueldo: alta y listado',
@@ -248,7 +248,7 @@ const CONFIGS = [
     ],
     tipo: 'act01',
   },
-
+ 
   /* ── ACTIVIDAD 02 — Intermedio ── */
   {
     actividad: 'Actividad 02 — Editar y eliminar en la BD',
@@ -284,7 +284,7 @@ const CONFIGS = [
     ],
     tipo: 'act02',
   },
-
+ 
   /* ── ACTIVIDAD 03 — Avanzado ── */
   {
     actividad: 'Actividad 03 — CRUD completo de la entidad propia',
@@ -325,7 +325,7 @@ const CONFIGS = [
     ],
     tipo: 'act03',
   },
-
+ 
 ];
 /* ════════════════════════════════════════════════════════════════ */
  
@@ -388,20 +388,20 @@ function buildPasos(cfg) {
     html: `
       ${esAct01 ? `
         <div class="tip"><div class="tip-lbl">Contexto de esta práctica</div>La dirección del instituto decidió registrar también el <strong>sueldo</strong> de cada persona. En la Práctica 3 el DAO solo consultaba la base; ahora se agrega el atributo nuevo en todas las capas y se pasan a MySQL las operaciones que todavía trabajaban en memoria.</div>
-        <div class="tip"><div class="tip-lbl">Paso 1 — Descargar el proyecto</div>Descargar el proyecto <strong>mini-crud-sql-base</strong> y abrirlo en VS Code: <a href="https://github.com/eliizquierdo/material_programacion_avanzada2026/blob/main/proyectos-teoricos/mini-crud-sql-base.zip" target="_blank" rel="noopener" style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:12px;word-break:break-all;">mini-crud-sql-base.zip →</a> Revisar que el usuario y la contraseña de <code>db.properties</code> sean los de la propia máquina.</div>
+        <div class="tip"><div class="tip-lbl">Paso 1 — Descargar el proyecto</div>Descargar el proyecto <strong>mini-crud-sql-base</strong> y abrirlo en VS Code: <a href="https://github.com/eliizquierdo/material_programacion_avanzada2026/blob/main/proyectos-teoricos/mini-crud-sql-base/mini-crud-sql-base.zip" target="_blank" rel="noopener" style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:12px;word-break:break-all;">mini-crud-sql-base.zip →</a> Revisar que el usuario y la contraseña de <code>db.properties</code> sean los de la propia máquina.</div>
         <div class="alerta"><div class="alerta-lbl">Paso 2 — Agregar la columna y cargar sueldos en MySQL</div>Ejecutar en MySQL Workbench el siguiente script. Si en la tabla quedaron otras personas de la Práctica 3, cargarles también un sueldo con un <code>UPDATE</code> por código:
           <div class="term" style="margin-top:10px;">
             <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="term-lbl">MySQL Workbench — columna nueva y datos</span></div>
             <div class="term-body"><span class="a">USE</span> institutoWeb;
-
+ 
 <span class="c">-- 1. Agregar la columna sin perder los datos que ya existen</span>
 <span class="a">ALTER TABLE</span> personas <span class="a">ADD COLUMN</span> sueldo <span class="b">DECIMAL</span>(10,2);
-
+ 
 <span class="c">-- 2. Cargar el sueldo de las personas que ya están en la tabla</span>
 <span class="a">UPDATE</span> personas <span class="a">SET</span> sueldo = 45000.00 <span class="a">WHERE</span> codigo = 1;
 <span class="a">UPDATE</span> personas <span class="a">SET</span> sueldo = 52300.50 <span class="a">WHERE</span> codigo = 2;
 <span class="a">UPDATE</span> personas <span class="a">SET</span> sueldo = 38900.00 <span class="a">WHERE</span> codigo = 3;
-
+ 
 <span class="c">-- 3. Comprobar el resultado</span>
 <span class="a">SELECT</span> * <span class="a">FROM</span> personas;</div>
           </div>
@@ -421,14 +421,14 @@ function buildPasos(cfg) {
           <div class="term" style="margin-top:10px;">
             <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="term-lbl">MySQL Workbench — columna nueva (ejemplo con Producto)</span></div>
             <div class="term-body"><span class="a">USE</span> institutoWeb;
-
+ 
 <span class="a">ALTER TABLE</span> productos <span class="a">ADD COLUMN</span> stock <span class="b">INT</span>;
-
+ 
 <span class="a">UPDATE</span> productos <span class="a">SET</span> stock = 25 <span class="a">WHERE</span> codigo = 1;
 <span class="a">UPDATE</span> productos <span class="a">SET</span> stock = 40 <span class="a">WHERE</span> codigo = 2;
 <span class="a">UPDATE</span> productos <span class="a">SET</span> stock = 8  <span class="a">WHERE</span> codigo = 3;
 <span class="a">UPDATE</span> productos <span class="a">SET</span> stock = 15 <span class="a">WHERE</span> codigo = 4;
-
+ 
 <span class="a">SELECT</span> * <span class="a">FROM</span> productos;</div>
           </div>
         </div>
@@ -437,15 +437,15 @@ function buildPasos(cfg) {
             <div class="term-bar"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div><span class="term-lbl">ProductoDAO.java — SQL de cada método</span></div>
             <div class="term-body"><span class="c">// obtenerXCodigo(int cod)</span>
 <span class="a">SELECT</span> * <span class="a">FROM</span> productos <span class="a">WHERE</span> codigo = ?
-
+ 
 <span class="c">// agregar(ProductoVO p)</span>
 <span class="a">INSERT INTO</span> productos(codigo, nombre, precio, descripcion, stock)
 <span class="a">VALUES</span> (?, ?, ?, ?, ?)
-
+ 
 <span class="c">// actualizar(ProductoVO p) — el código va último</span>
 <span class="a">UPDATE</span> productos <span class="a">SET</span> nombre = ?, precio = ?, descripcion = ?, stock = ?
 <span class="a">WHERE</span> codigo = ?
-
+ 
 <span class="c">// eliminar(int codigo)</span>
 <span class="a">DELETE FROM</span> productos <span class="a">WHERE</span> codigo = ?</div>
           </div>
@@ -457,7 +457,7 @@ function buildPasos(cfg) {
       <div class="file-list">${renderArchivos(cfg)}</div>
     `
   };
-
+ 
   /* ── paso2: Desplegar ── */
   const paso2 = {
     titulo: 'Desplegar y probar en Tomcat',
@@ -656,3 +656,4 @@ cambiarActividad(0);
 </script>
 </body>
 </html>
+ 
